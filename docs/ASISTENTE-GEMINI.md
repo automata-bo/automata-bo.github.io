@@ -82,4 +82,6 @@ Los límites de Cloudflare son aproximados y se aplican por ubicación. No equiv
 
 Antes de abrir el asistente, la web debe informar que los mensajes se procesan mediante un proveedor de IA para responder la consulta. No pedir datos sensibles. El historial vive en el estado de la pestaña y no se guarda en una base de datos. La persona controla qué contenido comparte al pasar a WhatsApp.
 
-Revisar las condiciones y el nivel de tratamiento de datos del plan de Gemini elegido antes de recibir conversaciones comerciales reales. Revisar consumo, límites y errores en Cloudflare y Google AI Studio durante la etapa piloto.
+**Importante sobre datos de clientes:** Google indica que el nivel gratuito puede utilizar el contenido enviado para mejorar sus productos; en el nivel pagado indica que ese contenido no se utiliza con ese fin. Por eso, usa ejemplos ficticios en las pruebas gratuitas. Antes de recibir consultas reales de clientes, activa el nivel pagado y vuelve a revisar las condiciones vigentes. Consulta la [página oficial de precios y tratamiento de datos de Gemini](https://ai.google.dev/gemini-api/docs/pricing).
+
+Revisar consumo, límites y errores en Cloudflare y Google AI Studio durante la etapa piloto. Los límites del Worker reducen abuso accidental, pero no son una garantía de gasto máximo: configura alertas y revisa el consumo de la API.
