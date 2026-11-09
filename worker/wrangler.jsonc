@@ -11,12 +11,12 @@
   "ratelimits": [
     {
       "name": "SESSION_LIMITER",
-      "namespace_id": "47401",
+      "namespace_id": "47474001",
       "simple": { "limit": 12, "period": 60 }
     },
     {
       "name": "IP_LIMITER",
-      "namespace_id": "47402",
+      "namespace_id": "47474002",
       "simple": { "limit": 60, "period": 60 }
     }
   ]
