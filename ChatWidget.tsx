@@ -187,10 +187,14 @@ export default function ChatWidget() {
             "X-Chat-Session": sessionId.current
           },
           body: JSON.stringify({
-            messages: conversation.map((message) => ({
-              role: message.role === "user" ? "user" : "model",
-              text: message.text
-            }))
+            messages: (() => {
+              const recent = conversation.slice(1).slice(-20);
+              if (recent[0]?.role === "bot") recent.shift();
+              return recent.map((message) => ({
+                role: message.role === "user" ? "user" : "model",
+                text: message.text
+              }));
+            })()
           })
         });
         const payload = await response.json().catch(() => ({})) as { answer?: string; error?: string };
@@ -248,7 +252,7 @@ export default function ChatWidget() {
           <div ref={bottomRef} />
         </div>
         <form className="automata-chat-compose" onSubmit={submit}>
-          <input value={input} onChange={(event) => setInput(event.target.value)} placeholder="Escribe tu consulta..." aria-label="Escribe tu consulta" disabled={isThinking} />
+          <input value={input} onChange={(event) => setInput(event.target.value)} placeholder="Escribe tu consulta..." aria-label="Escribe tu consulta" maxLength={1800} disabled={isThinking} />
           <button type="submit" disabled={!input.trim() || isThinking} aria-label="Enviar mensaje"><Send size={18} /></button>
         </form>
         <p className="automata-chat-note"><Sparkles size={12} /> {CHAT_API_URL ? "Tus mensajes se procesan con IA para responder." : "Modo local de demostración."} No incluyas datos sensibles. WhatsApp solo se abre con tu autorización.</p>
