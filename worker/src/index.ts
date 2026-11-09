@@ -79,14 +79,16 @@ function parseMessages(value: unknown): ChatMessage[] | null {
   for (const item of value) {
     if (!item || typeof item !== "object") return null;
     const candidate = item as { role?: unknown; text?: unknown };
-    if (candidate.role !== expectedRole) return null;
-    expectedRole = expectedRole === "user" ? "model" : "user";
+    const role = candidate.role;
+    if (role !== "user" && role !== "model") return null;
+    if (role !== expectedRole) return null;
+    expectedRole = role === "user" ? "model" : "user";
     if (typeof candidate.text !== "string") return null;
     const text = candidate.text.trim();
     if (!text || text.length > MAX_MESSAGE_CHARS) return null;
     total += text.length;
     if (total > MAX_TOTAL_CHARS) return null;
-    messages.push({ role: candidate.role, parts: [{ text }] });
+    messages.push({ role, parts: [{ text }] });
   }
 
   if (messages[messages.length - 1]?.role !== "user") return null;
