@@ -256,7 +256,7 @@ export default function ChatWidget() {
           <input value={input} onChange={(event) => setInput(event.target.value)} placeholder="Escribe tu consulta..." aria-label="Escribe tu consulta" maxLength={1800} disabled={isThinking} />
           <button type="submit" disabled={!input.trim() || isThinking} aria-label="Enviar mensaje"><Send size={18} /></button>
         </form>
-        <p className="automata-chat-note"><Sparkles size={12} /> {CHAT_API_URL ? "Al enviar, tu consulta se procesa con IA." : "Modo local de demostración."} No incluyas datos sensibles. WhatsApp solo se abre con tu autorización.</p>
+        <p className="automata-chat-note"><Sparkles size={12} /> {CHAT_API_URL ? "Al enviar, tu consulta se procesa mediante Google Gemini." : "Modo local de demostración."} No incluyas datos sensibles. WhatsApp solo se abre con tu autorización.</p>
       </section>}
       <button type="button" className="automata-chat-launcher" onClick={() => setOpen((value) => !value)} aria-label={open ? "Cerrar asistente" : "Abrir asistente"}>
         {open ? <X size={24} /> : <MessageCircle size={24} />}
