@@ -135,10 +135,10 @@ function buildHandoffSummary(messages: Message[]) {
     "Hola, equipo de Automata. Quiero continuar una consulta que inicié en su asistente web.",
     "",
     "CONTEXTO COMPARTIDO",
-    "Estos son los mensajes que escribí en el asistente. El equipo puede leerlos para continuar la conversación sin pedirme que repita la información."
+    "Se incluyen hasta los ocho mensajes más recientes que escribí en el asistente, para que el equipo pueda continuar la conversación sin pedirme que repita esa parte del contexto."
   ];
   lines.push("", "MENSAJES DEL CLIENTE");
-  userMessages.slice(-6).forEach((message) => {
+  userMessages.slice(-8).forEach((message) => {
     const excerpt = message.length > 400 ? message.slice(0, 397) + "..." : message;
     lines.push("• " + excerpt);
   });
@@ -186,6 +186,7 @@ export default function ChatWidget() {
             "Content-Type": "application/json",
             "X-Chat-Session": sessionId.current
           },
+          signal: AbortSignal.timeout(30000),
           body: JSON.stringify({
             messages: (() => {
               const recent = conversation.slice(1).slice(-20);
@@ -203,7 +204,7 @@ export default function ChatWidget() {
         }
         answer = payload.answer;
       } catch (error) {
-        answer = error instanceof Error
+        answer = error instanceof Error && !["TypeError", "AbortError", "TimeoutError"].includes(error.name)
           ? error.message
           : "No pudimos conectar con el asistente. Inténtalo nuevamente en unos minutos.";
       }
