@@ -62,7 +62,7 @@ El workflow de Pages lee esa variable al compilar. Si está vacía, la web manti
 - Gemini no puede ejecutar acciones, enviar mensajes ni abrir WhatsApp.
 - Catálogo comercial y límites de promesas incluidos en la instrucción de sistema.
 
-Los límites de Cloudflare son aproximados y se aplican por ubicación. No equivalen a un control antifraude estricto ni sustituyen la supervisión de consumo de Gemini.
+Los límites de Cloudflare son aproximados y se aplican por ubicación. No equivalen a un control antifraude estricto ni sustituyen la supervisión de consumo de Gemini. CORS tampoco es autenticación: un cliente automatizado puede falsificar el encabezado Origin. Antes de promocionar el asistente para recibir tráfico público amplio, añadir verificación server-side de Cloudflare Turnstile y revisar límites/cuotas de gasto de Gemini. Esta primera integración no incluye todavía el desafío Turnstile.
 
 ## Pruebas de aceptación
 
