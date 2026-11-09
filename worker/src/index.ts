@@ -110,12 +110,12 @@ export default {
       });
     }
 
-    if (!validOrigin(request, origin)) return json({ error: "Origen no autorizado." }, 403, origin);
-
     const url = new URL(request.url);
     if (request.method === "GET" && url.pathname === "/health") {
+      if (requestOrigin && requestOrigin !== origin) return json({ error: "Origen no autorizado." }, 403, origin);
       return json({ status: "ok", service: "automata-chat" }, 200, origin);
     }
+    if (!validOrigin(request, origin)) return json({ error: "Origen no autorizado." }, 403, origin);
     if (request.method !== "POST" || url.pathname !== "/api/chat") {
       return json({ error: "Ruta no encontrada." }, 404, origin);
     }
@@ -138,12 +138,15 @@ export default {
       return json({ error: "Llegaste al límite temporal de consultas. Espera un momento e inténtalo nuevamente." }, 429, origin);
     }
 
-    const declaredLength = Number(request.headers.get("Content-Length") || 0);
-    if (declaredLength > 20000) return json({ error: "La consulta es demasiado extensa." }, 413, origin);
+    if (!request.headers.get("Content-Type")?.toLowerCase().includes("application/json")) {
+      return json({ error: "Formato de consulta no admitido." }, 415, origin);
+    }
 
     let body: { messages?: unknown };
     try {
-      body = await request.json() as { messages?: unknown };
+      const rawBody = await request.text();
+      if (rawBody.length > 20000) return json({ error: "La consulta es demasiado extensa." }, 413, origin);
+      body = JSON.parse(rawBody) as { messages?: unknown };
     } catch {
       return json({ error: "No pudimos leer tu consulta." }, 400, origin);
     }
