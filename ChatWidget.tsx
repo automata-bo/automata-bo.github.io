@@ -95,6 +95,10 @@ function answerFor(input: string) {
   const tokens = new Set(normalized.split(" ").filter(Boolean));
   if (!normalized) return fallback;
 
+  if (/(publicidad|anuncio|campana)/.test(normalized) && /(video|audiovisual|ia|inteligencia artificial)/.test(normalized)) {
+    return intents.find((intent) => intent.id === "marketing")!.answer;
+  }
+
   if (/^(hola|buenas|buenos dias|buenas tardes|buenas noches|hey|que tal)$/.test(normalized)) {
     return "¡Hola! Puedo contarte qué hace Automata o ayudarte a identificar una solución para tu negocio. ¿Qué te gustaría resolver?";
   }
@@ -134,7 +138,10 @@ function buildHandoffSummary(messages: Message[]) {
     "Estos son los mensajes que escribí en el asistente. El equipo puede leerlos para continuar la conversación sin pedirme que repita la información."
   ];
   lines.push("", "MENSAJES DEL CLIENTE");
-  userMessages.slice(-10).forEach((message) => lines.push("• " + message));
+  userMessages.slice(-6).forEach((message) => {
+    const excerpt = message.length > 400 ? message.slice(0, 397) + "..." : message;
+    lines.push("• " + excerpt);
+  });
   lines.push("", "Quisiera continuar la conversación y recibir orientación sobre el siguiente paso.");
   return lines.join("\n");
 }
@@ -156,7 +163,7 @@ export default function ChatWidget() {
     return () => window.removeEventListener("automata:open-chat", show);
   }, []);
 
-  useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" }); }, [messages, open, handoffText]);
+  useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" }); }, [messages, open, handoffText, isThinking]);
 
   const send = async (value = input) => {
     const text = value.trim();
@@ -244,7 +251,7 @@ export default function ChatWidget() {
           <input value={input} onChange={(event) => setInput(event.target.value)} placeholder="Escribe tu consulta..." aria-label="Escribe tu consulta" disabled={isThinking} />
           <button type="submit" disabled={!input.trim() || isThinking} aria-label="Enviar mensaje"><Send size={18} /></button>
         </form>
-        <p className="automata-chat-note"><Sparkles size={12} /> {CHAT_API_URL ? "Asistente con IA. No compartas datos sensibles." : "Modo local de demostración. No compartas datos sensibles."} WhatsApp solo se abre con tu autorización.</p>
+        <p className="automata-chat-note"><Sparkles size={12} /> {CHAT_API_URL ? "Tus mensajes se procesan con IA para responder." : "Modo local de demostración."} No incluyas datos sensibles. WhatsApp solo se abre con tu autorización.</p>
       </section>}
       <button type="button" className="automata-chat-launcher" onClick={() => setOpen((value) => !value)} aria-label={open ? "Cerrar asistente" : "Abrir asistente"}>
         {open ? <X size={24} /> : <MessageCircle size={24} />}
