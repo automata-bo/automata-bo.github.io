@@ -117,7 +117,7 @@ export default function App() {
         <section id="soluciones" className="bg-[#0E1116] py-16 text-white sm:py-20 lg:py-24">
           <div className="mx-auto max-w-[1220px] px-5 sm:px-8">
             <p className="text-[12px] font-bold uppercase tracking-[0.22em] text-[#FF5A00]">Soluciones</p>
-            <div className="flex flex-wrap items-end justify-between gap-4"><h2 className="display mt-4 text-[44px] sm:text-[64px]">Cinco formas<br />de avanzar.</h2><p className="max-w-[260px] text-[15px] leading-snug text-white/60">Toca una tarjeta. Ve el ejemplo. Sin texto largo.</p></div>
+            <div className="flex flex-wrap items-end justify-between gap-4"><h2 className="display mt-4 text-[44px] sm:text-[64px]">Seis formas<br />de avanzar.</h2><p className="max-w-[260px] text-[15px] leading-snug text-white/60">Toca una tarjeta. Ve el ejemplo. Sin texto largo.</p></div>
             <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {solutions.map((s, i) => { const open = openSolution === i; return (
                 <article key={s.title} className="card-lift overflow-hidden rounded-[28px] p-6 text-[#0E1116] sm:p-7" style={{ background: s.bg }}>
