@@ -12,7 +12,7 @@ const pain = [
 
 const solutions = [
   { icon: Bot, title: "Asistentes que responden", line: "Respuestas claras en web y WhatsApp.", example: "Ejemplo: tu cafetería responde menú, horario y ubicación sin esperar.", color: "#FF5A00", bg: "#FFF1E8" },
-  { icon: ShoppingBag, title: "Pedidos y reservas", line: "Pedidos, citas y reservas sin caos.", example: "Ejemplo: el cliente pide, reserva y recibe confirmación en orden.", color: "#6C3BFF", bg: "#F2F0FF" },
+  { icon: ShoppingBag, title: "Pedidos y reservas", line: "Pedidos, citas y reservas sin caos.", example: "Ejemplo: el cliente envía una solicitud y el negocio confirma según su disponibilidad.", color: "#6C3BFF", bg: "#F2F0FF" },
   { icon: Globe, title: "Sitios web", line: "Webs que presentan y captan consultas.", example: "Ejemplo: una página clara con servicios, productos y un canal de contacto.", color: "#007AFF", bg: "#EAF4FF" },
   { icon: Workflow, title: "Procesos automáticos", line: "Lo repetitivo, en piloto automático.", example: "Ejemplo: registros, reportes y avisos se hacen solos.", color: "#00A86B", bg: "#E8FFF3" },
   { icon: Brain, title: "IA bien aplicada", line: "IA donde suma, con reglas claras.", example: "Ejemplo: clasifica consultas y resume información para tu equipo.", color: "#E11D63", bg: "#FFEAF1" },
