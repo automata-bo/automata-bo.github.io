@@ -21,6 +21,7 @@
   "include": [
     "App.tsx",
     "ChatWidget.tsx",
-    "main.tsx"
+    "main.tsx",
+    "vite-env.d.ts"
   ]
 }
