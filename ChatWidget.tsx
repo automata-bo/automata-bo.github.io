@@ -83,9 +83,6 @@ function buildHandoffSummary(messages: Message[]) {
   const askedAboutPricing = /\b(precio|precios|cotizacion|cotizar|costo|costos|presupuesto)\b/.test(normalized);
   const urgent = /\b(urgente|con urgencia|lo antes posible|inmediatamente|de inmediato)\b/.test(normalized);
   const lastSubstantive = [...userMessages].reverse().find((message) => message.length > 25);
-  const lastAssistantReply = [...messages].reverse().find((message) =>
-    message.role === "bot" && !/brief de cierre|preparé un brief|resumen editable/.test(normalize(message.text))
-  );
   const hasContext = Boolean(business || objective || problem || needs.length || cities.length || amountMatch);
   const lines = [
     "BRIEF DE CIERRE HUMANO | AUTOMATA",
