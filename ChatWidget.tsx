@@ -93,16 +93,21 @@ function buildHandoffSummary(messages: Message[]) {
     business ? "Negocio / actividad: " + business : "",
     formattedExpansion ? "Expansión: " + formattedExpansion : (cities.length ? "Mercado mencionado: " + cities.join(", ") : ""),
     problem ? "Problema identificado por el visitante: " + problem : "",
-    needs.length ? "Necesidad / solución a evaluar: " + [...new Set(needs)].join("; ") : "",
-    lastAssistantReply ? "Orientación ofrecida por el asistente: " + compact(lastAssistantReply.text, 180) : "",
+    needs.length ? "Servicios mencionados por el visitante (no implica que sean recomendables): " + [...new Set(needs)].join("; ") : "",
+    ...messages.filter((message) => message.role === "bot")
+      .filter((message) => !/brief de cierre|preparé un brief|resumen editable|tu autorización por escrito/i.test(normalize(message.text)))
+      .slice(-3)
+      .map((message, index) => "Orientación consultiva del asistente " + (index + 1) + " (conclusión preliminar; validar): " + compact(message.text, 320)),
     amountMatch ? "Monto mencionado: " + compact(amountMatch[1], 60) + " (confirmar si corresponde al servicio de Automata o a una compra de terceros)" : "",
     "Prioridad: " + (urgent ? "el visitante expresó urgencia" : "no indicada por el visitante"),
     "Acción para el equipo: " + (askedForHuman
       ? "contactar al visitante, revisar el alcance y acordar el siguiente paso"
       : (askedAboutPricing ? "aclarar el alcance antes de preparar una cotización" : "validar requisitos y definir si corresponde propuesta o evaluación técnica")),
-    "Pendiente de confirmar: alcance exacto, plazos, responsables y presupuesto del servicio, cuando corresponda.",
+    "Diagnóstico: conclusión conversacional preliminar; no constituye una evaluación técnica ni comercial validada automáticamente.",
+    "Pendiente de confirmar: problema prioritario, adecuación de la solución, alternativas, condiciones previas, alcance, plazos, responsables y presupuesto, según corresponda.",
+    "Acción humana: comprobar que la recomendación responde al problema expresado; considerar también la opción de no contratar o de resolver primero otra prioridad.",
     "Estado: consulta en evaluación; no implica cotización, contratación ni compromiso confirmado.",
-    "Fuente: información compartida por el visitante en esta conversación. Verificar los datos antes de tomar decisiones."
+    "Fuente: declaraciones del visitante y respuestas del asistente en esta conversación. Distinguir hechos de hipótesis y verificar antes de decidir."
   ].filter(Boolean);
   if (!hasContext && lastSubstantive) lines.splice(2, 0, "Contexto compartido: " + compact(lastSubstantive, 180));
   return lines.join("\n");
