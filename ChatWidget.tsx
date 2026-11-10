@@ -83,6 +83,9 @@ function buildHandoffSummary(messages: Message[]) {
   const askedAboutPricing = /\b(precio|precios|cotizacion|cotizar|costo|costos|presupuesto)\b/.test(normalized);
   const urgent = /\b(urgente|con urgencia|lo antes posible|inmediatamente|de inmediato)\b/.test(normalized);
   const lastSubstantive = [...userMessages].reverse().find((message) => message.length > 25);
+  const lastAssistantReply = [...messages].reverse().find((message) =>
+    message.role === "bot" && !/brief de cierre|preparé un brief|resumen editable/.test(normalize(message.text))
+  );
   const hasContext = Boolean(business || objective || problem || needs.length || cities.length || amountMatch);
   const lines = [
     "BRIEF DE CIERRE HUMANO | AUTOMATA",
@@ -91,6 +94,7 @@ function buildHandoffSummary(messages: Message[]) {
     formattedExpansion ? "Expansión: " + formattedExpansion : (cities.length ? "Mercado mencionado: " + cities.join(", ") : ""),
     problem ? "Problema identificado por el visitante: " + problem : "",
     needs.length ? "Necesidad / solución a evaluar: " + [...new Set(needs)].join("; ") : "",
+    lastAssistantReply ? "Orientación ofrecida por el asistente: " + compact(lastAssistantReply.text, 180) : "",
     amountMatch ? "Monto mencionado: " + compact(amountMatch[1], 60) + " (confirmar si corresponde al servicio de Automata o a una compra de terceros)" : "",
     "Prioridad: " + (urgent ? "el visitante expresó urgencia" : "no indicada por el visitante"),
     "Acción para el equipo: " + (askedForHuman
