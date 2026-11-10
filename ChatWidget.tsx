@@ -92,7 +92,7 @@ function buildHandoffSummary(messages: Message[]) {
     problem ? "Problema identificado por el visitante: " + problem : "",
     needs.length ? "Servicios mencionados por el visitante (no implica que sean recomendables): " + [...new Set(needs)].join("; ") : "",
     ...messages.filter((message) => message.role === "bot")
-      .filter((message) => !/brief de cierre|preparé un brief|resumen editable|tu autorización por escrito/i.test(normalize(message.text)))
+      .filter((message) => !/brief de cierre|preparé un brief|resumen editable|tu autorización por escrito|hola soy el asistente virtual/i.test(normalize(message.text)))
       .slice(-3)
       .map((message, index) => "Orientación consultiva del asistente " + (index + 1) + " (conclusión preliminar; validar): " + compact(message.text, 320)),
     amountMatch ? "Monto mencionado: " + compact(amountMatch[1], 60) + " (confirmar si corresponde al servicio de Automata o a una compra de terceros)" : "",
