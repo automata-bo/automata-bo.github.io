@@ -342,14 +342,27 @@ export default {
       return json({ error: "Formato de consulta no admitido." }, 415, origin);
     }
 
-    const parsed = await readBoundedJson<{ messages?: unknown }>(request, 48000);
+    const parsed = await readBoundedJson<{ messages?: unknown; source?: unknown }>(request, 48000);
     if (!parsed.ok) return json({ error: parsed.status === 413 ? "La consulta es demasiado extensa." : "No pudimos leer tu consulta." }, parsed.status, origin);
 
     const contents = parseMessages(parsed.value.messages);
     if (!contents) return json({ error: "La conversación no tiene un formato válido o es demasiado extensa." }, 400, origin);
 
+    const sourceLabels: Record<string, string> = {
+      home: "Inicio",
+      digital: "Digital",
+      experiences: "Experiences",
+      studio: "Studio",
+      projects: "Proyectos",
+      contact: "Contacto",
+    };
+    const source = typeof parsed.value.source === "string" && Object.prototype.hasOwnProperty.call(sourceLabels, parsed.value.source)
+      ? sourceLabels[parsed.value.source]
+      : "No identificado";
+    const contextualSystemInstruction = `${SYSTEM_INSTRUCTION}\\n\\nCONTEXTO DE NAVEGACIÓN\\nLa conversación se inició desde: ${source}. Este dato describe únicamente la página de origen, no una necesidad confirmada ni una declaración del visitante. Úsalo solo para orientar el contexto si resulta pertinente. No asumas que la persona busca contratar un servicio de esa división; pregunta por su objetivo real y permite que la necesidad apunte a otra capacidad o a una alternativa externa.`;
+
     const openAiMessages = [
-      { role: "system", content: SYSTEM_INSTRUCTION },
+      { role: "system", content: contextualSystemInstruction },
       ...contents.map((message) => ({
         role: message.role === "model" ? "assistant" : "user",
         content: message.parts.map((part) => part.text).join("\n"),
@@ -407,7 +420,7 @@ export default {
           {
             model: env.OLLAMA_MODEL || "gemma4:31b",
             messages: [
-              { role: "system", content: SYSTEM_INSTRUCTION },
+              { role: "system", content: contextualSystemInstruction },
               ...contents.map((message) => ({
                 role: message.role === "model" ? "assistant" : "user",
                 content: message.parts.map((part) => part.text).join("\n"),
@@ -433,7 +446,7 @@ export default {
             "Content-Type": "application/json",
           },
           {
-            systemInstruction: { parts: [{ text: SYSTEM_INSTRUCTION }] },
+            systemInstruction: { parts: [{ text: contextualSystemInstruction }] },
             contents: geminiContents,
             generationConfig: { temperature: 0.3, maxOutputTokens: 700 },
           },
