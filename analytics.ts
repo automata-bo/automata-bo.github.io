@@ -1,5 +1,7 @@
 import { AUTOMATA_API_URL } from "./api";
-const sessionId = typeof crypto !== "undefined" && "randomUUID" in crypto ? crypto.randomUUID() : "session-" + Date.now();
+const sessionId = typeof crypto !== "undefined" && "randomUUID" in crypto
+  ? crypto.randomUUID()
+  : (Date.now().toString(16) + Math.random().toString(16).slice(2)).slice(0, 32);
 
 function hasAnalyticsConsent() {
   return typeof document !== "undefined" && document.cookie.split("; ").some((item) => item === "automata_analytics_consent=accepted");
