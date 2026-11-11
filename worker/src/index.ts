@@ -284,9 +284,15 @@ export default {
         const id = crypto.randomUUID();
         const unsubscribeToken = crypto.randomUUID() + crypto.randomUUID().replace(/-/g, "");
         const consentText = "Acepto recibir novedades, lanzamientos y promociones de Automata por el canal que seleccioné. Puedo solicitar la baja cuando quiera.";
-        const result = await env.DB.prepare("INSERT OR IGNORE INTO subscribers (id, channel, contact, normalized_contact, consent_text, consent_version, unsubscribe_token) VALUES (?, ?, ?, ?, ?, ?, ?)")
-          .bind(id, body.channel, contact, normalized, consentText, "2026-11-09-v1", unsubscribeToken).run();
-        if (!result.meta.changes) return json({ error: "Ese contacto ya está registrado. Si quieres actualizar tus preferencias, contacta a Automata." }, 409, origin);
+        const result = await env.DB.prepare(
+          "INSERT INTO subscribers (id, channel, contact, normalized_contact, consent_text, consent_version, unsubscribe_token) VALUES (?, ?, ?, ?, ?, ?, ?) " +
+          "ON CONFLICT(channel, normalized_contact) DO UPDATE SET " +
+          "contact = excluded.contact, consent_text = excluded.consent_text, consent_version = excluded.consent_version, " +
+          "unsubscribe_token = excluded.unsubscribe_token, status = 'active', " +
+          "created_at = strftime('%Y-%m-%dT%H:%M:%fZ','now'), unsubscribed_at = NULL " +
+          "WHERE subscribers.status = 'unsubscribed'"
+        ).bind(id, body.channel, contact, normalized, consentText, "2026-11-09-v1", unsubscribeToken).run();
+        if (!result.meta.changes) return json({ error: "Ese contacto ya tiene una suscripción activa." }, 409, origin);
         return json({ ok: true, message: "Tu suscripción quedó registrada. Gracias por acompañar a Automata." }, 201, origin);
       } catch (error) {
         console.error("Subscription storage failure:", error instanceof Error ? error.name : "unknown");
