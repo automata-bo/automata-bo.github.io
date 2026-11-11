@@ -243,3 +243,8 @@ Se añadió la ruta `/experiences/demo/` como demostración interactiva de una i
 Se añadió `/studio/lab/`, un prototipo interactivo de brief creativo que permite definir marca, producto/servicio, público, objetivo y formato. Presenta una idea central, secuencia narrativa y CTA; permite copiar el brief. La lógica usa estructuras predefinidas en el navegador: no llama a un modelo de IA, no genera piezas audiovisuales y no almacena datos. Debe presentarse como prototipo de proceso creativo, no como generador IA ni como producción final.
 
 La página `/proyectos/` pasa a funcionar como showroom de tres demostraciones: flujos de negocio (`/demos/`), invitación de boda (`/experiences/demo/`) y Creative Lab (`/studio/lab/`). Cada tarjeta indica el estado y las limitaciones de su experiencia. Los casos reales se mantienen separados y solo se publicarán con material, permisos y contexto verificables. La ruta Creative Lab está marcada `noindex, nofollow` y no se incorpora al sitemap.
+
+
+## 17. Acceso al Experience Lab desde Inicio (11 nov 2026)
+
+La portada incorpora una sección de demostraciones interactivas con enlaces directos a las tres experiencias del showroom: flujos Digital, invitación Experiences y Creative Lab de Studio. El objetivo es que la web demuestre capacidades desde el primer recorrido, sin exigir que el visitante conozca previamente la sección Proyectos. Cada experiencia mantiene sus etiquetas y límites; no se presentan simulaciones como operaciones reales ni prototipos como servicios productivos.
