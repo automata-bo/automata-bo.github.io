@@ -1,6 +1,6 @@
 # Sitemap y recorrido web AUTOMATA 2.0
 
-**Estado:** propuesta de estructura. Las rutas son nombres objetivo, pendientes de validación técnica con GitHub Pages.
+**Estado:** estructura implementada en la rama de trabajo V2; pendiente de build y validación en GitHub Pages.
 
 ## 1. Mapa principal
 
@@ -56,9 +56,9 @@ AUTOMATA
 | Experiences | `/experiences/` | Mostrar experiencias personalizadas |
 | Studio | `/studio/` | Presentar producción creativa |
 | Proyectos | `/proyectos/` | Evidencia, demos y trabajos |
-| Contacto | `/contacto/` | Convertir interés en conversación |
+| Contacto | `/contacto/` | Convertir interés en conversación |\n| Demos | `/demos/` | Preservar las demostraciones interactivas de V1 bajo Digital |
 
-Las rutas son una propuesta editorial, no una afirmación sobre rutas que ya existan. Antes de implementarlas se debe verificar `vite.config.ts`, el `base` de Vite, el workflow de Pages y la estrategia de fallback para rutas profundas. Si la infraestructura no soporta rutas limpias sin cambios riesgosos, evaluar páginas estáticas o rutas hash como alternativa explícita.
+Las rutas se implementan como entradas HTML independientes de Vite, no como rutas profundas de una SPA. Cada carpeta contiene su propio `index.html` y se incluye explícitamente en `build.rollupOptions.input`; así GitHub Pages sirve un archivo estático real al solicitar cada URL. `base: "/"` mantiene los recursos en la raíz del dominio del sitio. La ruta `/demos/` conserva la experiencia interactiva anterior mientras se reorganiza su contenido bajo Digital.
 
 ## 3. Recorrido de la página de inicio
 
