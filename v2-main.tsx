@@ -28,6 +28,9 @@ const divisions = [
   { key: "experiences" as const, title: "Experiences", line: "Creamos experiencias memorables.", description: "Invitaciones, experiencias para eventos, álbumes colaborativos y recorridos interactivos.", href: "/experiences/", icon: Heart, number: "02" },
   { key: "studio" as const, title: "Studio", line: "Producimos comunicación y contenido.", description: "Audiovisual, fotografía, campañas y producción creativa asistida por IA.", href: "/studio/", icon: Clapperboard, number: "03" },
 ];
+function openChatWithSource(source: PageKey) {
+  window.dispatchEvent(new CustomEvent("automata:open-chat", { detail: { source } }));
+}
 function currentPage(): PageKey {
   const path = window.location.pathname.replace(/\/+$/, "") || "/";
   if (path === "/digital") return "digital";
@@ -39,7 +42,7 @@ function currentPage(): PageKey {
 }
 function Header({ page }: { page: PageKey }) {
   const [open, setOpen] = useState(false);
-  const openAssistant = () => window.dispatchEvent(new Event("automata:open-chat"));
+  const openAssistant = () => openChatWithSource(page);
   return <header className="sticky top-0 z-50 border-b border-[#E8E6E1] bg-white/95 backdrop-blur">
     <div className="mx-auto flex h-[76px] max-w-[1220px] items-center justify-between gap-4 px-5 sm:px-8">
       <a href="/" aria-label="AUTOMATA, inicio" className="shrink-0"><img src={logoFull} alt="AUTOMATA" className="h-9 w-auto sm:h-10" /></a>
