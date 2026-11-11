@@ -161,7 +161,13 @@ export default function ChatWidget() {
     const previousBotMessage = [...messages].reverse().find((message) => message.role === "bot")?.text ?? "";
     const affirmative = /^(si|sí|si por favor|sí por favor|de acuerdo|adelante|por supuesto)[.!\s]*$/i.test(text);
     const authorization = /^(autorizo|lo autorizo|autorizo el envío|autorizo compartir)[.!\s]*$/i.test(text);
-    if (handoffRequested && affirmative && /resumen/i.test(previousBotMessage)) setShowHandoff(true);
+    if (handoffRequested && affirmative && /resumen/i.test(previousBotMessage)) {
+      setShowHandoff(true);
+      setHandoffText(buildHandoffSummary(messages));
+      setInput("");
+      setIsThinking(false);
+      return;
+    }
     if (handoffRequested && authorization) {
       setShowHandoff(true);
       setMessages([...conversation, { role: "bot", text: "Tu autorización por escrito no envía la solicitud. Para compartirla, revisa el resumen, marca la casilla de autorización y pulsa «Continuar por WhatsApp». WhatsApp se abrirá para que confirmes el envío desde tu dispositivo." }]);
