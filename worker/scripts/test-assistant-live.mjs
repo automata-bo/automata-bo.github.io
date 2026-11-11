@@ -121,6 +121,12 @@ for (const scenario of scenarios) {
       console.log(payload.error || JSON.stringify(payload));
       continue;
     }
+    const expectedProvider = configured[0].slice(0, -8).toLowerCase();
+    if (payload.provider !== expectedProvider) {
+      failures++;
+      console.log(`\n[${scenario.id}] ERROR: proveedor inesperado. Esperado ${expectedProvider}; recibido ${payload.provider || "sin identificar"}.`);
+      continue;
+    }
     console.log(`\n[${scenario.id}] ${scenario.title} | proveedor: ${payload.provider} | ${elapsed} ms`);
     console.log("VISITANTE:", scenario.text);
     console.log("ASISTENTE:", payload.answer);
