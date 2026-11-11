@@ -5,6 +5,8 @@ import { AUTOMATA_API_URL } from "./api";
 
 type Message = { role: "bot" | "user"; text: string };
 type ChatSource = "home" | "digital" | "experiences" | "studio" | "projects" | "contact";
+type AssistantContext = { productId?: string; action?: "explore" | "experience" | "proposal" };
+const PRODUCT_LABELS: Record<string, string> = { "web-presence": "Sitios y experiencias web", "digital-assistants": "Asistentes digitales", "business-automation": "Automatización e integraciones", "event-experience": "Experiencias para bodas y celebraciones", "audiovisual-production": "Producción audiovisual", "creative-campaigns": "Publicidad y campañas" };
 const CHAT_SOURCES: ChatSource[] = ["home", "digital", "experiences", "studio", "projects", "contact"];
 function currentChatSource(): ChatSource {
   const path = window.location.pathname.replace(/\/+$/, "") || "/";
@@ -145,6 +147,7 @@ function buildHandoffSummary(messages: Message[]) {
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
   const [chatSource, setChatSource] = useState<ChatSource>(currentChatSource);
+  const [assistantContext, setAssistantContext] = useState<AssistantContext>({});
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>(() => [{ role: "bot", text: greetingForSource(currentChatSource()) }]);
   const [handoffText, setHandoffText] = useState("");
@@ -163,13 +166,18 @@ export default function ChatWidget() {
 
   useEffect(() => {
     const show = (event: Event) => {
-      const requestedSource = (event as CustomEvent<{ source?: unknown }>).detail?.source;
+      const detail = (event as CustomEvent<{ source?: unknown; productId?: unknown; action?: unknown }>).detail;
+      const requestedSource = detail?.source;
       const source = typeof requestedSource === "string" && CHAT_SOURCES.includes(requestedSource as ChatSource)
         ? requestedSource as ChatSource
         : currentChatSource();
+      const productId = typeof detail?.productId === "string" && Object.prototype.hasOwnProperty.call(PRODUCT_LABELS, detail.productId) ? detail.productId : undefined;
+      const action = detail?.action === "experience" || detail?.action === "proposal" || detail?.action === "explore" ? detail.action : undefined;
+      const nextContext: AssistantContext = { productId, action };
       setChatSource(source);
+      setAssistantContext(nextContext);
       setMessages((previous) => previous.length === 1 && previous[0].role === "bot"
-        ? [{ role: "bot", text: greetingForSource(source) }]
+        ? [{ role: "bot", text: productId ? `¡Hola! Veo que estás explorando ${PRODUCT_LABELS[productId]}. Puedo explicarte cómo funciona, cuándo tiene sentido y qué alternativas existen. ¿Qué te gustaría descubrir primero?` : greetingForSource(source) }]
         : previous);
       trackEvent("chat_open");
       setOpen(true);
@@ -235,6 +243,8 @@ export default function ChatWidget() {
           signal: AbortSignal.timeout(60000),
           body: JSON.stringify({
             source: chatSource,
+            productId: assistantContext.productId,
+            action: assistantContext.action,
             messages: (() => {
               const recent = conversation.slice(1).slice(-20);
               if (recent[0]?.role === "bot") recent.shift();
