@@ -4,7 +4,7 @@ import { Bot, MessageCircle, Send, Sparkles, X, ArrowUpRight } from "lucide-reac
 
 type Message = { role: "bot" | "user"; text: string };
 const WHATSAPP_NUMBER = "59176192899";
-const quick = ["¿Qué hace Automata?", "¿Hacen publicidad con IA?", "Tengo un negocio de vinos", "Quiero automatizar pedidos por WhatsApp"];
+const quick = ["¿Qué hace AUTOMATA?", "Necesito una web para mi negocio", "Quiero crear una experiencia para un evento", "Busco contenido para mi marca"];
 const CHAT_API_URL = "https://automata-chat.dgckg-trd1.workers.dev";
 const LOCAL_SESSION_ID = () => typeof crypto !== "undefined" && "randomUUID" in crypto ? crypto.randomUUID() : `session-${Date.now()}-${Math.random().toString(36).slice(2)}`;
 function normalize(value: string) {
@@ -112,7 +112,7 @@ function buildHandoffSummary(messages: Message[]) {
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
-  const [messages, setMessages] = useState<Message[]>([{ role: "bot", text: "¡Hola! Soy el asistente virtual de Automata. Puedo contarte qué hacemos y ayudarte a identificar oportunidades para tu negocio. ¿Qué necesitas resolver?" }]);
+  const [messages, setMessages] = useState<Message[]>([{ role: "bot", text: "¡Hola! Soy el asistente virtual de AUTOMATA. Puedo contarte qué hacemos y ayudarte a ordenar una idea o proyecto. ¿Qué tienes en mente?" }]);
   const [handoffText, setHandoffText] = useState("");
   const [contactName, setContactName] = useState("");
   const [companyName, setCompanyName] = useState("");
