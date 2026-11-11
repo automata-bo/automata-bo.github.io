@@ -9,6 +9,12 @@ if (!configured.length) {
   process.exit(2);
 }
 
+if (configured.length !== 1) {
+  console.error("Configura exactamente UN proveedor por ejecución para atribuir correctamente las respuestas y evitar failover entre servicios.");
+  console.error("Claves detectadas:", configured.join(", "));
+  process.exit(2);
+}
+
 const env = {
   ALLOWED_ORIGIN: ORIGIN,
   GEMINI_API_KEY: process.env.GEMINI_API_KEY,
@@ -82,7 +88,7 @@ const scenarios = [
 
 let failures = 0;
 console.log("AUTOMATA LIVE MODEL EVALUATION");
-console.log("Proveedor(es) disponibles:", configured.join(", "));
+console.log("Proveedor seleccionado:", configured[0]);
 console.log("Modelo:", process.env.GEMINI_MODEL || process.env.GROQ_MODEL || process.env.OPENROUTER_MODEL || process.env.OLLAMA_MODEL || "predeterminado");
 console.log("Entorno: Worker ejecutado en Node; limitadores y D1 aislados; fetch del proveedor REAL.");
 console.log("Aviso: cada escenario realiza una llamada facturable o sujeta a cuota del proveedor. No se contacta Cloudflare ni producción.");
