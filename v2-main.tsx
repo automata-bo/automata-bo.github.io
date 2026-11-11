@@ -178,7 +178,7 @@ function ContactPage() {
       "Quisiera conocer los siguientes pasos."
     ].filter(Boolean);
     trackEvent("whatsapp_click");
-    window.open("https://wa.me/59176192899?text=" + encodeURIComponent(lines.join("\\n")), "_blank", "noopener,noreferrer");
+    window.open("https://wa.me/59176192899?text=" + encodeURIComponent(lines.join("\n")), "_blank", "noopener,noreferrer");
   };
 
   return <>
