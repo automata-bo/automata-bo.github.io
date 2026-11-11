@@ -208,3 +208,12 @@ No presentar demos de restaurante, consultorio o peluquería como integraciones 
 7. Recibir aprobación explícita antes de fusionar y desplegar.
 
 **La implementación está en una rama de revisión. No equivale a una publicación ni a una aprobación comercial final.**
+
+## 13. Contexto de origen del asistente
+
+- Los puntos de entrada del asistente en Inicio, Digital, Experiences, Studio, Proyectos y Contacto transmiten un identificador de página permitido.
+- El frontend envía ese identificador junto al historial de conversación; no envía texto libre de la URL ni datos personales para este propósito.
+- El Worker valida el identificador contra una lista cerrada y convierte el valor en una etiqueta editorial antes de incorporarlo a las instrucciones del modelo.
+- El contexto se describe expresamente como metadato de navegación, no como una necesidad ni una declaración del visitante.
+- El asistente debe confirmar el objetivo real de la persona y no asumir que busca contratar la división desde la que abrió el chat.
+- Las solicitudes antiguas sin el campo `source` siguen siendo válidas y se procesan con origen no identificado.
