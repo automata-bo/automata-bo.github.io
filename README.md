@@ -159,6 +159,8 @@ Consulta los avisos y controles que aparecen en el propio sitio antes de compart
 | Modelos de IA | Adaptadores para proveedores configurables |
 | Despliegue | GitHub Actions y Wrangler |
 
+La web obtiene la URL del backend desde la variable de compilación `VITE_AUTOMATA_API_URL` (GitHub Actions: `vars.VITE_AUTOMATA_API_URL`). Chat, analítica y suscripciones comparten esa configuración en `api.ts`. Si no se define, se utiliza la URL del Worker existente `automata-chat`. Las claves de proveedores de IA y credenciales privadas permanecen en el entorno del Worker; nunca se incluyen en el bundle público.
+
 ---
 
 ## Desarrollo local
