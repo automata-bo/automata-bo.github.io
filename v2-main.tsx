@@ -62,7 +62,11 @@ function Footer() {
     <div className="mx-auto flex max-w-[1220px] flex-col gap-5 px-5 py-9 sm:px-8 md:flex-row md:items-center md:justify-between">
       <a href="/" className="display text-xl tracking-tight">AUTOMATA<span className="text-[#FF5A00]">.</span></a>
       <p className="max-w-md text-sm leading-relaxed text-[#5A6068]">Digital Experiences & Intelligent Solutions. Tecnología, creatividad e inteligencia aplicadas a experiencias y soluciones digitales.</p>
-      <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm font-semibold text-[#5A6068]">{nav.map(item => <a key={item.href} href={item.href} className="hover:text-[#FF5A00]">{item.label}</a>)}</div>\n      <NewsletterSignup/>
+      <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm font-semibold text-[#5A6068]">
+        {nav.map(item => <a key={item.href} href={item.href} className="hover:text-[#FF5A00]">{item.label}</a>)}
+        <button type="button" onClick={() => window.dispatchEvent(new Event("automata:open-cookie-settings"))} className="text-left hover:text-[#FF5A00]">Preferencias de cookies</button>
+      </div>
+      <NewsletterSignup/>
     </div>
     <div className="border-t border-[#E8E6E1] py-4 text-center text-xs text-[#8A8F96]">© {new Date().getFullYear()} AUTOMATA. Tecnología con intención.</div>
   </footer>;
