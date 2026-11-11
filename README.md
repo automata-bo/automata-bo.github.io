@@ -12,7 +12,7 @@ La idea no es incorporar tecnología por moda. Primero entendemos qué necesita 
 
 ## Qué hacemos
 
-Nuestro trabajo se organiza en seis líneas de solución que pueden combinarse según el problema y el alcance de cada proyecto.
+Nuestro trabajo se organiza en siete líneas de solución que pueden combinarse según el problema y el alcance de cada proyecto.
 
 ### 1. Asistentes digitales
 Asistentes para web y canales de mensajería que responden consultas con información aprobada, orientan a las personas y derivan los casos que necesitan atención humana.
@@ -31,6 +31,13 @@ Integración de IA cuando aporta una ventaja concreta: interpretación de consul
 
 ### 6. Publicidad y producción audiovisual
 Conceptos creativos, anuncios, videos promocionales, piezas de producto y campañas. Trabajamos con producción híbrida: grabación real, edición tradicional y recursos generados con IA, según lo que cada proyecto necesite.
+
+### 7. Experiencias digitales para celebraciones
+Diseñamos experiencias digitales personalizadas para bodas y otros eventos: regalos interactivos, páginas conmemorativas, galerías privadas y álbumes comunitarios donde los invitados pueden aportar sus fotografías mediante enlaces o tarjetas con códigos QR.
+
+En una producción para bodas, por ejemplo, los invitados pueden acceder desde sus teléfonos, compartir sus fotos y contribuir a un álbum digital personalizado para los novios. La experiencia puede incluir identidad visual del evento, tarjetas impresas con QR y una galería organizada para conservar los recuerdos.
+
+Cada producción se define según el evento, la privacidad requerida, el volumen de participantes y la forma de recopilar, revisar y entregar las fotografías. No se presupone que cualquier evento tenga las mismas necesidades ni que las imágenes se publiquen de forma abierta.
 
 También evaluamos proyectos a medida cuando el problema requiere una integración o desarrollo que no forma parte de una solución estándar. La viabilidad se determina después de conocer los requisitos.
 
@@ -57,6 +64,8 @@ El sitio incluye tres experiencias interactivas para mostrar cómo podrían func
 - **Restaurante:** explorar un menú, añadir productos, calcular un total y registrar un pedido de ejemplo.
 - **Consultorio:** seleccionar un servicio y registrar una solicitud de cita.
 - **Peluquería:** elegir un servicio y registrar una solicitud de reserva.
+
+Las experiencias para celebraciones son una línea de producción personalizada; no forman parte de estas tres demos comerciales.
 
 > **Importante:** estas experiencias son demostraciones simuladas. No envían pedidos a restaurantes, no consultan agendas reales y no confirman citas ni reservas. Sirven para explorar la experiencia y conversar sobre una posible adaptación al negocio.
 
@@ -177,4 +186,4 @@ El Worker requiere sus bindings y variables de entorno para habilitar las funcio
 - Web: https://automata-bo.github.io/
 - WhatsApp: [+591 76192899](https://wa.me/59176192899)
 
-Cuéntanos qué necesita resolver tu negocio. Primero entendemos el problema; después decidimos qué construir.
+Cuéntanos qué necesitas crear o resolver, ya sea para tu negocio, una celebración o un proyecto especial. Primero entendemos el objetivo; después decidimos qué construir.
