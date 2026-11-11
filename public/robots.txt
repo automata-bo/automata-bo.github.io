@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
-
+Disallow: /demos/
 Sitemap: https://automata-bo.github.io/sitemap.xml
