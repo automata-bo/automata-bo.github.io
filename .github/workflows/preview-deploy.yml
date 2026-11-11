@@ -1,0 +1,50 @@
+name: Deploy isolated AUTOMATA V2 preview
+
+on:
+  push:
+    branches: [feature/automata-web-v2-architecture]
+    paths:
+      - "src/**"
+      - "public/**"
+      - "*.tsx"
+      - "*.ts"
+      - "*.css"
+      - "*.html"
+      - "digital/**"
+      - "experiences/**"
+      - "studio/**"
+      - "proyectos/**"
+      - "contacto/**"
+      - "demos/**"
+      - "preview/**"
+      - "package.json"
+      - "package-lock.json"
+      - "vite.config.ts"
+      - ".github/workflows/preview-deploy.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: automata-v2-preview
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Build preview with same-origin assistant endpoint
+        run: VITE_AUTOMATA_API_URL=/api npm run build
+      - name: Deploy isolated preview Worker
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy --config preview/wrangler.jsonc
