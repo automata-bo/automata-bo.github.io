@@ -225,3 +225,9 @@ No presentar demos de restaurante, consultorio o peluquería como integraciones 
 - Al enviarlo, abre WhatsApp con un borrador dirigido al número comercial configurado; la persona revisa el texto y decide si lo envía.
 - La página también conserva el acceso al asistente conversacional para quien prefiera ordenar la consulta antes de contactar al equipo.
 - El texto de interfaz debe mantener esta distinción: preparar un mensaje no equivale a enviarlo ni confirma disponibilidad, cotización o contratación.
+
+### Presentación contextual del asistente
+
+- Si la conversación aún no tiene mensajes del visitante, el saludo inicial y las preguntas rápidas se adaptan a la página desde la que se abrió el chat.
+- Si ya existe una conversación, cambiar el origen no reemplaza el historial ni borra lo que la persona compartió.
+- Las preguntas rápidas son puntos de partida, no categorías obligatorias ni una inferencia sobre la intención del visitante.
