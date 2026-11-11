@@ -194,13 +194,22 @@ export default function ChatWidget() {
           })
         });
         const payload = await response.json().catch(() => ({})) as { answer?: string; error?: string };
-        if (!response.ok || !payload.answer) {
-          throw new Error(payload.error || "No pudimos procesar tu consulta. Inténtalo nuevamente.");
+        if (!response.ok) {
+          answer = payload.error || (response.status === 429
+            ? "Llegaste al límite temporal de consultas. Espera un momento e inténtalo nuevamente."
+            : response.status >= 500
+              ? "El asistente no está disponible en este momento. Inténtalo nuevamente en unos minutos."
+              : "No pudimos procesar tu consulta. Revisa el mensaje e inténtalo nuevamente.");
+        } else if (!payload.answer) {
+          answer = "El asistente respondió sin contenido. Inténtalo nuevamente en unos minutos.";
+        } else {
+          answer = payload.answer;
         }
-        answer = payload.answer;
     } catch (error) {
       console.error("Automata chat request failed:", error);
-      answer = "No pudimos conectar con el asistente de IA. Tu mensaje no se procesó; inténtalo nuevamente en unos minutos.";
+      answer = error instanceof DOMException && error.name === "TimeoutError"
+        ? "La respuesta tardó más de lo esperado. Tu mensaje no se procesó; inténtalo nuevamente."
+        : "No pudimos conectar con el asistente de IA. Tu mensaje no se procesó; revisa tu conexión e inténtalo nuevamente.";
     }
 
     const completedMessages: Message[] = [...conversation, { role: "bot", text: answer }];
