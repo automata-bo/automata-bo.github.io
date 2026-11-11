@@ -281,3 +281,27 @@ Cada ficha contiene:
 Estados y demos son explícitos: disponible, evaluación a medida, en desarrollo o dependiente del proyecto; demo inexistente, simulada o prototipo. El asistente debe explicar estas diferencias y no presentar simulaciones o prototipos como productos operativos.
 
 El catálogo es una fuente de verdad versionada en el repositorio. No es un CMS, no tiene edición dinámica y no confirma por sí solo disponibilidad contractual, plazos ni precios. Los cambios requieren revisión y despliegue normal del código.
+
+
+## 20. Descubrimiento y orientación comercial del asistente (11 nov 2026)
+
+La apertura del asesor se organiza alrededor de la persona, no de la página ni del producto que estaba mirando.
+
+### Secuencia conversacional
+1. **Contexto:** identificar el tipo de negocio, organización, evento o proyecto. La pregunta inicial es abierta: «¿Qué tipo de negocio o proyecto tienes?». Los ejemplos (restaurante, tienda, consultorio, emprendimiento, evento personal o idea) orientan, pero no limitan las respuestas.
+2. **Necesidad:** descubrir qué quiere mejorar, resolver o crear. Si no lo explicó ya, preguntar: «¿Qué te gustaría mejorar, resolver o crear?». Se admiten respuestas libres y se hace una pregunta por turno.
+3. **Orientación:** con contexto y necesidad suficientes, evaluar el catálogo y proponer Digital, Experiences, Studio o una combinación. La necesidad es el criterio principal; el rubro aporta contexto.
+
+### Reglas de comportamiento
+- El origen de navegación y el producto seleccionado son metadatos secundarios. No se interpretan como intención confirmada ni como recomendación.
+- Si el primer mensaje ya contiene contexto y necesidad, el asistente no repite preguntas.
+- Si la persona solo solicita información sobre un producto o demo, responde directamente sin forzar el flujo de descubrimiento.
+- Se admiten proyectos personales, eventos, ideas en etapa inicial y consultas exploratorias, además de negocios.
+- Las preguntas rápidas iniciales son ejemplos de contexto, no un formulario ni un sistema de clasificación obligatorio.
+- El catálogo tipado sigue siendo la fuente de verdad para capacidades, estado comercial, demos y limitaciones. La orientación no puede ampliar ni inventar esas capacidades.
+- El asistente puede concluir que una solución no corresponde, que conviene esperar o que se requiere una alternativa externa.
+
+### Implementación
+- ChatWidget.tsx utiliza un saludo inicial común con contexto de página/producto expresado como referencia, y preguntas rápidas de contexto.
+- worker/src/index.ts establece el orden contexto → necesidad → orientación y conserva la regla de una pregunta por turno.
+- No se añaden servicios externos, almacenamiento de perfiles ni campos personales nuevos. El contexto conversacional permanece en el historial de la sesión.
