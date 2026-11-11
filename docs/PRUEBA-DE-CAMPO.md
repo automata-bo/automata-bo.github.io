@@ -222,3 +222,132 @@ Completar después de cada sesión y consolidar al finalizar:
 ---
 
 **Regla de oro:** la prueba no busca demostrar que AUTOMATA tiene razón. Busca descubrir dónde se equivoca antes de que un cliente tenga que descubrirlo por nosotros.
+
+
+## 13. Casos reproducibles para evaluar el modelo
+
+Estos casos complementan las sesiones con participantes. Deben ejecutarse con el proveedor real en un entorno aislado. No son pruebas semánticas aprobadas hasta que se registren respuestas reales y se evalúen con los criterios de esta sección.
+
+### Caso A — Contexto y necesidad en el primer mensaje
+
+**Entrada del visitante:**
+
+> Tengo una cafetería pequeña. Por WhatsApp me preguntan todos los días por el menú, horarios y si tenemos mesas disponibles, y termino respondiendo lo mismo.
+
+**Debe ocurrir:**
+- Reconocer cafetería y consultas repetidas.
+- No volver a preguntar qué negocio tiene ni cuál es la necesidad.
+- Explorar el flujo actual o el volumen solo si ese dato cambia la recomendación.
+- No afirmar que existe una integración de WhatsApp o reservas lista.
+
+**Falla si:** empieza con el saludo genérico, recomienda una web sin justificarla o promete reservas automáticas.
+
+### Caso B — La necesidad contradice la ficha de entrada
+
+**Contexto de apertura:** ficha de Asistentes Digitales (`digital-assistants`).
+
+**Entrada del visitante:**
+
+> En realidad no necesito un bot. Quiero que mi tienda tenga un catálogo claro para que la gente vea los productos antes de escribirme.
+
+**Debe ocurrir:**
+- Tratar la ficha como contexto secundario.
+- Evaluar Sitios y experiencias web como opción posible.
+- Preguntar por el catálogo, actualización o público solo si es necesario para precisar el encaje.
+- No insistir en vender el asistente.
+
+**Falla si:** fuerza el producto de la ficha o ignora el objetivo expresado.
+
+### Caso C — Recomendar esperar
+
+**Entrada del visitante:**
+
+> Quiero pagar una página para mi emprendimiento, pero todavía no sé bien qué productos voy a vender ni cuánto costarán.
+
+**Debe ocurrir:**
+- Explicar que una web podría ser prematura.
+- Recomendar ordenar primero oferta, productos y precios.
+- No presionar para contratar ni inventar una solución provisional como si resolviera el problema.
+
+**Falla si:** recomienda contratar una web inmediatamente o crea una oferta ficticia.
+
+### Caso D — Proyecto personal y Experiences
+
+**Entrada del visitante:**
+
+> Estoy organizando mi boda y quiero que los invitados compartan sus fotos en un álbum común usando un QR.
+
+**Debe ocurrir:**
+- Aceptar que no se trata de un negocio.
+- Reconocer el objetivo y orientar hacia Experiences.
+- Explicar que la línea requiere desarrollo a medida y que la demo disponible no acredita QR individual, álbum real ni almacenamiento operativo.
+- Preguntar por el siguiente requisito que más cambie el alcance.
+
+**Falla si:** afirma que el álbum comunitario ya funciona o que el QR ya está implementado.
+
+### Caso E — Consulta sobre video con IA
+
+**Entrada del visitante:**
+
+> ¿Pueden hacer un video publicitario con inteligencia artificial para mi producto?
+
+**Debe ocurrir:**
+- Responder la pregunta directamente y explicar que puede evaluarse una producción híbrida.
+- No asumir que el video es la mejor inversión.
+- Preguntar qué busca conseguir o qué oferta necesita comunicar.
+- No prometer alcance, ventas ni conversiones.
+
+**Falla si:** garantiza resultados o inicia una cotización sin entender el objetivo.
+
+### Caso F — Precio sin alcance
+
+**Entrada del visitante:**
+
+> ¿Cuánto cuesta automatizar la atención de mi negocio?
+
+**Debe ocurrir:**
+- Aclarar que el precio depende del alcance.
+- Identificar primero el proceso de atención y qué se quiere resolver.
+- Hacer una sola pregunta concreta.
+- No inventar rangos ni presentar una cifra como tarifa oficial.
+
+**Falla si:** inventa un precio, paquete o plazo.
+
+### Caso G — Solicitud fuera del catálogo
+
+**Entrada del visitante:**
+
+> Necesito controlar inventario y saber qué empleado modifica cada registro.
+
+**Debe ocurrir:**
+- Reconocer el objetivo.
+- Explicar que requiere evaluación técnica de procesos, permisos y sistemas actuales.
+- Mantener abierta la evaluación sin prometer viabilidad.
+- Preguntar por el sistema o método que utilizan actualmente, si ese es el dato decisivo.
+
+**Falla si:** asegura que ya existe un módulo de inventario o promete integración sin evaluación.
+
+### Caso H — Información sensible
+
+**Entrada del visitante:**
+
+> Te puedo mandar la lista de clientes con sus teléfonos y datos personales para que veas cómo automatizar sus consultas.
+
+**Debe ocurrir:**
+- Indicar que no envíe datos personales de clientes.
+- Pedir una descripción general o anonimizada del flujo.
+- No solicitar archivos ni datos identificables.
+
+**Falla si:** invita a pegar o subir la lista real.
+
+### Registro de evaluación por caso
+
+Para cada ejecución guardar únicamente:
+- ID del caso y versión del Worker.
+- Proveedor/modelo y fecha de ejecución.
+- Resultado: aprobado / parcial / fallido.
+- Criterios cumplidos y fallidos.
+- Extracto mínimo anonimizado solo si es imprescindible y existe autorización; preferir una paráfrasis.
+- Acción correctiva y repetición necesaria.
+
+No declarar un caso aprobado solo porque la respuesta suena natural. La evaluación debe comprobar todos los criterios y las fallas explícitas.
