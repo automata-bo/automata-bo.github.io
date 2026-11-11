@@ -342,7 +342,7 @@ export default {
       return json({ error: "Formato de consulta no admitido." }, 415, origin);
     }
 
-    const parsed = await readBoundedJson<{ messages?: unknown; source?: unknown }>(request, 48000);
+    const parsed = await readBoundedJson<{ messages?: unknown; source?: unknown; productId?: unknown; action?: unknown }>(request, 48000);
     if (!parsed.ok) return json({ error: parsed.status === 413 ? "La consulta es demasiado extensa." : "No pudimos leer tu consulta." }, parsed.status, origin);
 
     const contents = parseMessages(parsed.value.messages);
@@ -359,7 +359,22 @@ export default {
     const source = typeof parsed.value.source === "string" && Object.prototype.hasOwnProperty.call(sourceLabels, parsed.value.source)
       ? sourceLabels[parsed.value.source]
       : "No identificado";
-    const contextualSystemInstruction = `${SYSTEM_INSTRUCTION}\\n\\nCONTEXTO DE NAVEGACIÓN\\nLa conversación se inició desde: ${source}. Este dato describe únicamente la página de origen, no una necesidad confirmada ni una declaración del visitante. Úsalo solo para orientar el contexto si resulta pertinente. No asumas que la persona busca contratar un servicio de esa división; pregunta por su objetivo real y permite que la necesidad apunte a otra capacidad o a una alternativa externa.`;
+    const productCatalog: Record<string, { name: string; division: string; status: string; summary: string; limits: string }> = {
+      "web-presence": { name: "Sitios y experiencias web", division: "Digital", status: "Capacidad disponible; alcance a medida", summary: "Sitios institucionales, páginas de presentación y captación para explicar una oferta, generar confianza y facilitar consultas.", limits: "No asumir contenido, integraciones, mantenimiento, resultados ni plazos sin definir alcance." },
+      "digital-assistants": { name: "Asistentes digitales", division: "Digital", status: "Capacidad disponible; configuración a medida", summary: "Asistentes para orientar consultas con información aprobada y transferir casos a personas.", limits: "No prometer autonomía total, exactitud perfecta ni integraciones no verificadas." },
+      "business-automation": { name: "Automatización e integraciones", division: "Digital", status: "Evaluación y desarrollo a medida", summary: "Diseño de flujos para reducir tareas repetitivas, organizar solicitudes y conectar sistemas cuando es viable.", limits: "Requiere revisar procesos, herramientas, permisos y dependencias antes de confirmar viabilidad." },
+      "event-experience": { name: "Experiencias para bodas y celebraciones", division: "Experiences", status: "Línea en desarrollo; proyectos personalizados", summary: "Conceptos de invitación interactiva, participación de invitados y recopilación comunitaria de recuerdos.", limits: "La demo actual no persiste respuestas ni ofrece QR individual, administración, álbum real o notificaciones." },
+      "audiovisual-production": { name: "Producción audiovisual", division: "Studio", status: "Capacidad disponible según proyecto", summary: "Videos promocionales, piezas de marca y producción híbrida que puede combinar grabación, edición y herramientas de IA.", limits: "No garantizar entregables, derechos, locaciones, equipo ni plazos sin brief y evaluación." },
+      "creative-campaigns": { name: "Publicidad y campañas", division: "Studio", status: "Desarrollo creativo a medida", summary: "Concepto, narrativa y piezas de comunicación adaptadas al público y canal.", limits: "No prometer resultados publicitarios ni métricas de campaña." }
+    };
+    const productId = typeof parsed.value.productId === "string" && Object.prototype.hasOwnProperty.call(productCatalog, parsed.value.productId) ? parsed.value.productId : "";
+    const selectedProduct = productId ? productCatalog[productId] : null;
+    const requestedAction = parsed.value.action === "experience" || parsed.value.action === "proposal" || parsed.value.action === "explore" ? parsed.value.action : "";
+    const actionLabel = requestedAction === "experience" ? "ver una demostración" : requestedAction === "proposal" ? "solicitar una propuesta" : requestedAction === "explore" ? "explorar la solución" : "";
+    const productContext = selectedProduct
+      ? `\n\nCONTEXTO DE PRODUCTO SELECCIONADO (CATÁLOGO CONTROLADO)\nProducto: ${selectedProduct.name}. División: ${selectedProduct.division}. Estado comercial: ${selectedProduct.status}. Descripción: ${selectedProduct.summary}. Límites confirmados: ${selectedProduct.limits}. Acción desde la que abrió el asesor: ${actionLabel || "sin acción específica"}.\nEl visitante mostró interés en este producto, pero todavía no ha confirmado su problema ni su intención de compra. Usa esta ficha como contexto para explicar y orientar; no recites la ficha automáticamente. Pregunta qué quiere comprender o resolver. Si la acción fue solicitar propuesta, ayuda a descubrir el alcance antes de preparar un brief. Si pidió demostración y no existe una demo real para ese producto, dilo y ofrece una explicación guiada; nunca inventes un enlace.`
+      : "";
+    const contextualSystemInstruction = `${SYSTEM_INSTRUCTION}\n\nCONTEXTO DE NAVEGACIÓN\nLa conversación se inició desde: ${source}. Este dato describe únicamente la página de origen, no una necesidad confirmada ni una declaración del visitante. Úsalo solo para orientar el contexto si resulta pertinente. No asumas que la persona busca contratar un servicio de esa división; pregunta por su objetivo real y permite que la necesidad apunte a otra capacidad o a una alternativa externa.${productContext}`;
 
     const openAiMessages = [
       { role: "system", content: contextualSystemInstruction },
