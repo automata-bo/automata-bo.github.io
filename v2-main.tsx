@@ -161,7 +161,60 @@ function ProjectsPage() {
 }
 function ContactPage() {
   const openAssistant = () => openChatWithSource("contact");
-  return <><Hero page="contact"/><section className="mx-auto max-w-[900px] px-5 py-20 text-center sm:px-8"><span className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#FFF1E8] text-[#FF5A00]"><Bot size={30}/></span><h2 className="display mt-7 text-4xl sm:text-5xl">Cuéntanos qué tienes en mente.</h2><p className="mx-auto mt-5 max-w-xl text-sm leading-relaxed text-[#5A6068]">Autómata puede ayudarte a ordenar la consulta y preparar el contexto. Si hace falta, podrás continuar con el equipo humano.</p><button onClick={openAssistant} className="mt-8 inline-flex min-h-14 items-center gap-3 rounded-full bg-[#FF5A00] px-7 text-sm font-bold text-white">Iniciar conversación <ArrowRight size={18}/></button></section></>;
+  const [name, setName] = useState("");
+  const [organization, setOrganization] = useState("");
+  const [area, setArea] = useState("No estoy seguro");
+  const [objective, setObjective] = useState("");
+
+  const prepareWhatsAppBrief = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const lines = [
+      "Hola, AUTOMATA. Quiero conversar sobre un proyecto.",
+      name.trim() ? "Nombre: " + name.trim() : "",
+      organization.trim() ? "Negocio / organización: " + organization.trim() : "",
+      "Área de interés: " + area,
+      "¿Qué necesito resolver?: " + objective.trim(),
+      "",
+      "Quisiera conocer los siguientes pasos."
+    ].filter(Boolean);
+    trackEvent("whatsapp_click");
+    window.open("https://wa.me/59176192899?text=" + encodeURIComponent(lines.join("\\n")), "_blank", "noopener,noreferrer");
+  };
+
+  return <>
+    <Hero page="contact"/>
+    <section className="mx-auto max-w-[900px] px-5 py-16 sm:px-8 lg:py-20">
+      <div className="mx-auto max-w-2xl text-center">
+        <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#FFF1E8] text-[#FF5A00]"><Bot size={30}/></span>
+        <h2 className="display mt-7 text-4xl sm:text-5xl">Cuéntanos qué tienes en mente.</h2>
+        <p className="mx-auto mt-5 max-w-xl text-sm leading-relaxed text-[#5A6068]">Puedes preparar una consulta para WhatsApp o conversar primero con nuestro asistente. No enviamos este formulario a un servidor ni guardamos sus respuestas: tú revisas el mensaje y decides si lo envías desde WhatsApp.</p>
+      </div>
+      <form onSubmit={prepareWhatsAppBrief} className="mx-auto mt-10 max-w-2xl rounded-[28px] border border-[#E8E6E1] bg-white p-6 shadow-sm sm:p-9">
+        <div className="grid gap-5 sm:grid-cols-2">
+          <label className="block text-sm font-semibold text-[#272B31]">Tu nombre <span className="font-normal text-[#8A8F96]">(opcional)</span>
+            <input value={name} onChange={event => setName(event.target.value)} maxLength={80} autoComplete="name" className="mt-2 min-h-12 w-full rounded-xl border border-[#DAD8D2] px-4 font-normal outline-none transition focus:border-[#FF5A00] focus:ring-2 focus:ring-[#FF5A00]/15" placeholder="¿Cómo te llamas?"/>
+          </label>
+          <label className="block text-sm font-semibold text-[#272B31]">Negocio u organización <span className="font-normal text-[#8A8F96]">(opcional)</span>
+            <input value={organization} onChange={event => setOrganization(event.target.value)} maxLength={100} autoComplete="organization" className="mt-2 min-h-12 w-full rounded-xl border border-[#DAD8D2] px-4 font-normal outline-none transition focus:border-[#FF5A00] focus:ring-2 focus:ring-[#FF5A00]/15" placeholder="Nombre o actividad"/>
+          </label>
+        </div>
+        <label className="mt-5 block text-sm font-semibold text-[#272B31]">¿Qué área te interesa?
+          <select value={area} onChange={event => setArea(event.target.value)} className="mt-2 min-h-12 w-full rounded-xl border border-[#DAD8D2] bg-white px-4 font-normal outline-none transition focus:border-[#FF5A00] focus:ring-2 focus:ring-[#FF5A00]/15">
+            <option>Digital</option><option>Experiences</option><option>Studio</option><option>Una combinación de áreas</option><option>No estoy seguro</option>
+          </select>
+        </label>
+        <label className="mt-5 block text-sm font-semibold text-[#272B31]">¿Qué necesitas resolver?
+          <textarea required value={objective} onChange={event => setObjective(event.target.value)} minLength={12} maxLength={1200} rows={5} className="mt-2 w-full resize-y rounded-xl border border-[#DAD8D2] px-4 py-3 font-normal outline-none transition focus:border-[#FF5A00] focus:ring-2 focus:ring-[#FF5A00]/15" placeholder="Cuéntanos brevemente qué quieres conseguir, qué problema tienes o qué idea quieres explorar."/>
+          <span className="mt-1 block text-right text-xs font-normal text-[#8A8F96]">{objective.length}/1200</span>
+        </label>
+        <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+          <button type="submit" className="inline-flex min-h-14 flex-1 items-center justify-center gap-3 rounded-full bg-[#FF5A00] px-6 text-sm font-bold text-white transition hover:bg-[#E14E00]">Preparar mensaje en WhatsApp <ArrowUpRight size={18}/></button>
+          <button type="button" onClick={openAssistant} className="inline-flex min-h-14 items-center justify-center gap-3 rounded-full border border-[#DAD8D2] px-6 text-sm font-bold text-[#272B31] transition hover:border-[#FF5A00] hover:text-[#FF5A00]">Hablar con el asistente <Bot size={18}/></button>
+        </div>
+        <p className="mt-4 text-center text-xs leading-relaxed text-[#8A8F96]">El botón abre WhatsApp con un borrador. El mensaje solo se comparte si tú lo envías.</p>
+      </form>
+    </section>
+  </>;
 }
 export default function V2App() {
   const page = currentPage();
