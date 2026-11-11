@@ -1,4 +1,4 @@
-import { getProduct } from "./product-catalog";
+import { getProduct, PRODUCT_CATALOG } from "./product-catalog";
 interface Env {
   OLLAMA_API_KEY?: string;
   OLLAMA_MODEL?: string;
@@ -44,16 +44,8 @@ REGLAS DE DESCUBRIMIENTO
 - La necesidad es el criterio principal de orientación; el rubro aporta contexto. Una misma actividad puede requerir soluciones de distintas divisiones o una combinación.
 - No reveles etiquetas internas, estados de conversación ni puntuaciones de clasificación.
 
-CATÁLOGO CONFIRMADO
-- Publicidad audiovisual con apoyo de IA: conceptos, anuncios, videos promocionales, piezas de producto y campañas.
-- Producción híbrida: combinación de grabación real, edición tradicional y recursos generados con IA.
-- Contenido para redes sociales y apoyo creativo para campañas.
-- Sitios web institucionales y páginas de presentación/captación.
-- Asistentes digitales para responder consultas con información aprobada y derivar casos a personas.
-- Flujos de atención, recepción y organización de consultas y solicitudes por WhatsApp.
-- Diseño de flujos para pedidos y reservas. No confirmes disponibilidad real si no existe una integración conectada.
-- Automatización de tareas y procesos, reportes, registros e integraciones, previa evaluación.
-
+FUENTE DE VERDAD DEL CATÁLOGO
+Las capacidades, estados comerciales, demostraciones, requisitos y límites se incorporan desde el catálogo tipado compartido. No inventes servicios adicionales ni contradigas sus fichas.
 REGLAS COMERCIALES
 - No inventes precios, plazos, clientes, resultados, casos de éxito, integraciones, funcionalidades ni disponibilidad.
 - No prometas ventas, crecimiento, ahorro cuantificado ni resultados garantizados.
@@ -378,12 +370,15 @@ export default {
       : "No identificado";
     const productId = getProduct(parsed.value.productId)?.id;
     const selectedProduct = productId ? getProduct(productId) : undefined;
+    const productCatalogContext = Object.values(PRODUCT_CATALOG).map((product) =>
+      `- ${product.name} | División: ${product.division} | Estado: ${product.statusLabel}. ${product.summary} Necesidades: ${product.suitableNeeds.join("; ")}. Capacidades: ${product.capabilities.join("; ")}. Demo: ${product.demo.status}; ${product.demo.scope} Límites: ${product.limitations.join("; ")}. Requisitos: ${product.prerequisites.join("; ")}. Precio: depende del alcance; sin precio público.`
+    ).join("\\n");
     const requestedAction = parsed.value.action === "experience" || parsed.value.action === "proposal" || parsed.value.action === "explore" ? parsed.value.action : "";
     const actionLabel = requestedAction === "experience" ? "ver una demostración" : requestedAction === "proposal" ? "solicitar una propuesta" : requestedAction === "explore" ? "explorar la solución" : "";
     const productContext = selectedProduct
       ? `\n\nCONTEXTO DE PRODUCTO SELECCIONADO (CATÁLOGO CONTROLADO)\nProducto: ${selectedProduct.name}. División: ${selectedProduct.division}. Estado comercial: ${selectedProduct.statusLabel}. Descripción: ${selectedProduct.summary}. Necesidades para las que puede encajar: ${selectedProduct.suitableNeeds.join("; ")}. Capacidades descritas: ${selectedProduct.capabilities.join("; ")}. Público orientativo: ${selectedProduct.audience.join("; ")}. Demo: ${selectedProduct.demo.status}; ${selectedProduct.demo.scope}${selectedProduct.demo.route ? ` Ruta: ${selectedProduct.demo.route}.` : ""} Requisitos previos: ${selectedProduct.prerequisites.join("; ")}. Límites confirmados: ${selectedProduct.limitations.join("; ")}. Precio: no hay precio público confirmado; depende del alcance. Acción desde la que abrió el asesor: ${actionLabel || "sin acción específica"}.\nEl visitante mostró interés en este producto, pero todavía no ha confirmado su problema ni su intención de compra. Usa esta ficha como contexto secundario: primero comprende qué tipo de negocio o proyecto tiene y qué necesita resolver, salvo que ya lo haya explicado o solo esté preguntando por la ficha/demostración. No recites la ficha automáticamente ni supongas que este producto es la recomendación correcta. Si la acción fue solicitar propuesta, ayuda a descubrir el alcance antes de preparar un brief. Si pidió demostración y el estado de demo es "none", dilo y ofrece una explicación guiada; nunca inventes un enlace. Si la demo es simulada o prototipo, explica claramente su alcance y límites antes de presentarla como ejemplo.`
       : "";
-    const contextualSystemInstruction = `${SYSTEM_INSTRUCTION}\n\nCONTEXTO DE NAVEGACIÓN\nLa conversación se inició desde: ${source}. Este dato describe únicamente la página de origen, no una necesidad confirmada ni una declaración del visitante. Úsalo solo para orientar el contexto si resulta pertinente. No asumas que la persona busca contratar un servicio de esa división; pregunta por su objetivo real y permite que la necesidad apunte a otra capacidad o a una alternativa externa.${productContext}`;
+    const contextualSystemInstruction = `${SYSTEM_INSTRUCTION}\n\nCATÁLOGO VIGENTE (FUENTE ÚNICA: PRODUCT_CATALOG)\n${productCatalogContext}\n\nCONTEXTO DE NAVEGACIÓN\nLa conversación se inició desde: ${source}. Este dato describe únicamente la página de origen, no una necesidad confirmada ni una declaración del visitante. Úsalo solo para orientar el contexto si resulta pertinente. No asumas que la persona busca contratar un servicio de esa división; pregunta por su objetivo real y permite que la necesidad apunte a otra capacidad o a una alternativa externa.${productContext}`;
 
     const openAiMessages = [
       { role: "system", content: contextualSystemInstruction },
