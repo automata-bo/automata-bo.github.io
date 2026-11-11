@@ -123,6 +123,9 @@ export default function ChatWidget() {
   const [isThinking, setIsThinking] = useState(false);
   const sessionId = useRef(LOCAL_SESSION_ID());
   const bottomRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLElement>(null);
+  const launcherRef = useRef<HTMLButtonElement>(null);
+  const composeInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const show = () => { trackEvent("chat_open"); setOpen(true); };
@@ -220,6 +223,23 @@ export default function ChatWidget() {
     setOpen(false);
   };
 
+  useEffect(() => {
+    if (!open) {
+      launcherRef.current?.focus();
+      return;
+    }
+
+    composeInputRef.current?.focus();
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        closeChat();
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [open]);
+
   const continueOnWhatsApp = () => {
     if (!shareConsent || !handoffText.trim()) return;
     const contactLines = [contactName.trim() ? "Contacto: " + contactName.trim() : "", companyName.trim() ? "Empresa: " + companyName.trim() : ""].filter(Boolean);
@@ -231,13 +251,13 @@ export default function ChatWidget() {
 
   return (
     <div className="automata-chat-root">
-      {open && <section className="automata-chat-panel" role="dialog" aria-modal="false" aria-label="Asistente virtual de Automata">
+      {open && <section ref={panelRef} id="automata-chat-panel" className="automata-chat-panel" role="dialog" aria-modal="false" aria-label="Asistente virtual de Automata">
         <header className="automata-chat-header">
           <span className="automata-chat-avatar"><Bot size={22} /></span>
           <div><strong>Autómata</strong><small>Asistente virtual de Automata</small></div>
           <button type="button" onClick={closeChat} aria-label="Cerrar chat" className="automata-chat-close"><X size={20} /></button>
         </header>
-        <div className="automata-chat-messages" aria-live="polite">
+        <div className="automata-chat-messages" role="log" aria-live="polite" aria-relevant="additions" aria-atomic="false">
           {messages.map((message, index) => <div key={index} className={`automata-chat-message ${message.role}`}>{message.text}</div>)}
           {messages.length === 1 && <div className="automata-chat-quick">{quick.map((question) => <button key={question} type="button" disabled={isThinking} onClick={() => send(question)}>{question}</button>)}</div>}
           {canOfferHandoff && !showHandoff && <button type="button" className="automata-handoff-button" onClick={() => setShowHandoff(true)}>Preparar brief de cierre</button>}
@@ -256,12 +276,12 @@ export default function ChatWidget() {
           <div ref={bottomRef} />
         </div>
         <form className="automata-chat-compose" onSubmit={submit}>
-          <input value={input} onChange={(event) => setInput(event.target.value)} placeholder="Escribe tu consulta..." aria-label="Escribe tu consulta" maxLength={1800} disabled={isThinking} />
+          <input ref={composeInputRef} value={input} onChange={(event) => setInput(event.target.value)} placeholder="Escribe tu consulta..." aria-label="Escribe tu consulta" maxLength={1800} disabled={isThinking} />
           <button type="submit" disabled={!input.trim() || isThinking} aria-label="Enviar mensaje"><Send size={18} /></button>
         </form>
         <p className="automata-chat-note"><Sparkles size={12} /> Asistente con IA de Automata · proveedores alternativos. No incluyas datos sensibles. Escribir una autorización en el chat no envía mensajes; el envío se inicia al pulsar Continuar por WhatsApp.</p>
       </section>}
-      <button type="button" className="automata-chat-launcher" onClick={() => { if (!open) { trackEvent("chat_open"); setOpen(true); } else { closeChat(); } }} aria-label={open ? "Cerrar asistente" : "Abrir asistente"}>
+      <button ref={launcherRef} type="button" className="automata-chat-launcher" onClick={() => { if (!open) { trackEvent("chat_open"); setOpen(true); } else { closeChat(); } }} aria-label={open ? "Cerrar asistente" : "Abrir asistente"} aria-expanded={open} aria-controls="automata-chat-panel" aria-haspopup="dialog">
         {open ? <X size={24} /> : <MessageCircle size={24} />}
         {!open && <span>¿Hablamos?</span>}
       </button>
