@@ -8,7 +8,7 @@ const [worker, catalog, widget] = await Promise.all([
 ]);
 
 const start = worker.indexOf("const SYSTEM_INSTRUCTION");
-const end = worker.indexOf("\n\`.trim();", start);
+const end = worker.indexOf("\n`.trim();", start);
 assert.ok(start >= 0 && end > start, "System instruction must exist");
 const prompt = worker.slice(start, end);
 
