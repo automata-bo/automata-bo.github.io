@@ -7,7 +7,8 @@
     "deploy": "wrangler deploy --config wrangler.jsonc",
     "typecheck": "tsc --noEmit",
     "test:contract": "node scripts/check-assistant-contract.mjs",
-    "test:runtime": "node --import tsx --test scripts/test-assistant-runtime.mjs"
+    "test:runtime": "node --import tsx --test scripts/test-assistant-runtime.mjs",
+    "test:live": "node --import tsx scripts/test-assistant-live.mjs"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^5.20261109.1",
