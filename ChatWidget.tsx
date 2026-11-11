@@ -18,27 +18,28 @@ function currentChatSource(): ChatSource {
   return "home";
 }
 const WHATSAPP_NUMBER = "59176192899";
-function greetingForSource(source: ChatSource) {
-  const greetings: Record<ChatSource, string> = {
-    home: "¡Hola! Soy el asistente virtual de AUTOMATA. Puedo contarte qué hacemos y ayudarte a ordenar una idea o proyecto. ¿Qué tienes en mente?",
-    digital: "¡Hola! Estás explorando AUTOMATA Digital. Puedo ayudarte a entender nuestras capacidades en sitios, sistemas, asistentes e integraciones. ¿Qué necesitas resolver?",
-    experiences: "¡Hola! Estás explorando AUTOMATA Experiences. Podemos conversar sobre invitaciones, experiencias para eventos y recuerdos digitales. ¿Qué idea tienes en mente?",
-    studio: "¡Hola! Estás explorando AUTOMATA Studio. Puedo orientarte sobre fotografía, video, campañas y producción creativa. ¿Qué quieres comunicar?",
-    projects: "¡Hola! Estás revisando los proyectos y exploraciones de AUTOMATA. Puedo explicarte qué hay detrás de una demostración o ayudarte a plantear una idea.",
-    contact: "¡Hola! Estás en contacto con AUTOMATA. Cuéntame qué quieres conseguir y te ayudaré a ordenar la consulta para el equipo."
+function greetingForSource(source: ChatSource, productName?: string) {
+  const origins: Record<ChatSource, string> = {
+    home: "",
+    digital: "Estabas explorando AUTOMATA Digital. ",
+    experiences: "Estabas explorando AUTOMATA Experiences. ",
+    studio: "Estabas explorando AUTOMATA Studio. ",
+    projects: "Llegaste desde nuestros proyectos y demostraciones. ",
+    contact: "Llegaste desde la sección de contacto. "
   };
-  return greetings[source];
+  const productContext = productName
+    ? `Veo que estabas explorando ${productName}; lo tendré como referencia, sin asumir que sea lo que necesitas. `
+    : origins[source];
+  return `¡Hola! Soy el asistente de AUTOMATA. ${productContext}Primero quiero entender tu contexto para orientarte bien: ¿qué tipo de negocio o proyecto tienes?`;
 }
-function quickQuestionsForSource(source: ChatSource) {
-  const questions: Record<ChatSource, string[]> = {
-    home: ["¿Qué hace AUTOMATA?", "Necesito una web para mi negocio", "Quiero crear una experiencia para un evento", "Busco contenido para mi marca"],
-    digital: ["Necesito una web para mi negocio", "Quiero automatizar una tarea", "Necesito un sistema o integración", "No sé qué solución me conviene"],
-    experiences: ["Quiero una invitación digital", "Busco una experiencia para mi boda", "Quiero un álbum colaborativo con QR", "Tengo otro tipo de evento"],
-    studio: ["Necesito fotografía para mi marca", "Quiero producir un video", "Busco una campaña creativa", "Quiero explorar producción con IA"],
-    projects: ["¿Qué puedo explorar aquí?", "Quiero conocer cómo trabajan", "Tengo una idea para desarrollar", "¿Puedo solicitar una demostración?"],
-    contact: ["Quiero explicar mi proyecto", "Necesito orientación para empezar", "Quiero hablar con el equipo", "Tengo una consulta comercial"]
-  };
-  return questions[source];
+function quickQuestionsForSource(_source: ChatSource) {
+  return [
+    "Tengo un restaurante o cafetería",
+    "Tengo una tienda o negocio de servicios",
+    "Estoy organizando un evento o celebración",
+    "Tengo una marca, proyecto o idea",
+    "Otro contexto"
+  ];
 }
 const LOCAL_SESSION_ID = () => typeof crypto !== "undefined" && "randomUUID" in crypto ? crypto.randomUUID() : `session-${Date.now()}-${Math.random().toString(36).slice(2)}`;
 function normalize(value: string) {
@@ -179,7 +180,7 @@ export default function ChatWidget() {
       setChatSource(source);
       setAssistantContext(nextContext);
       setMessages((previous) => previous.length === 1 && previous[0].role === "bot"
-        ? [{ role: "bot", text: selectedProduct ? `¡Hola! Veo que estás explorando ${selectedProduct.name}. Puedo explicarte cómo funciona, cuándo tiene sentido y qué alternativas existen. ¿Qué te gustaría descubrir primero?` : greetingForSource(source) }]
+        ? [{ role: "bot", text: selectedProduct ? greetingForSource(source, selectedProduct.name) : greetingForSource(source) }]
         : previous);
       trackEvent("chat_open");
       setOpen(true);
