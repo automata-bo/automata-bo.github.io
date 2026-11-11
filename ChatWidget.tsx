@@ -18,7 +18,8 @@ function requestsHumanHandoff(value: string) {
   const directRequest = /\b(quiero|quisiera|necesito|puedo|podria|prefiero)\b.{0,45}\b(hablar|contactar|comunicarme|comunicar|pasar|derivar|conectar|llamar|llamada)\b/.test(text);
   const wantsPersonDirectly = /\b(quiero|quisiera|necesito)\s+(un|una)\s+(humano|humana|humnao|persona|asesor|asesora|agente)\b/.test(text);
   const explicitWhatsAppHandoff = /\b(continuar|pasar|ir|seguir)\b.{0,25}\bwhatsapp\b/.test(text);
-  return (person && contactIntent) || (directRequest && (person || /\b(whatsapp|equipo)\b/.test(text))) || wantsPersonDirectly || explicitWhatsAppHandoff;
+  const callbackRequest = /\b(quiero|quisiera|necesito|me gustaria|podrian|pueden|prefiero)\b.{0,55}\b(que me llamen|llamarme|recibir una llamada|una llamada|me contacten|contactarme|se comuniquen conmigo)\b/.test(text);
+  return (person && contactIntent) || (directRequest && (person || /\b(whatsapp|equipo)\b/.test(text))) || wantsPersonDirectly || explicitWhatsAppHandoff || callbackRequest;
 }
 
 function buildHandoffSummary(messages: Message[]) {
