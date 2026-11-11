@@ -137,7 +137,7 @@ function ContactPage() {
 }
 export default function V2App() {
   const page = currentPage();
-  useEffect(() => { trackEvent("page_view"); }, []);
+  useEffect(() => { if (window.location.pathname.replace(/\\/+$/, "") !== "/demos") trackEvent("page_view"); }, []);
   if (window.location.pathname.replace(/\/+$/, "") === "/demos") return <LegacyDigital/>;
   return <div className="min-h-screen overflow-x-clip bg-white text-[#0E1116]"><Header page={page}/><main>{page === "home" ? <HomePage/> : page === "digital" ? <DigitalPage/> : page === "experiences" ? <ExperiencesPage/> : page === "studio" ? <StudioPage/> : page === "projects" ? <ProjectsPage/> : <ContactPage/>}</main><Footer/><ChatWidget/><CookieConsent/></div>;
 }
