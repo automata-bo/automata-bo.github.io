@@ -4,6 +4,17 @@ import { Bot, MessageCircle, Send, Sparkles, X, ArrowUpRight } from "lucide-reac
 import { AUTOMATA_API_URL } from "./api";
 
 type Message = { role: "bot" | "user"; text: string };
+type ChatSource = "home" | "digital" | "experiences" | "studio" | "projects" | "contact";
+const CHAT_SOURCES: ChatSource[] = ["home", "digital", "experiences", "studio", "projects", "contact"];
+function currentChatSource(): ChatSource {
+  const path = window.location.pathname.replace(/\\/+$/, "") || "/";
+  if (path === "/digital") return "digital";
+  if (path === "/experiences") return "experiences";
+  if (path === "/studio") return "studio";
+  if (path === "/proyectos") return "projects";
+  if (path === "/contacto") return "contact";
+  return "home";
+}
 const WHATSAPP_NUMBER = "59176192899";
 const quick = ["¿Qué hace AUTOMATA?", "Necesito una web para mi negocio", "Quiero crear una experiencia para un evento", "Busco contenido para mi marca"];
 const LOCAL_SESSION_ID = () => typeof crypto !== "undefined" && "randomUUID" in crypto ? crypto.randomUUID() : `session-${Date.now()}-${Math.random().toString(36).slice(2)}`;
@@ -112,6 +123,7 @@ function buildHandoffSummary(messages: Message[]) {
 }
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
+  const [chatSource, setChatSource] = useState<ChatSource>(currentChatSource);
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([{ role: "bot", text: "¡Hola! Soy el asistente virtual de AUTOMATA. Puedo contarte qué hacemos y ayudarte a ordenar una idea o proyecto. ¿Qué tienes en mente?" }]);
   const [handoffText, setHandoffText] = useState("");
@@ -129,7 +141,15 @@ export default function ChatWidget() {
   const closeChatRef = useRef<() => void>(() => {});
 
   useEffect(() => {
-    const show = () => { trackEvent("chat_open"); setOpen(true); };
+    const show = (event: Event) => {
+      const requestedSource = (event as CustomEvent<{ source?: unknown }>).detail?.source;
+      const source = typeof requestedSource === "string" && CHAT_SOURCES.includes(requestedSource as ChatSource)
+        ? requestedSource as ChatSource
+        : currentChatSource();
+      setChatSource(source);
+      trackEvent("chat_open");
+      setOpen(true);
+    };
     window.addEventListener("automata:open-chat", show);
     return () => window.removeEventListener("automata:open-chat", show);
   }, []);
@@ -190,6 +210,7 @@ export default function ChatWidget() {
           },
           signal: AbortSignal.timeout(60000),
           body: JSON.stringify({
+            source: chatSource,
             messages: (() => {
               const recent = conversation.slice(1).slice(-20);
               if (recent[0]?.role === "bot") recent.shift();
