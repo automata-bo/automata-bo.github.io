@@ -97,6 +97,9 @@ label{font-size:13px;font-weight:700;letter-spacing:.02em}
 .automata-handoff-button{width:100%;padding:0 14px}
 
 
+.automata-chat-root :is(button,input,textarea):focus-visible{outline:3px solid #FF5A00;outline-offset:3px}
+.automata-chat-root input[type="checkbox"]:focus-visible{outline-offset:4px}
+
 /* AUTOMATA 2.0 · accesibilidad de movimiento */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
