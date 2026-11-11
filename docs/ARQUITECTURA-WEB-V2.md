@@ -248,3 +248,18 @@ La página `/proyectos/` pasa a funcionar como showroom de tres demostraciones: 
 ## 17. Acceso al Experience Lab desde Inicio (11 nov 2026)
 
 La portada incorpora una sección de demostraciones interactivas con enlaces directos a las tres experiencias del showroom: flujos Digital, invitación Experiences y Creative Lab de Studio. El objetivo es que la web demuestre capacidades desde el primer recorrido, sin exigir que el visitante conozca previamente la sección Proyectos. Cada experiencia mantiene sus etiquetas y límites; no se presentan simulaciones como operaciones reales ni prototipos como servicios productivos.
+
+## 18. Asesor comercial contextual y catálogo de productos (11 nov 2026)
+
+La V2 incorpora el primer tramo de la experiencia **A website that talks back**: el asistente único puede recibir el contexto de un producto seleccionado, además del origen de navegación que ya recibía.
+
+- Los puntos de entrada de Digital, Experiences y Studio pueden abrir el mismo asistente con `productId` y una acción (`explore`, `experience` o `proposal`).
+- El frontend solo transmite identificadores permitidos; no envía descripciones libres para convertirlas en instrucciones del sistema.
+- El Worker mantiene una lista controlada de productos con división, estado comercial, descripción y límites confirmados. Valida el identificador recibido y construye el contexto desde esa lista.
+- El saludo contextual indica qué producto estaba explorando la persona, sin asumir que ya tiene intención de compra ni obligarla a explicar qué estaba mirando.
+- El asistente debe explicar y orientar, descubrir la necesidad real y reconocer las limitaciones. Una solicitud de demostración no autoriza a inventar una demo o un enlace; una solicitud de propuesta requiere descubrir el alcance.
+- Se añadieron acciones **Explore this solution** en las fichas de Digital, Experiences y Studio. En Experiences se conserva por separado **View experience** para abrir la demostración existente.
+- El catálogo inicial cubre sitios y experiencias web, asistentes digitales, automatización e integraciones, experiencias para bodas y celebraciones, producción audiovisual y publicidad/campañas.
+- Este es un catálogo inicial controlado en el Worker, no todavía un CMS ni un panel de administración. La siguiente etapa será normalizar las fichas y definir cómo se mantienen sin duplicar datos entre interfaz y backend.
+
+La conversación existente no se borra al abrir un nuevo punto de entrada. El contexto del producto se actualiza para las siguientes consultas; el historial continúa siendo el de la misma sesión.
