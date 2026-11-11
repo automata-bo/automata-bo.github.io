@@ -130,7 +130,18 @@ Dirección visual:
 - Preferir imágenes propias o con licencia adecuada para portafolio comercial.
 - Evitar imágenes genéricas de robots, circuitos y cerebros de IA como recurso dominante.
 
-## 10. Revisión editorial antes de publicar
+## 10. Rutas de entrada por objetivo del visitante
+
+La home incorpora cuatro rutas de descubrimiento para que el visitante no tenga que conocer previamente las divisiones de AUTOMATA:
+
+- **Presentar tu negocio:** sitio web y presencia digital clara. Deriva a Digital.
+- **Ordenar la atención:** asistentes, formularios e integraciones para organizar consultas y tareas repetitivas. Deriva a Digital.
+- **Crear una experiencia:** invitaciones, dinámicas participativas y recuerdos digitales para eventos. Deriva a Experiences.
+- **Comunicar una idea:** fotografía, video y piezas creativas para marcas y proyectos. Deriva a Studio.
+
+Estas rutas describen capacidades que se diseñan según el contexto del cliente. No implican paquetes cerrados, disponibilidad inmediata ni resultados garantizados. La conversación inicial sirve para definir alcance y viabilidad.
+
+## 11. Revisión editorial antes de publicar
 
 - ¿Se entiende qué ofrece AUTOMATA sin leer toda la página?
 - ¿Se distinguen Digital, Experiences y Studio?
