@@ -372,7 +372,7 @@ export default {
     const selectedProduct = productId ? getProduct(productId) : undefined;
     const productCatalogContext = Object.values(PRODUCT_CATALOG).map((product) =>
       `- ${product.name} | División: ${product.division} | Estado: ${product.statusLabel}. ${product.summary} Necesidades: ${product.suitableNeeds.join("; ")}. Capacidades: ${product.capabilities.join("; ")}. Demo: ${product.demo.status}; ${product.demo.scope} Límites: ${product.limitations.join("; ")}. Requisitos: ${product.prerequisites.join("; ")}. Precio: depende del alcance; sin precio público.`
-    ).join("\\n");
+    ).join("\n");
     const requestedAction = parsed.value.action === "experience" || parsed.value.action === "proposal" || parsed.value.action === "explore" ? parsed.value.action : "";
     const actionLabel = requestedAction === "experience" ? "ver una demostración" : requestedAction === "proposal" ? "solicitar una propuesta" : requestedAction === "explore" ? "explorar la solución" : "";
     const productContext = selectedProduct
