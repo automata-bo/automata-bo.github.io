@@ -217,3 +217,11 @@ No presentar demos de restaurante, consultorio o peluquería como integraciones 
 - El contexto se describe expresamente como metadato de navegación, no como una necesidad ni una declaración del visitante.
 - El asistente debe confirmar el objetivo real de la persona y no asumir que busca contratar la división desde la que abrió el chat.
 - Las solicitudes antiguas sin el campo `source` siguen siendo válidas y se procesan con origen no identificado.
+
+## 14. Brief de proyecto en Contacto
+
+- La página Contacto incluye un formulario breve para preparar una primera consulta: nombre y organización opcionales, área de interés y objetivo requerido.
+- El formulario funciona en el navegador. No realiza una petición al Worker ni guarda las respuestas en AUTOMATA.
+- Al enviarlo, abre WhatsApp con un borrador dirigido al número comercial configurado; la persona revisa el texto y decide si lo envía.
+- La página también conserva el acceso al asistente conversacional para quien prefiera ordenar la consulta antes de contactar al equipo.
+- El texto de interfaz debe mantener esta distinción: preparar un mensaje no equivale a enviarlo ni confirma disponibilidad, cotización o contratación.
