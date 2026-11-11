@@ -102,3 +102,41 @@ Commits de la corrección:
 ## 7. Punto exacto para reanudar
 
 La última acción local conocida fue ejecutar `npm install` y `npm run typecheck` dentro de `worker/` después de hacer pull hasta `111bceb`. Ambos terminaron correctamente; quedó pendiente revisar las seis vulnerabilidades npm. En GitHub, los dos workflows principales para ese commit aparecen en SUCCESS. La siguiente tarea técnica recomendada es inspeccionar el detalle de `npm audit` y, en paralelo, preparar la primera ejecución controlada del banco live.
+
+
+## 8. Actualización de ejecución (11 nov 2026, tarde)
+
+**HEAD de la rama al cierre de esta actualización:** `59eca8b673685dd71784251916f458067642c438`.
+
+### Banco live: atribución del proveedor
+
+- `worker/scripts/test-assistant-live.mjs` ahora exige exactamente una clave de proveedor por ejecución.
+- Si detecta cero claves, explica cómo configurar una. Si detecta más de una, se detiene antes de realizar llamadas.
+- También compara el proveedor devuelto por el Worker con el proveedor seleccionado y marca como error cualquier discrepancia.
+- Esto evita confundir un failover con una prueba atribuible a un proveedor concreto.
+- Todavía no se ejecutaron los ocho escenarios contra un modelo real: falta una clave disponible en un entorno de prueba aislado.
+
+### Auditoría npm informativa en CI
+
+- `.github/workflows/worker-check.yml` ahora ejecuta `npm audit --json` después de instalar dependencias e imprime severidad, ruta, efectos y disponibilidad de corrección por paquete.
+- La auditoría es informativa y no modifica dependencias ni bloquea el resto de las validaciones.
+- Resultado de CI en el commit `4a95fc7ab1c937e3d04ea5675e90cddeaca1601a`: **0 vulnerabilidades** en el árbol resuelto por la instalación limpia de GitHub Actions.
+- **Discrepancia pendiente:** la instalación local del usuario reportó 6 vulnerabilidades. El repositorio no contiene `worker/package-lock.json`; CI y la instalación local pueden resolver árboles distintos porque `npm install` usa rangos semver sin lockfile.
+- Por tanto, el resultado de CI no invalida el reporte local ni demuestra que el entorno local esté limpio. La corrección definitiva requiere generar y versionar un lockfile reproducible, revisar el cambio de versiones y validar con `npm ci` + `npm audit`. No ejecutar `npm audit fix` ni `--force` a ciegas.
+
+### Validación CI más reciente
+
+- Commit `59eca8b673685dd71784251916f458067642c438`:
+  - [Check Automata chat Worker #43090946836](https://github.com/automata-bo/automata-bo.github.io/actions/runs/43090946836): SUCCESS.
+  - [Validate Automata site #43090947176](https://github.com/automata-bo/automata-bo.github.io/actions/runs/43090947176): SUCCESS.
+- En el workflow del Worker pasaron typecheck, contrato, runtime simulado, sintaxis del banco live y Wrangler dry-run.
+- Wrangler dry-run generó un paquete de 47.80 KiB (14.64 KiB gzip) y reconoció los bindings existentes `automata-audience`, `SESSION_LIMITER` e `IP_LIMITER`. No desplegó el Worker.
+- PR #9 sigue abierto como borrador. `main` permanece intacta. Sin merge ni despliegue.
+
+### Siguiente trabajo real
+
+1. Resolver la discrepancia de dependencias y crear un `package-lock.json` versionado.
+2. Ejecutar el banco live con un único proveedor real en entorno aislado.
+3. Evaluar semánticamente las ocho respuestas, especialmente honestidad de demos, precios y capacidades.
+4. Completar QA visual y funcional en navegador móvil y escritorio.
+5. Preparar sesiones de campo consentidas solo después de superar las validaciones anteriores.
