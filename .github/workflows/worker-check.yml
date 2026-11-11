@@ -25,4 +25,5 @@ jobs:
       - run: npm run typecheck
       - run: npm run test:contract
       - run: npm run test:runtime
+      - run: node --check scripts/test-assistant-live.mjs
       - run: npx wrangler deploy --dry-run --config wrangler.jsonc
