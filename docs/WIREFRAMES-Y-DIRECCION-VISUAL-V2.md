@@ -1,6 +1,6 @@
 # AUTOMATA 2.0 · Wireframes y dirección visual
 
-**Estado:** propuesta de diseño funcional  
+**Estado:** dirección visual y wireframes funcionales implementados parcialmente en la rama V2; revisión visual y build pendientes.  
 **Rama:** `feature/automata-web-v2-architecture`  
 **Base revisada:** `App.tsx`, `index.css`, `package.json`, `assets/` y documentación V2.
 
