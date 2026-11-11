@@ -231,3 +231,8 @@ No presentar demos de restaurante, consultorio o peluquería como integraciones 
 - Si la conversación aún no tiene mensajes del visitante, el saludo inicial y las preguntas rápidas se adaptan a la página desde la que se abrió el chat.
 - Si ya existe una conversación, cambiar el origen no reemplaza el historial ni borra lo que la persona compartió.
 - Las preguntas rápidas son puntos de partida, no categorías obligatorias ni una inferencia sobre la intención del visitante.
+
+
+## 15. Demo de invitación digital (11 nov 2026)
+
+Se añadió la ruta `/experiences/demo/` como demostración interactiva de una invitación para bodas. Incluye datos ilustrativos del evento y un flujo de confirmación de asistencia en el navegador. La respuesta se mantiene únicamente en el estado temporal de la página: no se envía a un servidor, no se almacena y se pierde al recargar. La ruta lleva `noindex, nofollow` y no se incorpora al sitemap. Esta demo valida presentación y recorrido de interfaz; no representa todavía un sistema real de gestión de invitados, notificaciones, QR individual ni almacenamiento de RSVP. Para convertirla en producto comercial se requiere diseñar persistencia, administración de eventos, privacidad y consentimiento.
