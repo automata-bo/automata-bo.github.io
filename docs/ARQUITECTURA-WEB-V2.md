@@ -255,11 +255,29 @@ La V2 incorpora el primer tramo de la experiencia **A website that talks back**:
 
 - Los puntos de entrada de Digital, Experiences y Studio pueden abrir el mismo asistente con `productId` y una acción (`explore`, `experience` o `proposal`).
 - El frontend solo transmite identificadores permitidos; no envía descripciones libres para convertirlas en instrucciones del sistema.
-- El Worker mantiene una lista controlada de productos con división, estado comercial, descripción y límites confirmados. Valida el identificador recibido y construye el contexto desde esa lista.
+- El módulo `worker/src/product-catalog.ts` mantiene el catálogo estructurado y tipado. El Worker valida el identificador recibido y construye el contexto del modelo desde esa fuente.
 - El saludo contextual indica qué producto estaba explorando la persona, sin asumir que ya tiene intención de compra ni obligarla a explicar qué estaba mirando.
 - El asistente debe explicar y orientar, descubrir la necesidad real y reconocer las limitaciones. Una solicitud de demostración no autoriza a inventar una demo o un enlace; una solicitud de propuesta requiere descubrir el alcance.
 - Se añadieron acciones **Explore this solution** en las fichas de Digital, Experiences y Studio. En Experiences se conserva por separado **View experience** para abrir la demostración existente.
 - El catálogo inicial cubre sitios y experiencias web, asistentes digitales, automatización e integraciones, experiencias para bodas y celebraciones, producción audiovisual y publicidad/campañas.
-- Este es un catálogo inicial controlado en el Worker, no todavía un CMS ni un panel de administración. La siguiente etapa será normalizar las fichas y definir cómo se mantienen sin duplicar datos entre interfaz y backend.
+- El catálogo es una fuente TypeScript versionada, no un CMS ni un panel de administración. La interfaz importa los mismos nombres e identificadores que consume el Worker.
 
 La conversación existente no se borra al abrir un nuevo punto de entrada. El contexto del producto se actualiza para las siguientes consultas; el historial continúa siendo el de la misma sesión.
+
+## 19. Product Knowledge Engine compartido (11 nov 2026)
+
+Se normalizó el catálogo inicial en `worker/src/product-catalog.ts`, un módulo TypeScript compartido por el Worker y el frontend. La interfaz importa los nombres e identificadores de ese módulo; el Worker valida el identificador recibido y construye el contexto comercial desde la misma ficha. No se mantienen copias independientes del catálogo.
+
+Cada ficha contiene:
+- Identidad y división del producto.
+- Estado comercial tipado y etiqueta legible.
+- Descripción y necesidades para las que puede encajar.
+- Capacidades descritas y público orientativo.
+- Estado, ruta y alcance real de la demostración, cuando existe.
+- Requisitos previos para evaluar el proyecto.
+- Limitaciones confirmadas.
+- Política de precio: no hay precios públicos; dependen del alcance.
+
+Estados y demos son explícitos: disponible, evaluación a medida, en desarrollo o dependiente del proyecto; demo inexistente, simulada o prototipo. El asistente debe explicar estas diferencias y no presentar simulaciones o prototipos como productos operativos.
+
+El catálogo es una fuente de verdad versionada en el repositorio. No es un CMS, no tiene edición dinámica y no confirma por sí solo disponibilidad contractual, plazos ni precios. Los cambios requieren revisión y despliegue normal del código.
