@@ -10,6 +10,7 @@ export default defineConfig({
         "index.html",
         "digital/index.html",
         "experiences/index.html",
+        "experiences/demo/index.html",
         "studio/index.html",
         "proyectos/index.html",
         "contacto/index.html",
