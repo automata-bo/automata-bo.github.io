@@ -76,7 +76,7 @@ function Footer() {
 }
 function Hero({ page }: { page: PageKey }) {
   const meta = pageMeta[page];
-  const openAssistant = () => window.dispatchEvent(new Event("automata:open-chat"));
+  const openAssistant = () => openChatWithSource(page);
   return <section className="relative overflow-hidden bg-[#0E1116] text-white">
     <div className="pointer-events-none absolute -right-32 -top-32 h-[440px] w-[440px] rounded-full border border-white/10" />
     <div className="pointer-events-none absolute -right-12 -top-12 h-[280px] w-[280px] rounded-full border border-[#FF5A00]/30" />
@@ -160,7 +160,7 @@ function ProjectsPage() {
   return <><Hero page="projects"/><section className="mx-auto max-w-[1220px] px-5 py-20 sm:px-8"><div className="grid gap-4 md:grid-cols-2"><a href="/demos/" className="group rounded-[28px] border border-[#E8E6E1] p-8 hover:border-[#FF5A00]"><span className="text-xs font-bold uppercase tracking-[.2em] text-[#FF5A00]">Demostración interactiva</span><h2 className="display mt-6 text-3xl">Flujos para negocios</h2><p className="mt-3 text-sm leading-relaxed text-[#5A6068]">Restaurante, consultorio y peluquería. Ejemplos simulados para explorar interacciones.</p><span className="mt-7 inline-flex items-center gap-2 text-sm font-bold">Explorar demos <ArrowRight size={16}/></span></a><div className="rounded-[28px] border border-dashed border-[#D8D5CE] p-8"><span className="text-xs font-bold uppercase tracking-[.2em] text-[#8A8F96]">Próximamente · con material aprobado</span><h2 className="display mt-6 text-3xl">Proyectos y casos</h2><p className="mt-3 text-sm leading-relaxed text-[#5A6068]">Publicaremos proyectos cuando existan resultados, permisos y contexto suficientes para describirlos con precisión.</p></div></div></section></>;
 }
 function ContactPage() {
-  const openAssistant = () => window.dispatchEvent(new Event("automata:open-chat"));
+  const openAssistant = () => openChatWithSource("contact");
   return <><Hero page="contact"/><section className="mx-auto max-w-[900px] px-5 py-20 text-center sm:px-8"><span className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#FFF1E8] text-[#FF5A00]"><Bot size={30}/></span><h2 className="display mt-7 text-4xl sm:text-5xl">Cuéntanos qué tienes en mente.</h2><p className="mx-auto mt-5 max-w-xl text-sm leading-relaxed text-[#5A6068]">Autómata puede ayudarte a ordenar la consulta y preparar el contexto. Si hace falta, podrás continuar con el equipo humano.</p><button onClick={openAssistant} className="mt-8 inline-flex min-h-14 items-center gap-3 rounded-full bg-[#FF5A00] px-7 text-sm font-bold text-white">Iniciar conversación <ArrowRight size={18}/></button></section></>;
 }
 export default function V2App() {
