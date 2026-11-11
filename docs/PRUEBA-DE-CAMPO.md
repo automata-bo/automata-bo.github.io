@@ -365,3 +365,52 @@ La rama ya dispone de una base de analítica con consentimiento; no parte de cer
 - La IP de Cloudflare se utiliza como clave transitoria del limitador de frecuencia del endpoint; no forma parte del `INSERT` de analítica inspeccionado.
 
 Por tanto, los eventos adicionales de la sección anterior **no están implementados ni aceptados por el Worker**. No se deben emitir desde el navegador hasta ampliar el contrato, probarlo y revisar si el consentimiento actual cubre claramente el uso propuesto. La prueba de campo puede realizarse inicialmente con observación manual consentida, sin esperar a esa ampliación.
+
+
+## 14. Banco de pruebas aislado con proveedor real
+
+Se añadió `worker/scripts/test-assistant-live.mjs` y el comando `npm run test:live`. Este banco ejecuta el Worker directamente en Node:
+
+- Llama al proveedor real configurado mediante una variable de entorno.
+- Sustituye los limitadores por implementaciones locales que siempre permiten la prueba.
+- Proporciona un objeto D1 vacío: la ruta `/api/chat` no necesita consultar la base de datos.
+- No inicia Wrangler, no accede a Cloudflare, no despliega y no modifica producción.
+- Ejecuta los ocho escenarios sintéticos A–H y muestra las respuestas, el proveedor y la latencia.
+- Informa errores técnicos por separado de la evaluación semántica.
+
+### Ejecución en Linux
+
+Desde la carpeta `worker`:
+
+```bash
+npm install
+npm run typecheck
+npm run test:contract
+npm run test:runtime
+
+# Configura UNA clave de proveedor en la terminal local.
+# Ejemplo Gemini:
+read -rsp "Gemini API key: " GEMINI_API_KEY
+echo
+export GEMINI_API_KEY
+
+# Ejecuta ocho solicitudes reales al proveedor:
+npm run test:live
+
+# Al terminar, elimina la variable de esta sesión:
+unset GEMINI_API_KEY
+```
+
+También se admiten `GROQ_API_KEY`, `OPENROUTER_API_KEY` u `OLLAMA_API_KEY`. Se recomienda configurar solo un proveedor por ejecución para que los resultados sean atribuibles a un modelo concreto. Los modelos pueden seleccionarse mediante `GEMINI_MODEL`, `GROQ_MODEL`, `OPENROUTER_MODEL` u `OLLAMA_MODEL`; si no se indica uno, se utiliza el valor predeterminado del Worker.
+
+**Seguridad:** no pegues claves en el chat, en archivos versionados, en el código ni en comandos que queden guardados en el historial del shell. El ejemplo usa `read -s` para evitar mostrar la clave mientras se introduce. La variable vive solo en esa terminal y no se envía a GitHub. Revisa la cuota y el posible coste del proveedor antes de ejecutar: son ocho solicitudes reales.
+
+### Cómo interpretar el resultado
+
+- `8/8 respuestas recibidas` significa únicamente que el Worker obtuvo ocho respuestas HTTP válidas del proveedor.
+- No significa que las ocho respuestas sean correctas.
+- Evalúa cada salida con los criterios del caso correspondiente en la sección 13.
+- Registra aprobado / parcial / fallido, justificación y corrección necesaria.
+- Si hay error técnico, separa autenticación, cuota, modelo inexistente, timeout y error del Worker antes de cambiar instrucciones.
+
+Este banco permite reproducir las pruebas reales sin exponer el endpoint público. Su ejecución depende de que el desarrollador tenga una clave válida configurada localmente; no se guarda ninguna clave en el repositorio.
