@@ -102,6 +102,26 @@ function HomePage() {
         </a>)}
       </div>
     </section>
+    <section className="border-y border-[#E8E6E1] bg-white py-20 lg:py-24">
+      <div className="mx-auto max-w-[1220px] px-5 sm:px-8">
+        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <div className="max-w-2xl"><p className="text-xs font-bold uppercase tracking-[.2em] text-[#FF5A00]">Soluciones según tu objetivo</p><h2 className="display mt-4 text-4xl sm:text-6xl">¿Qué necesitas poner en marcha?</h2></div>
+          <p className="max-w-sm text-sm leading-relaxed text-[#5A6068]">No tienes que llegar con la solución definida. Cuéntanos qué quieres conseguir y vemos qué combinación de capacidades tiene sentido.</p>
+        </div>
+        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            {icon:MonitorSmartphone,title:"Presentar tu negocio",desc:"Una web clara para explicar lo que haces, mostrar tu oferta y facilitar consultas.",tag:"Digital",href:"/digital/"},
+            {icon:Workflow,title:"Ordenar la atención",desc:"Asistentes, formularios e integraciones para organizar consultas y tareas repetitivas.",tag:"Digital",href:"/digital/"},
+            {icon:Heart,title:"Crear una experiencia",desc:"Invitaciones, dinámicas participativas y recuerdos digitales para eventos y celebraciones.",tag:"Experiences",href:"/experiences/"},
+            {icon:Camera,title:"Comunicar una idea",desc:"Fotografía, video y piezas creativas para contar mejor una marca, producto o proyecto.",tag:"Studio",href:"/studio/"},
+          ].map(item=><a key={item.title} href={item.href} className="group flex min-h-[250px] flex-col rounded-3xl border border-[#E8E6E1] p-6 transition hover:-translate-y-1 hover:border-[#FF5A00]/60 hover:shadow-lg">
+            <div className="flex items-center justify-between"><span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#FFF1E8] text-[#FF5A00]"><item.icon size={22}/></span><span className="text-[10px] font-extrabold uppercase tracking-[.16em] text-[#8A8F96]">{item.tag}</span></div>
+            <h3 className="mt-7 text-lg font-extrabold">{item.title}</h3><p className="mt-2 text-sm leading-relaxed text-[#5A6068]">{item.desc}</p>
+            <span className="mt-auto flex items-center gap-2 pt-6 text-xs font-extrabold text-[#FF5A00]">Explorar capacidad <ArrowRight size={15} className="transition group-hover:translate-x-1"/></span>
+          </a>)}
+        </div>
+      </div>
+    </section>
     <section className="bg-[#F4F3F0] py-20 lg:py-24"><div className="mx-auto grid max-w-[1220px] gap-10 px-5 sm:px-8 lg:grid-cols-[.8fr_1.2fr] lg:items-center">
       <div><p className="text-xs font-bold uppercase tracking-[.2em] text-[#FF5A00]">Cómo pensamos</p><h2 className="display mt-4 text-4xl sm:text-6xl">Primero el propósito. Después la tecnología.</h2></div>
       <div className="grid gap-5 sm:grid-cols-2">{[["01","Comprender","Escuchamos el contexto y el resultado que se busca."],["02","Diseñar","Elegimos una solución adecuada, no la más complicada."],["03","Construir","Prototipamos, probamos e implementamos por etapas."],["04","Acompañar","Medimos, corregimos y mejoramos con el uso real."]].map(([n,t,d])=><div key={n} className="border-t border-[#D8D5CE] pt-5"><span className="text-xs font-bold text-[#FF5A00]">{n}</span><h3 className="mt-2 text-xl font-extrabold">{t}</h3><p className="mt-2 text-sm leading-relaxed text-[#5A6068]">{d}</p></div>)}</div>
