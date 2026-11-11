@@ -5,7 +5,7 @@ import { Bot, MessageCircle, Send, Sparkles, X, ArrowUpRight } from "lucide-reac
 type Message = { role: "bot" | "user"; text: string };
 const WHATSAPP_NUMBER = "59176192899";
 const quick = ["¿Qué hace AUTOMATA?", "Necesito una web para mi negocio", "Quiero crear una experiencia para un evento", "Busco contenido para mi marca"];
-const CHAT_API_URL = "https://automata-chat.dgckg-trd1.workers.dev";
+import { AUTOMATA_API_URL } from "./api";
 const LOCAL_SESSION_ID = () => typeof crypto !== "undefined" && "randomUUID" in crypto ? crypto.randomUUID() : `session-${Date.now()}-${Math.random().toString(36).slice(2)}`;
 function normalize(value: string) {
   return value.toLocaleLowerCase("es").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9\s]/g, " ").replace(/\s+/g, " ").trim();
@@ -171,7 +171,7 @@ export default function ChatWidget() {
 
     let answer = "";
     try {
-        const response = await fetch(`${CHAT_API_URL}/api/chat`, {
+        const response = await fetch(`${AUTOMATA_API_URL}/api/chat`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
