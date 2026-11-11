@@ -1,0 +1,84 @@
+name: Build visual preview
+on:
+  push:
+    branches:
+      - feature/automata-web-v2-architecture
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: visual-preview-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install site dependencies
+        run: npm install
+      - name: Build feature branch
+        run: npm run build
+      - name: Install Chromium for screenshots
+        run: |
+          npm install --no-save --package-lock=false playwright
+          npx playwright install --with-deps chromium
+      - name: Capture desktop and mobile pages
+        run: |
+          mkdir -p preview-shots
+          npm run preview -- --host 127.0.0.1 > /tmp/automata-preview.log 2>&1 &
+          echo $! > /tmp/automata-preview.pid
+          for attempt in $(seq 1 30); do
+            if curl --silent --fail http://127.0.0.1:4173/ > /dev/null; then break; fi
+            sleep 2
+          done
+          node --input-type=module <<'NODE'
+          import { chromium } from "playwright";
+          const browser = await chromium.launch({ headless: true });
+          const pages = [
+            ["/", "home"],
+            ["/digital/", "digital"],
+            ["/experiences/", "experiences"],
+            ["/studio/", "studio"],
+            ["/proyectos/", "proyectos"],
+            ["/contacto/", "contacto"],
+            ["/experiences/demo/", "invitacion-demo"],
+            ["/studio/lab/", "creative-lab"],
+            ["/demos/", "flujos-demo"]
+          ];
+          for (const [route, name] of pages) {
+            for (const viewport of [
+              { label: "desktop", width: 1440, height: 1000 },
+              { label: "mobile", width: 390, height: 844 }
+            ]) {
+              const page = await browser.newPage({ viewport: { width: viewport.width, height: viewport.height }, deviceScaleFactor: 1 });
+              await page.goto("http://127.0.0.1:4173" + route, { waitUntil: "networkidle", timeout: 30000 });
+              await page.screenshot({ path: `preview-shots/${name}-${viewport.label}.png`, fullPage: true, animations: "disabled" });
+              await page.close();
+            }
+          }
+          await browser.close();
+          NODE
+      - name: Package interactive preview
+        run: |
+          mkdir -p preview-package
+          cp -R dist preview-package/site
+          cp -R preview-shots preview-package/screenshots
+          cat > preview-package/README.txt <<'EOF'
+          AUTOMATA V2 · Visual preview from the feature branch
+          
+          The screenshots show desktop (1440px) and mobile (390px) captures.
+          The site/ directory contains the built static site.
+          This artifact is a review snapshot. It is not a production deployment.
+          EOF
+      - uses: actions/upload-artifact@v4
+        with:
+          name: automata-v2-visual-preview
+          path: preview-package/
+          retention-days: 7
