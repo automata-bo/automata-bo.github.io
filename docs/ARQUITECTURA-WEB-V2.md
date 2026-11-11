@@ -236,3 +236,10 @@ No presentar demos de restaurante, consultorio o peluquería como integraciones 
 ## 15. Demo de invitación digital (11 nov 2026)
 
 Se añadió la ruta `/experiences/demo/` como demostración interactiva de una invitación para bodas. Incluye datos ilustrativos del evento y un flujo de confirmación de asistencia en el navegador. La respuesta se mantiene únicamente en el estado temporal de la página: no se envía a un servidor, no se almacena y se pierde al recargar. La ruta lleva `noindex, nofollow` y no se incorpora al sitemap. Esta demo valida presentación y recorrido de interfaz; no representa todavía un sistema real de gestión de invitados, notificaciones, QR individual ni almacenamiento de RSVP. Para convertirla en producto comercial se requiere diseñar persistencia, administración de eventos, privacidad y consentimiento.
+
+
+## 16. AUTOMATA Studio Creative Lab y showroom de proyectos (11 nov 2026)
+
+Se añadió `/studio/lab/`, un prototipo interactivo de brief creativo que permite definir marca, producto/servicio, público, objetivo y formato. Presenta una idea central, secuencia narrativa y CTA; permite copiar el brief. La lógica usa estructuras predefinidas en el navegador: no llama a un modelo de IA, no genera piezas audiovisuales y no almacena datos. Debe presentarse como prototipo de proceso creativo, no como generador IA ni como producción final.
+
+La página `/proyectos/` pasa a funcionar como showroom de tres demostraciones: flujos de negocio (`/demos/`), invitación de boda (`/experiences/demo/`) y Creative Lab (`/studio/lab/`). Cada tarjeta indica el estado y las limitaciones de su experiencia. Los casos reales se mantienen separados y solo se publicarán con material, permisos y contexto verificables. La ruta Creative Lab está marcada `noindex, nofollow` y no se incorpora al sitemap.
