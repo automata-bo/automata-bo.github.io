@@ -6,9 +6,7 @@ import { AUTOMATA_API_URL } from "./api";
 type Message = { role: "bot" | "user"; text: string };
 type ChatSource = "home" | "digital" | "experiences" | "studio" | "projects" | "contact";
 type AssistantContext = { productId?: string; action?: "explore" | "experience" | "proposal" };
-import { PRODUCT_CATALOG, type ProductId } from "./worker/src/product-catalog";
-
-const PRODUCT_LABELS: Record<ProductId, string> = Object.fromEntries(Object.values(PRODUCT_CATALOG).map((product) => [product.id, product.name])) as Record<ProductId, string>;
+import { PRODUCT_CATALOG } from "./worker/src/product-catalog";
 const CHAT_SOURCES: ChatSource[] = ["home", "digital", "experiences", "studio", "projects", "contact"];
 function currentChatSource(): ChatSource {
   const path = window.location.pathname.replace(/\/+$/, "") || "/";
@@ -173,13 +171,15 @@ export default function ChatWidget() {
       const source = typeof requestedSource === "string" && CHAT_SOURCES.includes(requestedSource as ChatSource)
         ? requestedSource as ChatSource
         : currentChatSource();
-      const productId = typeof detail?.productId === "string" && Object.prototype.hasOwnProperty.call(PRODUCT_LABELS, detail.productId) ? detail.productId : undefined;
+      const selectedProduct = typeof detail?.productId === "string" && Object.prototype.hasOwnProperty.call(PRODUCT_CATALOG, detail.productId)
+        ? PRODUCT_CATALOG[detail.productId as keyof typeof PRODUCT_CATALOG]
+        : undefined;
       const action = detail?.action === "experience" || detail?.action === "proposal" || detail?.action === "explore" ? detail.action : undefined;
-      const nextContext: AssistantContext = { productId, action };
+      const nextContext: AssistantContext = { productId: selectedProduct?.id, action };
       setChatSource(source);
       setAssistantContext(nextContext);
       setMessages((previous) => previous.length === 1 && previous[0].role === "bot"
-        ? [{ role: "bot", text: productId ? `¡Hola! Veo que estás explorando ${PRODUCT_LABELS[productId]}. Puedo explicarte cómo funciona, cuándo tiene sentido y qué alternativas existen. ¿Qué te gustaría descubrir primero?` : greetingForSource(source) }]
+        ? [{ role: "bot", text: selectedProduct ? `¡Hola! Veo que estás explorando ${selectedProduct.name}. Puedo explicarte cómo funciona, cuándo tiene sentido y qué alternativas existen. ¿Qué te gustaría descubrir primero?` : greetingForSource(source) }]
         : previous);
       trackEvent("chat_open");
       setOpen(true);
