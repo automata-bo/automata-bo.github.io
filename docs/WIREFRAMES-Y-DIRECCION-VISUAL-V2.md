@@ -1,10 +1,10 @@
 # AUTOMATA 2.0 · Wireframes y dirección visual
 
-**Estado:** dirección visual y wireframes funcionales implementados parcialmente en la rama V2; revisión visual y build pendientes.  
+**Estado:** dirección visual implementada parcialmente en la rama V2. La compilación de la base fue aprobada en CI; la última corrección de navegación debe revalidarse. Revisión visual manual pendiente.  
 **Rama:** `feature/automata-web-v2-architecture`  
 **Base revisada:** `App.tsx`, `index.css`, `package.json`, `assets/` y documentación V2.
 
-Este documento convierte la arquitectura y el sitemap en una guía concreta de composición. No es todavía una implementación visual ni autoriza a presentar contenido conceptual como un servicio ya desplegado.
+Este documento convierte la arquitectura y el sitemap en una guía concreta de composición y referencia para la implementación. La rama contiene una primera versión funcional de las páginas; aún no se ha completado la revisión visual ni la validación en el hosting. No autoriza a presentar contenido conceptual como un servicio ya desplegado.
 
 ---
 
@@ -217,7 +217,7 @@ No crear un sistema genérico de bloques antes de necesitarlo. Primero extraer l
 4. **Experiences:** página y recorrido del producto de bodas, con estados y límites explícitos.
 5. **Studio:** estructura editorial y galería preparada para contenido aprobado.
 6. **Integración:** asistente, consentimiento, analítica y newsletter solo donde tengan sentido.
-7. **Validación:** build, responsive, accesibilidad básica, enlaces, eventos y prueba de rutas en GitHub Pages.
+7. **Validación:** build, responsive, accesibilidad básica, enlaces, eventos y prueba de rutas en GitHub Pages. La compilación inicial ya pasó en CI; repetirla tras los cambios más recientes y completar QA manual.
 
 ### Puerta de calidad antes de publicar
 
