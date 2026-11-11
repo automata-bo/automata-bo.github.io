@@ -1,7 +1,7 @@
 import React, { FormEvent, useEffect, useState } from "react";
 import { ArrowRight, CheckCircle2, X } from "lucide-react";
 
-const API = "https://automata-chat.dgckg-trd1.workers.dev";
+import { AUTOMATA_API_URL } from "./api";
 const CONSENT_VERSION = "2026-11-09-v1";
 
 export default function NewsletterSignup() {
@@ -38,7 +38,7 @@ export default function NewsletterSignup() {
     setBusy(true);
     setStatus(null);
     try {
-      const response = await fetch(API + "/api/subscribe", {
+      const response = await fetch(AUTOMATA_API_URL + "/api/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ channel, contact: contact.trim(), consent: true, consentVersion: CONSENT_VERSION }),
