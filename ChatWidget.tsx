@@ -6,7 +6,9 @@ import { AUTOMATA_API_URL } from "./api";
 type Message = { role: "bot" | "user"; text: string };
 type ChatSource = "home" | "digital" | "experiences" | "studio" | "projects" | "contact";
 type AssistantContext = { productId?: string; action?: "explore" | "experience" | "proposal" };
-const PRODUCT_LABELS: Record<string, string> = { "web-presence": "Sitios y experiencias web", "digital-assistants": "Asistentes digitales", "business-automation": "Automatización e integraciones", "event-experience": "Experiencias para bodas y celebraciones", "audiovisual-production": "Producción audiovisual", "creative-campaigns": "Publicidad y campañas" };
+import { PRODUCT_CATALOG, type ProductId } from "./worker/src/product-catalog";
+
+const PRODUCT_LABELS: Record<ProductId, string> = Object.fromEntries(Object.values(PRODUCT_CATALOG).map((product) => [product.id, product.name])) as Record<ProductId, string>;
 const CHAT_SOURCES: ChatSource[] = ["home", "digital", "experiences", "studio", "projects", "contact"];
 function currentChatSource(): ChatSource {
   const path = window.location.pathname.replace(/\/+$/, "") || "/";
