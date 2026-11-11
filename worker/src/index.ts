@@ -1,3 +1,4 @@
+import { getProduct } from "./product-catalog";
 interface Env {
   OLLAMA_API_KEY?: string;
   OLLAMA_MODEL?: string;
@@ -359,16 +360,8 @@ export default {
     const source = typeof parsed.value.source === "string" && Object.prototype.hasOwnProperty.call(sourceLabels, parsed.value.source)
       ? sourceLabels[parsed.value.source]
       : "No identificado";
-    const productCatalog: Record<string, { name: string; division: string; status: string; summary: string; limits: string }> = {
-      "web-presence": { name: "Sitios y experiencias web", division: "Digital", status: "Capacidad disponible; alcance a medida", summary: "Sitios institucionales, páginas de presentación y captación para explicar una oferta, generar confianza y facilitar consultas.", limits: "No asumir contenido, integraciones, mantenimiento, resultados ni plazos sin definir alcance." },
-      "digital-assistants": { name: "Asistentes digitales", division: "Digital", status: "Capacidad disponible; configuración a medida", summary: "Asistentes para orientar consultas con información aprobada y transferir casos a personas.", limits: "No prometer autonomía total, exactitud perfecta ni integraciones no verificadas." },
-      "business-automation": { name: "Automatización e integraciones", division: "Digital", status: "Evaluación y desarrollo a medida", summary: "Diseño de flujos para reducir tareas repetitivas, organizar solicitudes y conectar sistemas cuando es viable.", limits: "Requiere revisar procesos, herramientas, permisos y dependencias antes de confirmar viabilidad." },
-      "event-experience": { name: "Experiencias para bodas y celebraciones", division: "Experiences", status: "Línea en desarrollo; proyectos personalizados", summary: "Conceptos de invitación interactiva, participación de invitados y recopilación comunitaria de recuerdos.", limits: "La demo actual no persiste respuestas ni ofrece QR individual, administración, álbum real o notificaciones." },
-      "audiovisual-production": { name: "Producción audiovisual", division: "Studio", status: "Capacidad disponible según proyecto", summary: "Videos promocionales, piezas de marca y producción híbrida que puede combinar grabación, edición y herramientas de IA.", limits: "No garantizar entregables, derechos, locaciones, equipo ni plazos sin brief y evaluación." },
-      "creative-campaigns": { name: "Publicidad y campañas", division: "Studio", status: "Desarrollo creativo a medida", summary: "Concepto, narrativa y piezas de comunicación adaptadas al público y canal.", limits: "No prometer resultados publicitarios ni métricas de campaña." }
-    };
-    const productId = typeof parsed.value.productId === "string" && Object.prototype.hasOwnProperty.call(productCatalog, parsed.value.productId) ? parsed.value.productId : "";
-    const selectedProduct = productId ? productCatalog[productId] : null;
+    const productId = getProduct(parsed.value.productId)?.id;
+    const selectedProduct = productId ? getProduct(productId) : undefined;
     const requestedAction = parsed.value.action === "experience" || parsed.value.action === "proposal" || parsed.value.action === "explore" ? parsed.value.action : "";
     const actionLabel = requestedAction === "experience" ? "ver una demostración" : requestedAction === "proposal" ? "solicitar una propuesta" : requestedAction === "explore" ? "explorar la solución" : "";
     const productContext = selectedProduct
