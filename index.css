@@ -54,6 +54,16 @@ label{font-size:13px;font-weight:700;letter-spacing:.02em}
 .card-lift:hover{transform:translateY(-8px);box-shadow:0 24px 48px rgba(14,17,22,.12)}
 
 
+
+/* Burbujas contextuales: invitan a explorar sin abrir el chat automáticamente */
+.automata-learn-bubble{position:relative;display:inline-flex;min-height:38px;align-items:center;gap:7px;padding:0 13px;border:1px solid rgba(255,90,0,.28);border-radius:999px;background:#FFF8F3;color:#C44700;font-size:12px;font-weight:800;cursor:pointer;transition:background .2s,border-color .2s,transform .2s}
+.automata-learn-bubble::after{position:absolute;bottom:-5px;left:17px;width:8px;height:8px;border-right:1px solid rgba(255,90,0,.28);border-bottom:1px solid rgba(255,90,0,.28);background:#FFF8F3;content:"";transform:rotate(45deg)}
+.automata-learn-bubble:hover{transform:translateY(-1px);border-color:#FF5A00;background:#FFF1E8}
+.automata-learn-bubble:focus-visible{outline:3px solid rgba(255,90,0,.35);outline-offset:3px}
+.automata-learn-bubble-dark{border-color:rgba(255,122,54,.4);background:rgba(255,122,54,.1);color:#FF9A68}
+.automata-learn-bubble-dark::after{border-color:rgba(255,122,54,.4);background:#17191D}
+.automata-learn-bubble-dark:hover{border-color:#FF7A36;background:rgba(255,122,54,.18)}
+
 /* Asistente virtual */
 .automata-chat-root{position:fixed;right:22px;bottom:22px;z-index:1000;font-family:Inter,system-ui,sans-serif}
 .automata-chat-launcher{display:flex;align-items:center;justify-content:center;gap:10px;min-height:58px;padding:0 21px;border:0;border-radius:999px;background:#FF5A00;color:#fff;font-size:14px;font-weight:800;box-shadow:0 12px 32px rgba(14,17,22,.24);cursor:pointer;transition:transform .2s,background .2s}
