@@ -24,4 +24,5 @@ jobs:
       - run: npm install
       - run: npm run typecheck
       - run: npm run test:contract
+      - run: npm run test:runtime
       - run: npx wrangler deploy --dry-run --config wrangler.jsonc
