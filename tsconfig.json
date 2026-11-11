@@ -24,6 +24,7 @@
     "CookieConsent.tsx",
     "NewsletterSignup.tsx",
     "analytics.ts",
+    "api.ts",
     "main.tsx",
     "v2-main.tsx",
     "v2-entry.tsx",
