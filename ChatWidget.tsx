@@ -123,9 +123,9 @@ export default function ChatWidget() {
   const [isThinking, setIsThinking] = useState(false);
   const sessionId = useRef(LOCAL_SESSION_ID());
   const bottomRef = useRef<HTMLDivElement>(null);
-  const panelRef = useRef<HTMLElement>(null);
   const launcherRef = useRef<HTMLButtonElement>(null);
   const composeInputRef = useRef<HTMLInputElement>(null);
+  const wasOpenRef = useRef(false);
 
   useEffect(() => {
     const show = () => { trackEvent("chat_open"); setOpen(true); };
@@ -225,10 +225,14 @@ export default function ChatWidget() {
 
   useEffect(() => {
     if (!open) {
-      launcherRef.current?.focus();
+      if (wasOpenRef.current) {
+        wasOpenRef.current = false;
+        launcherRef.current?.focus();
+      }
       return;
     }
 
+    wasOpenRef.current = true;
     composeInputRef.current?.focus();
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -251,7 +255,7 @@ export default function ChatWidget() {
 
   return (
     <div className="automata-chat-root">
-      {open && <section ref={panelRef} id="automata-chat-panel" className="automata-chat-panel" role="dialog" aria-modal="false" aria-label="Asistente virtual de Automata">
+      {open && <section id="automata-chat-panel" className="automata-chat-panel" role="dialog" aria-modal="false" aria-label="Asistente virtual de Automata">
         <header className="automata-chat-header">
           <span className="automata-chat-avatar"><Bot size={22} /></span>
           <div><strong>Autómata</strong><small>Asistente virtual de Automata</small></div>
