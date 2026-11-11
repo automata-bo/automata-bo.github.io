@@ -1,11 +1,11 @@
 import React, { FormEvent, useEffect, useRef, useState } from "react";
 import { trackEvent } from "./analytics";
 import { Bot, MessageCircle, Send, Sparkles, X, ArrowUpRight } from "lucide-react";
+import { AUTOMATA_API_URL } from "./api";
 
 type Message = { role: "bot" | "user"; text: string };
 const WHATSAPP_NUMBER = "59176192899";
 const quick = ["¿Qué hace AUTOMATA?", "Necesito una web para mi negocio", "Quiero crear una experiencia para un evento", "Busco contenido para mi marca"];
-import { AUTOMATA_API_URL } from "./api";
 const LOCAL_SESSION_ID = () => typeof crypto !== "undefined" && "randomUUID" in crypto ? crypto.randomUUID() : `session-${Date.now()}-${Math.random().toString(36).slice(2)}`;
 function normalize(value: string) {
   return value.toLocaleLowerCase("es").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9\s]/g, " ").replace(/\s+/g, " ").trim();
