@@ -126,6 +126,7 @@ export default function ChatWidget() {
   const launcherRef = useRef<HTMLButtonElement>(null);
   const composeInputRef = useRef<HTMLInputElement>(null);
   const wasOpenRef = useRef(false);
+  const closeChatRef = useRef<() => void>(() => {});
 
   useEffect(() => {
     const show = () => { trackEvent("chat_open"); setOpen(true); };
@@ -237,6 +238,7 @@ export default function ChatWidget() {
     }
     setOpen(false);
   };
+  closeChatRef.current = closeChat;
 
   useEffect(() => {
     if (!open) {
@@ -252,7 +254,7 @@ export default function ChatWidget() {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         event.preventDefault();
-        closeChat();
+        closeChatRef.current();
       }
     };
     document.addEventListener("keydown", handleKeyDown);
