@@ -7,7 +7,7 @@ type Message = { role: "bot" | "user"; text: string };
 type ChatSource = "home" | "digital" | "experiences" | "studio" | "projects" | "contact";
 const CHAT_SOURCES: ChatSource[] = ["home", "digital", "experiences", "studio", "projects", "contact"];
 function currentChatSource(): ChatSource {
-  const path = window.location.pathname.replace(/\\/+$/, "") || "/";
+  const path = window.location.pathname.replace(/\/+$/, "") || "/";
   if (path === "/digital") return "digital";
   if (path === "/experiences") return "experiences";
   if (path === "/studio") return "studio";
