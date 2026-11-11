@@ -258,7 +258,7 @@ La V2 incorpora el primer tramo de la experiencia **A website that talks back**:
 - El módulo `worker/src/product-catalog.ts` mantiene el catálogo estructurado y tipado. El Worker valida el identificador recibido y construye el contexto del modelo desde esa fuente.
 - El saludo contextual indica qué producto estaba explorando la persona, sin asumir que ya tiene intención de compra ni obligarla a explicar qué estaba mirando.
 - El asistente debe explicar y orientar, descubrir la necesidad real y reconocer las limitaciones. Una solicitud de demostración no autoriza a inventar una demo o un enlace; una solicitud de propuesta requiere descubrir el alcance.
-- Se añadieron acciones **Explore this solution** en las fichas de Digital, Experiences y Studio. En Experiences se conserva por separado **View experience** para abrir la demostración existente.
+- Se añadieron acciones **Explore this solution** y **Request a proposal** en las fichas de Digital, Experiences y Studio. Ambas abren el mismo asesor con producto y acción contextual. En Experiences se conserva por separado **View experience** para abrir la demostración existente.
 - El catálogo inicial cubre sitios y experiencias web, asistentes digitales, automatización e integraciones, experiencias para bodas y celebraciones, producción audiovisual y publicidad/campañas.
 - El catálogo es una fuente TypeScript versionada, no un CMS ni un panel de administración. La interfaz importa los mismos nombres e identificadores que consume el Worker.
 
