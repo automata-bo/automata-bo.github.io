@@ -1,8 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { analyticsConsentChoice, setAnalyticsConsent, trackEvent } from "./analytics";
 
 export default function CookieConsent() {
   const [visible, setVisible] = useState(() => analyticsConsentChoice() === null);
+  useEffect(() => {
+    const openPreferences = () => setVisible(true);
+    window.addEventListener("automata:open-cookie-settings", openPreferences);
+    return () => window.removeEventListener("automata:open-cookie-settings", openPreferences);
+  }, []);
   const choose = (accepted: boolean) => {
     setAnalyticsConsent(accepted);
     setVisible(false);
