@@ -1,6 +1,6 @@
 # Arquitectura web AUTOMATA 2.0
 
-**Estado:** propuesta de arquitectura aprobada para iniciar diseño; todavía no implementada.  
+**Estado:** arquitectura aprobada e implementada parcialmente en la rama V2. La base multipágina está construida; falta QA visual/funcional y aprobación antes de publicar.  
 **Base:** repositorio `automata-bo/automata-bo.github.io`, rama `main` como V1.  
 **Rama de trabajo:** `feature/automata-web-v2-architecture`.
 
@@ -187,16 +187,24 @@ No presentar demos de restaurante, consultorio o peluquería como integraciones 
 - La navegación funciona en escritorio y móvil, incluyendo recargas y enlaces directos.
 - No se degrada el rendimiento, la accesibilidad ni la privacidad.
 
-## 12. Secuencia de trabajo
+## 12. Estado de implementación y siguientes pasos
 
-1. Aprobar arquitectura, sitemap y contenido.
-2. Crear wireframes de home y páginas de división.
-3. Definir sistema visual y componentes.
-4. Implementar home y navegación.
-5. Implementar páginas Digital, Experiences y Studio.
-6. Reubicar demos y construir fichas de proyectos/productos.
-7. Integrar Autómata y los mecanismos de contacto existentes.
-8. Auditar rendimiento, accesibilidad, privacidad y SEO.
-9. Probar y desplegar.
+### Implementado en la rama V2
+- Sitio institucional multipágina con Inicio, Digital, Experiences, Studio, Proyectos y Contacto.
+- Navegación compartida y diseño responsive inicial.
+- Metadatos y canonical por página; sitemap y robots actualizados.
+- Demos V1 preservadas en `/demos/`, sin indexación.
+- Chat, consentimiento y analítica existentes reutilizados.
+- Configuración Vite multipágina y entrada React V2.
+- Pull Request de revisión #9 abierto como borrador; `main` no ha sido modificado ni publicado.
 
-**Este documento define el destino. No autoriza a considerar implementada ninguna parte de la V2.**
+### Pendiente antes de publicar
+1. Confirmar compilación después de los últimos cambios.
+2. Revisar visualmente móvil, tablet y escritorio.
+3. Probar enlaces, menú móvil, navegación directa y recarga de todas las rutas.
+4. Verificar chat, consentimiento, analítica y conexiones al Worker.
+5. Aprobar contenido, material visual y presentación comercial.
+6. Preparar una vista previa aislada de producción o acordar el entorno de preview.
+7. Recibir aprobación explícita antes de fusionar y desplegar.
+
+**La implementación está en una rama de revisión. No equivale a una publicación ni a una aprobación comercial final.**
