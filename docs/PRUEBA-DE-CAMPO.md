@@ -351,3 +351,17 @@ Para cada ejecución guardar únicamente:
 - Acción correctiva y repetición necesaria.
 
 No declarar un caso aprobado solo porque la respuesta suena natural. La evaluación debe comprobar todos los criterios y las fallas explícitas.
+
+
+### Estado técnico comprobado de la analítica existente (11 nov 2026)
+
+La rama ya dispone de una base de analítica con consentimiento; no parte de cero:
+
+- `analytics.ts` solo envía eventos si la cookie `automata_analytics_consent=accepted` está presente.
+- La interfaz ofrece aceptar o rechazar analíticas. La elección se conserva durante seis meses aproximadamente.
+- Los eventos actualmente emitidos por el frontend son `page_view`, `chat_open`, `chat_message` y `whatsapp_click`.
+- El Worker valida el consentimiento mediante `X-Analytics-Consent: yes` y solo admite esos cuatro nombres de evento.
+- El registro actual guarda identificador de sesión, nombre del evento, categoría permitida y ruta. No guarda el texto del chat.
+- La IP de Cloudflare se utiliza como clave transitoria del limitador de frecuencia del endpoint; no forma parte del `INSERT` de analítica inspeccionado.
+
+Por tanto, los eventos adicionales de la sección anterior **no están implementados ni aceptados por el Worker**. No se deben emitir desde el navegador hasta ampliar el contrato, probarlo y revisar si el consentimiento actual cubre claramente el uso propuesto. La prueba de campo puede realizarse inicialmente con observación manual consentida, sin esperar a esa ampliación.
