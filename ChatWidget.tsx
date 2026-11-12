@@ -180,7 +180,7 @@ export default function ChatWidget() {
 
   useEffect(() => {
     const show = (event: Event) => {
-      const detail = (event as CustomEvent<{ source?: unknown; productId?: unknown; action?: unknown }>).detail;
+      const detail = (event as CustomEvent<{ source?: unknown; productId?: unknown; action?: unknown; draft?: unknown }>).detail;
       const requestedSource = detail?.source;
       const source = typeof requestedSource === "string" && CHAT_SOURCES.includes(requestedSource as ChatSource)
         ? requestedSource as ChatSource
@@ -192,6 +192,7 @@ export default function ChatWidget() {
       const nextContext: AssistantContext = { productId: selectedProduct?.id, action };
       setChatSource(source);
       setAssistantContext(nextContext);
+      if (typeof detail?.draft === "string") setInput(detail.draft.slice(0, 1800));
       setMessages((previous) => previous.length === 1 && previous[0].role === "bot"
         ? [{ role: "bot", text: selectedProduct ? greetingForSource(source, selectedProduct.name) : greetingForSource(source) }]
         : previous);
