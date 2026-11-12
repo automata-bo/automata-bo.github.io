@@ -5,8 +5,7 @@ import ChatWidget from "./ChatWidget";
 import CookieConsent from "./CookieConsent";
 import NewsletterSignup from "./NewsletterSignup";
 import { trackEvent } from "./analytics";
-import logoFull from "./assets/automata.svg";
-import logoMonoWhite from "./assets/automataB.svg";
+
 import ImmersiveHome from "./ImmersiveHome";
 import { DigitalExperience, ExperiencesExperience, StudioExperience, ProjectsExperience, ContactExperience } from "./ImmersiveSections";
 
@@ -48,7 +47,7 @@ function currentPage(): PageKey {
 }
 function BrandLogo() {
   return <a href="/" aria-label="AUTOMATA, inicio" className="inline-flex shrink-0 items-center">
-    <img src={logoFull} alt="AUTOMATA" className="h-[23px] w-auto max-w-[190px] object-contain sm:h-[27px]" />
+    <img src="/assets/automata.svg" alt="AUTOMATA" className="h-[23px] w-auto max-w-[190px] object-contain sm:h-[27px]" />
   </a>;
 }
 function Header({ page }: { page: PageKey }) {
@@ -78,7 +77,7 @@ function Footer() {
   return <footer className="border-t border-white/10">
     <div className="mx-auto flex max-w-[1220px] flex-col gap-5 px-5 py-9 sm:px-8 md:flex-row md:items-center md:justify-between">
       <a href="/" aria-label="AUTOMATA, inicio" className="inline-flex shrink-0 items-center">
-        <img src={logoMonoWhite} alt="AUTOMATA" className="h-6 w-auto max-w-[190px] object-contain" />
+        <img src="/assets/automataB.svg" alt="AUTOMATA" className="h-6 w-auto max-w-[190px] object-contain" />
       </a>
       <p className="max-w-md text-sm leading-relaxed text-white/65">Digital Experiences & Intelligent Solutions. Tecnología, creatividad e inteligencia aplicadas a experiencias y soluciones digitales.</p>
       <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm font-semibold text-white/65">
