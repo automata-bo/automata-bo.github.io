@@ -89,6 +89,13 @@ jobs:
             deviceScaleFactor: 1
           });
           try {
+            await smokePage.addInitScript(() => {
+              (window as Window & { __automataOpenedUrl?: string }).__automataOpenedUrl = "";
+              window.open = ((url?: string | URL) => {
+                (window as Window & { __automataOpenedUrl?: string }).__automataOpenedUrl = String(url ?? "");
+                return null;
+              }) as typeof window.open;
+            });
             await smokePage.goto("http://127.0.0.1:4173/", { waitUntil: "domcontentloaded", timeout: 15000 });
             const consent = smokePage.locator('aside[aria-label="Preferencias de cookies"]');
             const consentBox = await consent.boundingBox();
@@ -153,7 +160,34 @@ jobs:
             if (await smokePage.locator("body").evaluate((element) => element.style.overflow === "hidden")) {
               throw new Error("Closing the newsletter dialog did not restore page scrolling.");
             }
-            console.log("OK mobile smoke test: consent, navigation and accessible newsletter dialog");
+
+            await smokePage.getByRole("button", { name: /Conversemos sobre tu proyecto/ }).click();
+            const chatDialog = smokePage.getByRole("dialog", { name: "Asistente virtual de Automata" });
+            await chatDialog.waitFor({ state: "visible" });
+            if (!(await chatDialog.getByText(/Estabas explorando AUTOMATA Digital/).count())) {
+              throw new Error("Assistant did not preserve the Digital page context.");
+            }
+            const chatInput = chatDialog.getByRole("textbox", { name: "Escribe tu consulta" });
+            await chatInput.fill("Quiero hablar con una persona");
+            await chatDialog.getByRole("button", { name: "Enviar mensaje" }).click();
+            const handoff = chatDialog.getByRole("region").filter({ hasText: "Brief de cierre para el equipo" });
+            await handoff.waitFor({ state: "visible" });
+            const whatsappButton = handoff.getByRole("button", { name: /Continuar por WhatsApp/ });
+            if (await whatsappButton.isEnabled()) {
+              throw new Error("WhatsApp handoff was enabled before explicit data-sharing consent.");
+            }
+            await handoff.locator('input[type="checkbox"]').check();
+            if (!(await whatsappButton.isEnabled())) {
+              throw new Error("WhatsApp handoff stayed disabled after explicit consent.");
+            }
+            await whatsappButton.click();
+            const openedUrl = await smokePage.evaluate(() =>
+              (window as Window & { __automataOpenedUrl?: string }).__automataOpenedUrl ?? ""
+            );
+            if (!openedUrl.startsWith("https://wa.me/59176192899?text=") || !decodeURIComponent(openedUrl).includes("BRIEF DE CIERRE HUMANO")) {
+              throw new Error("WhatsApp handoff did not prepare the expected contextual brief URL.");
+            }
+            console.log("OK mobile smoke test: consent, newsletter focus, contextual assistant and explicit WhatsApp handoff");
           } catch (error) {
             failures.push(`mobile smoke test: ${error.message}`);
             console.error(failures.at(-1));
