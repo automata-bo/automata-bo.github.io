@@ -6,6 +6,7 @@ import CookieConsent from "./CookieConsent";
 import NewsletterSignup from "./NewsletterSignup";
 import { trackEvent } from "./analytics";
 import logoFull from "./assets/42a5f50319bf92a6-automataF.png";
+import ImmersiveHome from "./ImmersiveHome";
 
 type PageKey = "home" | "digital" | "experiences" | "studio" | "projects" | "contact";
 const nav = [
@@ -95,52 +96,7 @@ function Hero({ page }: { page: PageKey }) {
     <div className="h-1 w-full bg-gradient-to-r from-[#FF5A00] via-[#FF8A4C] to-transparent"/>
   </section>;
 }
-function HomePage() {
-  return <>
-    <Hero page="home"/>
-    <section id="divisiones" className="mx-auto max-w-[1220px] px-5 py-20 sm:px-8 lg:py-28">
-      <div className="max-w-2xl"><p className="text-xs font-bold uppercase tracking-[.2em] text-[#FF5A00]">Un mismo estudio, tres capacidades</p><h2 className="display mt-4 text-4xl sm:text-6xl">Tecnología y creatividad trabajando juntas.</h2></div>
-      <div className="mt-12 grid gap-4 lg:grid-cols-3">
-        {divisions.map(d => <a key={d.key} href={d.href} className="group flex min-h-[330px] flex-col rounded-[28px] border border-[#E8E6E1] bg-white p-7 transition hover:-translate-y-1 hover:border-[#FF5A00]/50 hover:shadow-xl sm:p-8">
-          <div className="flex items-center justify-between"><span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#FFF1E8] text-[#FF5A00]"><d.icon size={27}/></span><span className="display text-5xl text-[#E8E6E1]">{d.number}</span></div>
-          <h3 className="display mt-10 text-4xl">{d.title}</h3><p className="mt-3 font-bold">{d.line}</p><p className="mt-3 max-w-sm text-sm leading-relaxed text-[#5A6068]">{d.description}</p>
-          <span className="mt-auto flex items-center gap-2 pt-8 text-sm font-extrabold text-[#FF5A00]">Explorar {d.title} <ArrowRight size={17} className="transition group-hover:translate-x-1"/></span>
-        </a>)}
-      </div>
-    </section>
-    <section className="border-y border-[#E8E6E1] bg-white py-20 lg:py-24">
-      <div className="mx-auto max-w-[1220px] px-5 sm:px-8">
-        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-          <div className="max-w-2xl"><p className="text-xs font-bold uppercase tracking-[.2em] text-[#FF5A00]">Soluciones según tu objetivo</p><h2 className="display mt-4 text-4xl sm:text-6xl">¿Qué necesitas poner en marcha?</h2></div>
-          <p className="max-w-sm text-sm leading-relaxed text-[#5A6068]">No tienes que llegar con la solución definida. Cuéntanos qué quieres conseguir y vemos qué combinación de capacidades tiene sentido.</p>
-        </div>
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {[
-            {icon:MonitorSmartphone,title:"Presentar tu negocio",desc:"Una web clara para explicar lo que haces, mostrar tu oferta y facilitar consultas.",tag:"Digital",href:"/digital/"},
-            {icon:Workflow,title:"Ordenar la atención",desc:"Asistentes, formularios e integraciones para organizar consultas y tareas repetitivas.",tag:"Digital",href:"/digital/"},
-            {icon:Heart,title:"Crear una experiencia",desc:"Invitaciones, dinámicas participativas y recuerdos digitales para eventos y celebraciones.",tag:"Experiences",href:"/experiences/"},
-            {icon:Camera,title:"Comunicar una idea",desc:"Fotografía, video y piezas creativas para contar mejor una marca, producto o proyecto.",tag:"Studio",href:"/studio/"},
-          ].map(item=><a key={item.title} href={item.href} className="group flex min-h-[250px] flex-col rounded-3xl border border-[#E8E6E1] p-6 transition hover:-translate-y-1 hover:border-[#FF5A00]/60 hover:shadow-lg">
-            <div className="flex items-center justify-between"><span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#FFF1E8] text-[#FF5A00]"><item.icon size={22}/></span><span className="text-[10px] font-extrabold uppercase tracking-[.16em] text-[#8A8F96]">{item.tag}</span></div>
-            <h3 className="mt-7 text-lg font-extrabold">{item.title}</h3><p className="mt-2 text-sm leading-relaxed text-[#5A6068]">{item.desc}</p>
-            <span className="mt-auto flex items-center gap-2 pt-6 text-xs font-extrabold text-[#FF5A00]">Explorar capacidad <ArrowRight size={15} className="transition group-hover:translate-x-1"/></span>
-          </a>)}
-        </div>
-      </div>
-    </section>
-    <section className="bg-[#0E1116] py-20 text-white lg:py-24"><div className="mx-auto max-w-[1220px] px-5 sm:px-8">
-      <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between"><div><p className="text-xs font-bold uppercase tracking-[.2em] text-[#FF7A36]">AUTOMATA · Experience Lab</p><h2 className="display mt-4 max-w-2xl text-4xl sm:text-6xl">No te lo contamos.<br/>Pruébalo.</h2></div><p className="max-w-sm text-sm leading-relaxed text-white/60">Explora pequeñas experiencias interactivas que muestran cómo pensamos, diseñamos y construimos.</p></div>
-      <div className="mt-10 grid gap-4 md:grid-cols-3">
-        {[{area:"DIGITAL",title:"Flujos para negocios",desc:"Explora pedidos y solicitudes de cita en ejemplos interactivos.",href:"/demos/",action:"Probar flujos"},{area:"EXPERIENCES",title:"Una invitación especial",desc:"Recorre una invitación de boda y prueba su confirmación de asistencia.",href:"/experiences/demo/",action:"Ver invitación"},{area:"STUDIO",title:"Creative Lab",desc:"Convierte un brief sencillo en una primera estructura narrativa.",href:"/studio/lab/",action:"Crear concepto"}].map(item=><a key={item.area} href={item.href} className="group flex min-h-[250px] flex-col rounded-[24px] border border-white/15 bg-white/[.04] p-6 transition hover:-translate-y-1 hover:border-[#FF7A36]/70 hover:bg-white/[.07]"><span className="text-[10px] font-extrabold tracking-[.2em] text-[#FF7A36]">{item.area}</span><h3 className="display mt-8 text-3xl">{item.title}</h3><p className="mt-3 text-sm leading-relaxed text-white/60">{item.desc}</p><span className="mt-auto flex items-center gap-2 pt-7 text-sm font-bold text-white">{item.action} <ArrowUpRight size={16} className="transition group-hover:translate-x-1"/></span></a>)}
-      </div><div className="mt-7 text-center"><a href="/proyectos/" className="inline-flex min-h-12 items-center gap-2 rounded-full border border-white/25 px-6 text-sm font-bold text-white transition hover:border-[#FF7A36] hover:text-[#FF7A36]">Explorar todo el laboratorio <ArrowRight size={16}/></a></div>
-    </div></section>
-    <section className="bg-[#F4F3F0] py-20 lg:py-24"><div className="mx-auto grid max-w-[1220px] gap-10 px-5 sm:px-8 lg:grid-cols-[.8fr_1.2fr] lg:items-center">
-      <div><p className="text-xs font-bold uppercase tracking-[.2em] text-[#FF5A00]">Cómo pensamos</p><h2 className="display mt-4 text-4xl sm:text-6xl">Primero el propósito. Después la tecnología.</h2></div>
-      <div className="grid gap-5 sm:grid-cols-2">{[["01","Comprender","Escuchamos el contexto y el resultado que se busca."],["02","Diseñar","Elegimos una solución adecuada, no la más complicada."],["03","Construir","Prototipamos, probamos e implementamos por etapas."],["04","Acompañar","Medimos, corregimos y mejoramos con el uso real."]].map(([n,t,d])=><div key={n} className="border-t border-[#D8D5CE] pt-5"><span className="text-xs font-bold text-[#FF5A00]">{n}</span><h3 className="mt-2 text-xl font-extrabold">{t}</h3><p className="mt-2 text-sm leading-relaxed text-[#5A6068]">{d}</p></div>)}</div>
-    </div></section>
-    <section className="mx-auto max-w-[1220px] px-5 py-20 text-center sm:px-8 lg:py-28"><p className="text-xs font-bold uppercase tracking-[.2em] text-[#FF5A00]">Cada proyecto empieza distinto</p><h2 className="display mx-auto mt-4 max-w-3xl text-4xl sm:text-6xl">La solución correcta empieza con una buena conversación.</h2><p className="mx-auto mt-5 max-w-xl text-sm leading-relaxed text-[#5A6068]">Cuéntanos qué quieres resolver, crear o comunicar. Te ayudamos a ordenar la idea antes de decidir qué construir.</p><a href="/contacto/" className="mt-8 inline-flex min-h-14 items-center gap-3 rounded-full bg-[#0E1116] px-7 text-sm font-bold text-white hover:bg-[#FF5A00]">Hablemos <ArrowRight size={18}/></a></section>
-  </>;
-}
+function HomePage() { return <ImmersiveHome/>; }
 function DigitalPage() {
   const items = [
     [Code2,"Sitios y experiencias web","Presencia digital clara, rápida y pensada para orientar consultas.","web-presence"],
