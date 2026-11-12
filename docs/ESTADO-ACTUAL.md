@@ -160,7 +160,8 @@ La última acción local conocida fue ejecutar `npm install` y `npm run typechec
 
 ## 11. QA de previsualización y estado de CI (12 nov 2026)
 
-**HEAD verificado de la rama:** `278a67f582531189b95616a064419d69631463ee`.
+**Commit de implementación revisado:** `278a67f582531189b95616a064419d69631463ee`.  
+**Commit de esta actualización documental:** `88298f73fd0c23bbe46ecfeb870c466ba637b643`.
 
 ### Previsualización automatizada
 
