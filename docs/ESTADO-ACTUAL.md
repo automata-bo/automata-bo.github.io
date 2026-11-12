@@ -156,3 +156,30 @@ La última acción local conocida fue ejecutar `npm install` y `npm run typechec
 - Se consultó el inventario de Workers de la cuenta Cloudflare conectada: solo aparece `automata-chat`. No aparece `automata-v2-preview`; por tanto, no se detecta que el flujo anterior haya creado ese Worker.
 - Commit de eliminación: `f433d0091aec9dd28e618689d4ff5629c5ad3e89`.
 - `main`, el Worker `automata-chat` y la base D1 existente no fueron modificados por esta corrección. No se realizó despliegue.
+
+
+## 11. QA de previsualización y estado de CI (12 nov 2026)
+
+**HEAD verificado de la rama:** `278a67f582531189b95616a064419d69631463ee`.
+
+### Previsualización automatizada
+
+- Se endureció `.github/workflows/visual-preview.yml`: espera la disponibilidad del servidor, verifica respuestas HTTP correctas y captura errores JavaScript de página antes de dar por aprobado el recorrido.
+- La ejecución [Build visual preview #43215077161](https://github.com/automata-bo/automata-bo.github.io/actions/runs/43215077161) terminó en SUCCESS.
+- Se recorrieron nueve rutas en dos tamaños (1440×1000 y 390×844): 18 visitas en total. El workflow terminó sin errores HTTP ni excepciones JavaScript de página.
+- Artefacto `automata-v2-visual-preview`, con capturas y sitio compilado: 3.97 MB. Disponible hasta el 19 de noviembre de 2026.
+- Se inspeccionaron las capturas de escritorio y móvil. La jerarquía visual y la identidad se mantienen coherentes entre divisiones y páginas de demostración. **Hallazgo pendiente:** el panel inicial de consentimiento de analítica invade parcialmente el área del CTA del hero en la primera vista, especialmente en móvil. Revisar su ubicación/espaciado sin debilitar la elección de privacidad.
+- Esta automatización comprueba carga de rutas y errores de runtime; no sustituye las pruebas manuales de menú móvil, teclado, chat, consentimiento, formulario de contacto ni interacciones de las demos.
+
+### CI y Cloudflare
+
+- Los workflows GitHub Actions de sitio, TypeScript y Worker que acompañan al HEAD se reportaron aprobados en el estado de ejecución revisado.
+- El chequeo externo **Workers Builds: automata-chat** falló al ejecutar `npx wrangler preview`: la configuración Wrangler existente no contiene el bloque `previews` requerido por ese comando.
+- Ese fallo pertenece al trigger de Workers Builds asociado al Worker existente `automata-chat`; no es un despliegue de la web ni una prueba de que la V2 haya sido publicada.
+- No se añadió el bloque `previews`, no se cambió el trigger, no se desplegó ningún Worker y no se creó infraestructura Cloudflare adicional. Resolver la integración solo después de decidir si ese trigger debe ejecutar preview o si debe quedar fuera del flujo de esta rama.
+
+### Estado de publicación
+
+- PR #9 continúa abierto como borrador.
+- `main`, GitHub Pages de producción, Worker `automata-chat` y D1 `automata-audience` permanecen fuera de los cambios de esta rama.
+- No se ha autorizado merge ni despliegue.
