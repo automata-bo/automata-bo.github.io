@@ -105,7 +105,8 @@ jobs:
             await smokePage.getByText(/Una primera orientación ordenada/).waitFor({ state: "visible" });
             await smokePage.getByRole("button", { name: /Encuentra una solución/ }).click();
             const digitalAdvisor = smokePage.getByRole("dialog", { name: "Asistente virtual de Automata" });
-            await digitalAdvisor.getByText(/Estabas explorando AUTOMATA Digital/).waitFor({ state: "visible" });
+            await digitalAdvisor.waitFor({ state: "visible" });
+            await digitalAdvisor.getByRole("textbox", { name: "Escribe tu consulta" }).waitFor({ state: "visible" });
 
             await smokePage.goto("http://127.0.0.1:4173/experiences/", { waitUntil: "domcontentloaded", timeout: 15000 });
             await smokePage.getByRole("button", { name: "Participación" }).click();
