@@ -87,7 +87,7 @@ function Hero({ page }: { page: PageKey }) {
       <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[.22em] text-[#FF7A36]"><span className="h-2 w-2 rounded-full bg-[#FF5A00]"/>{meta.eyebrow}</p>
       <h1 className="display mt-7 max-w-[980px] text-[clamp(2.8rem,7vw,6.6rem)] leading-[.98]">{meta.title}</h1>
       <p className="mt-7 max-w-[660px] text-base leading-relaxed text-white/65 sm:text-lg">{meta.description}</p>
-      <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+      <div className="mt-9 flex flex-col items-start gap-3 sm:flex-row">
         {page === "home" ? <a href="#divisiones" className="inline-flex min-h-14 items-center justify-center gap-3 rounded-full bg-[#FF5A00] px-7 text-sm font-bold text-white hover:bg-[#E14E00]">Explorar lo que hacemos <ArrowRight size={18}/></a> : <button onClick={openAssistant} className="inline-flex min-h-14 items-center justify-center gap-3 rounded-full bg-[#FF5A00] px-7 text-sm font-bold text-white hover:bg-[#E14E00]">Conversemos sobre tu proyecto <ArrowRight size={18}/></button>}
         {page === "home" && <button onClick={openAssistant} className="inline-flex min-h-14 items-center justify-center gap-3 rounded-full border border-white/25 px-7 text-sm font-bold text-white hover:bg-white/10">Iniciar una conversación <Bot size={18}/></button>}
       </div>
