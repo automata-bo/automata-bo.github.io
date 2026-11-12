@@ -369,6 +369,7 @@ label{font-size:13px;font-weight:700;letter-spacing:.02em}
 
 
 /* ADAPTACIÓN FIEL DE LA COMPOSICIÓN ORIGINAL · AUTOMATA */
+.automata-editorial .auto-hero-top{display:none}
 .automata-editorial .auto-hero{
   min-height:calc(100svh - 76px);
   padding-top:clamp(28px,5vh,58px);
@@ -477,7 +478,7 @@ label{font-size:13px;font-weight:700;letter-spacing:.02em}
 }
 @media(max-width:640px){
   .automata-editorial .auto-hero-center{padding:8vh 0 7vh}
-  .automata-editorial .auto-hero-title{font-size:clamp(3.2rem,15vw,6.8rem)}
+  .automata-editorial .auto-hero-title{font-size:clamp(2.4rem,9.4vw,6.8rem)}
   .automata-editorial .auto-hero-manifesto{font-size:9px;letter-spacing:.08em}
   .automata-editorial .auto-hero-bottom span:nth-child(2){display:none}
   .automata-editorial .auto-divisions{padding-top:72px}
