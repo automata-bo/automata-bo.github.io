@@ -6,6 +6,7 @@ import CookieConsent from "./CookieConsent";
 import NewsletterSignup from "./NewsletterSignup";
 import { trackEvent } from "./analytics";
 import logoFull from "./assets/automata.svg";
+import logoMonoWhite from "./assets/automataB.svg";
 import ImmersiveHome from "./ImmersiveHome";
 import { DigitalExperience, ExperiencesExperience, StudioExperience, ProjectsExperience, ContactExperience } from "./ImmersiveSections";
 
@@ -74,19 +75,19 @@ function Header({ page }: { page: PageKey }) {
   </header>;
 }
 function Footer() {
-  return <footer className="border-t border-[#E8E6E1] bg-white">
+  return <footer className="border-t border-white/10">
     <div className="mx-auto flex max-w-[1220px] flex-col gap-5 px-5 py-9 sm:px-8 md:flex-row md:items-center md:justify-between">
       <a href="/" aria-label="AUTOMATA, inicio" className="inline-flex shrink-0 items-center">
-        <img src={logoFull} alt="AUTOMATA" className="h-6 w-auto max-w-[190px] object-contain" />
+        <img src={logoMonoWhite} alt="AUTOMATA" className="h-6 w-auto max-w-[190px] object-contain" />
       </a>
-      <p className="max-w-md text-sm leading-relaxed text-[#5A6068]">Digital Experiences & Intelligent Solutions. Tecnología, creatividad e inteligencia aplicadas a experiencias y soluciones digitales.</p>
-      <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm font-semibold text-[#5A6068]">
+      <p className="max-w-md text-sm leading-relaxed text-white/65">Digital Experiences & Intelligent Solutions. Tecnología, creatividad e inteligencia aplicadas a experiencias y soluciones digitales.</p>
+      <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm font-semibold text-white/65">
         {nav.map(item => <a key={item.href} href={item.href} className="hover:text-[#FF5A00]">{item.label}</a>)}
         <button type="button" onClick={() => window.dispatchEvent(new Event("automata:open-cookie-settings"))} className="text-left hover:text-[#FF5A00]">Preferencias de cookies</button>
       </div>
       <NewsletterSignup/>
     </div>
-    <div className="border-t border-[#E8E6E1] py-4 text-center text-xs text-[#8A8F96]">© {new Date().getFullYear()} AUTOMATA. Tecnología con intención.</div>
+    <div className="border-t border-white/10 py-4 text-center text-xs text-white/40">© {new Date().getFullYear()} AUTOMATA. Tecnología con intención.</div>
   </footer>;
 }
 function Hero({ page }: { page: PageKey }) {
