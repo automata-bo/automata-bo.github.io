@@ -113,7 +113,7 @@ jobs:
               if (!panel) return false;
               const rect = panel.getBoundingClientRect();
               return rect.top >= 0 && rect.top < window.innerHeight;
-            }, { timeout: 5000 }).catch(() => {
+            }, undefined, { timeout: 5000 }).catch(() => {
               throw new Error("Footer cookie preferences did not reopen and scroll to the notice.");
             });
             await smokePage.getByRole("button", { name: "Abrir menú" }).click();
