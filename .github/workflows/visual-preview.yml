@@ -212,6 +212,21 @@ jobs:
               || !contactMessage.includes("automatizar consultas y reservas")) {
               throw new Error("Contact form did not prepare the expected WhatsApp brief.");
             }
+            await smokePage.goto("http://127.0.0.1:4173/demos/", { waitUntil: "domcontentloaded", timeout: 15000 });
+            await smokePage.getByRole("button", { name: "Añadir" }).first().click();
+            await smokePage.getByRole("button", { name: "Registrar pedido" }).click();
+            await smokePage.getByText("Pedido registrado. Simulación lista.").waitFor({ state: "visible" });
+            await smokePage.getByRole("tab", { name: "CONSULTORIO" }).click();
+            await smokePage.getByLabel("Nombre", { exact: true }).fill("Paciente QA");
+            await smokePage.getByLabel("Fecha tentativa").fill("2027-01-10");
+            await smokePage.getByRole("button", { name: "Solicitar cita" }).click();
+            await smokePage.getByText(/Solicitud registrada\. Simulación: la confirmación real la da la atención humana/).waitFor({ state: "visible" });
+            await smokePage.getByRole("tab", { name: "PELUQUERÍA" }).click();
+            await smokePage.getByLabel("Nombre", { exact: true }).fill("Cliente QA");
+            await smokePage.getByRole("button", { name: "Reservar" }).click();
+            await smokePage.getByText(/Solicitud registrada\. Simulación: la disponibilidad se confirma en la versión real/).waitFor({ state: "visible" });
+            console.log("OK Digital demos smoke test: restaurant order, clinic appointment and salon reservation");
+
             await smokePage.goto("http://127.0.0.1:4173/experiences/", { waitUntil: "domcontentloaded", timeout: 15000 });
             await smokePage.getByRole("link", { name: /Ver experiencia/ }).click();
             await smokePage.waitForURL("**/experiences/demo/");
