@@ -129,7 +129,8 @@ jobs:
             await smokePage.getByLabel("¿Qué quieres conseguir?").fill("Quiero organizar las consultas que llegan a mi negocio por WhatsApp.");
             await smokePage.getByRole("button", { name: /Continuar con el asesor/ }).click();
             const contactAdvisor = smokePage.getByRole("dialog", { name: "Asistente virtual de Automata" });
-            await contactAdvisor.getByRole("textbox", { name: "Escribe tu consulta" }).toHaveValue("Quiero explorar una solución para: Digital. Mi objetivo es: Quiero organizar las consultas que llegan a mi negocio por WhatsApp.");
+            const contactDraft = await contactAdvisor.getByRole("textbox", { name: "Escribe tu consulta" }).inputValue();
+            if (contactDraft !== "Quiero explorar una solución para: Digital. Mi objetivo es: Quiero organizar las consultas que llegan a mi negocio por WhatsApp.") throw new Error(`Unexpected contact draft: ${contactDraft}`);
 
             await smokePage.goto("http://127.0.0.1:4173/demos/", { waitUntil: "domcontentloaded", timeout: 15000 });
             await smokePage.getByRole("button", { name: "Añadir" }).first().click();
