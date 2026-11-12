@@ -212,6 +212,44 @@ jobs:
               || !contactMessage.includes("automatizar consultas y reservas")) {
               throw new Error("Contact form did not prepare the expected WhatsApp brief.");
             }
+            await smokePage.goto("http://127.0.0.1:4173/experiences/", { waitUntil: "domcontentloaded", timeout: 15000 });
+            await smokePage.getByRole("link", { name: /Ver experiencia/ }).click();
+            await smokePage.waitForURL("**/experiences/demo/");
+            const invitationForm = smokePage.locator("form");
+            await invitationForm.getByLabel("Nombre y apellido").fill("Invitada QA");
+            await invitationForm.getByRole("button", { name: "Sí, ahí estaré" }).click();
+            await invitationForm.getByLabel(/Cantidad de personas/).selectOption("3");
+            await invitationForm.getByRole("button", { name: "Confirmar respuesta" }).click();
+            const invitationStatus = smokePage.getByRole("status");
+            await invitationStatus.waitFor({ state: "visible" });
+            if (!(await invitationStatus.getByText(/Invitada QA/).count())
+              || !(await invitationStatus.getByText(/3 personas/).count())
+              || !(await invitationStatus.getByText(/No se envió ni guardó en un servidor/).count())) {
+              throw new Error("Invitation demo did not show the expected local-only RSVP confirmation.");
+            }
+            await invitationStatus.getByRole("button", { name: "Editar respuesta" }).click();
+            await invitationForm.getByRole("button", { name: "No podré asistir" }).click();
+            await invitationForm.getByRole("button", { name: "Confirmar respuesta" }).click();
+            if (!(await smokePage.getByRole("status").getByText(/no asistencia/).count())) {
+              throw new Error("Invitation demo did not handle a negative RSVP.");
+            }
+
+            await smokePage.goto("http://127.0.0.1:4173/studio/", { waitUntil: "domcontentloaded", timeout: 15000 });
+            await smokePage.getByRole("link", { name: /Explorar Creative Lab/ }).click();
+            await smokePage.waitForURL("**/studio/lab/");
+            const creativeForm = smokePage.locator("form");
+            await creativeForm.getByLabel("Marca o negocio").fill("Marca QA");
+            await creativeForm.getByLabel("¿Qué producto o servicio comunicamos?").fill("una experiencia digital");
+            await creativeForm.getByLabel("Objetivo").selectOption("conversion");
+            await creativeForm.getByLabel("Formato").selectOption("spot");
+            await creativeForm.getByRole("button", { name: /Construir concepto/ }).click();
+            const creativeOutput = smokePage.locator("section").filter({ has: smokePage.getByRole("heading", { name: "Tu primera dirección." }) });
+            await creativeOutput.getByText(/Motivar una consulta o compra/).waitFor({ state: "visible" });
+            await creativeOutput.getByText(/Spot audiovisual · 30–45 s/).waitFor({ state: "visible" });
+            await creativeOutput.getByText(/35–45 s · Cierre/).waitFor({ state: "visible" });
+            await creativeOutput.getByRole("button", { name: /Copiar brief completo/ }).click();
+            await creativeOutput.getByRole("button", { name: /Brief copiado/ }).waitFor({ state: "visible" });
+            console.log("OK demos smoke test: invitation RSVP and Studio creative brief");
             console.log("OK mobile smoke test: consent, newsletter focus, assistant handoff and contact form");
 
           } catch (error) {
