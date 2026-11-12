@@ -187,7 +187,33 @@ jobs:
             if (!openedUrl.startsWith("https://wa.me/59176192899?text=") || !decodeURIComponent(openedUrl).includes("BRIEF DE CIERRE HUMANO")) {
               throw new Error("WhatsApp handoff did not prepare the expected contextual brief URL.");
             }
-            console.log("OK mobile smoke test: consent, newsletter focus, contextual assistant and explicit WhatsApp handoff");
+
+            await smokePage.goto("http://127.0.0.1:4173/contacto/", { waitUntil: "domcontentloaded", timeout: 15000 });
+            await smokePage.evaluate(() => { window.__automataOpenedUrl = ""; });
+            const contactForm = smokePage.locator("form").filter({ has: smokePage.getByRole("button", { name: /Preparar mensaje en WhatsApp/ }) });
+            const objectiveField = contactForm.locator("textarea");
+            if (await contactForm.evaluate((form) => form.checkValidity())) {
+              throw new Error("Contact form accepted an empty required objective.");
+            }
+            await contactForm.getByLabel("Tu nombre").fill("Prueba QA");
+            await contactForm.getByLabel("Negocio u organización").fill("Negocio de prueba");
+            await contactForm.locator("select").selectOption({ label: "Digital" });
+            await objectiveField.fill("Necesito automatizar consultas y reservas por WhatsApp.");
+            if (!(await contactForm.evaluate((form) => form.checkValidity()))) {
+              throw new Error("Contact form rejected a valid objective.");
+            }
+            await contactForm.getByRole("button", { name: /Preparar mensaje en WhatsApp/ }).click();
+            const contactUrl = await smokePage.evaluate(() => window.__automataOpenedUrl ?? "");
+            const contactMessage = decodeURIComponent(contactUrl);
+            if (!contactUrl.startsWith("https://wa.me/59176192899?text=")
+              || !contactMessage.includes("Nombre: Prueba QA")
+              || !contactMessage.includes("Negocio / organización: Negocio de prueba")
+              || !contactMessage.includes("Área de interés: Digital")
+              || !contactMessage.includes("automatizar consultas y reservas")) {
+              throw new Error("Contact form did not prepare the expected WhatsApp brief.");
+            }
+            console.log("OK mobile smoke test: consent, newsletter focus, assistant handoff and contact form");
+
           } catch (error) {
             failures.push(`mobile smoke test: ${error.message}`);
             console.error(failures.at(-1));
