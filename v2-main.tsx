@@ -6,6 +6,8 @@ import CookieConsent from "./CookieConsent";
 import NewsletterSignup from "./NewsletterSignup";
 import { trackEvent } from "./analytics";
 import logoFull from "./assets/42a5f50319bf92a6-automataF.png";
+import ImmersiveHome from "./ImmersiveHome";
+import { DigitalExperience, ExperiencesExperience, StudioExperience, ProjectsExperience, ContactExperience } from "./ImmersiveSections";
 
 type PageKey = "home" | "digital" | "experiences" | "studio" | "projects" | "contact";
 const nav = [
@@ -95,150 +97,15 @@ function Hero({ page }: { page: PageKey }) {
     <div className="h-1 w-full bg-gradient-to-r from-[#FF5A00] via-[#FF8A4C] to-transparent"/>
   </section>;
 }
-function HomePage() {
-  return <>
-    <Hero page="home"/>
-    <section id="divisiones" className="mx-auto max-w-[1220px] px-5 py-20 sm:px-8 lg:py-28">
-      <div className="max-w-2xl"><p className="text-xs font-bold uppercase tracking-[.2em] text-[#FF5A00]">Un mismo estudio, tres capacidades</p><h2 className="display mt-4 text-4xl sm:text-6xl">Tecnología y creatividad trabajando juntas.</h2></div>
-      <div className="mt-12 grid gap-4 lg:grid-cols-3">
-        {divisions.map(d => <a key={d.key} href={d.href} className="group flex min-h-[330px] flex-col rounded-[28px] border border-[#E8E6E1] bg-white p-7 transition hover:-translate-y-1 hover:border-[#FF5A00]/50 hover:shadow-xl sm:p-8">
-          <div className="flex items-center justify-between"><span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#FFF1E8] text-[#FF5A00]"><d.icon size={27}/></span><span className="display text-5xl text-[#E8E6E1]">{d.number}</span></div>
-          <h3 className="display mt-10 text-4xl">{d.title}</h3><p className="mt-3 font-bold">{d.line}</p><p className="mt-3 max-w-sm text-sm leading-relaxed text-[#5A6068]">{d.description}</p>
-          <span className="mt-auto flex items-center gap-2 pt-8 text-sm font-extrabold text-[#FF5A00]">Explorar {d.title} <ArrowRight size={17} className="transition group-hover:translate-x-1"/></span>
-        </a>)}
-      </div>
-    </section>
-    <section className="border-y border-[#E8E6E1] bg-white py-20 lg:py-24">
-      <div className="mx-auto max-w-[1220px] px-5 sm:px-8">
-        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-          <div className="max-w-2xl"><p className="text-xs font-bold uppercase tracking-[.2em] text-[#FF5A00]">Soluciones según tu objetivo</p><h2 className="display mt-4 text-4xl sm:text-6xl">¿Qué necesitas poner en marcha?</h2></div>
-          <p className="max-w-sm text-sm leading-relaxed text-[#5A6068]">No tienes que llegar con la solución definida. Cuéntanos qué quieres conseguir y vemos qué combinación de capacidades tiene sentido.</p>
-        </div>
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {[
-            {icon:MonitorSmartphone,title:"Presentar tu negocio",desc:"Una web clara para explicar lo que haces, mostrar tu oferta y facilitar consultas.",tag:"Digital",href:"/digital/"},
-            {icon:Workflow,title:"Ordenar la atención",desc:"Asistentes, formularios e integraciones para organizar consultas y tareas repetitivas.",tag:"Digital",href:"/digital/"},
-            {icon:Heart,title:"Crear una experiencia",desc:"Invitaciones, dinámicas participativas y recuerdos digitales para eventos y celebraciones.",tag:"Experiences",href:"/experiences/"},
-            {icon:Camera,title:"Comunicar una idea",desc:"Fotografía, video y piezas creativas para contar mejor una marca, producto o proyecto.",tag:"Studio",href:"/studio/"},
-          ].map(item=><a key={item.title} href={item.href} className="group flex min-h-[250px] flex-col rounded-3xl border border-[#E8E6E1] p-6 transition hover:-translate-y-1 hover:border-[#FF5A00]/60 hover:shadow-lg">
-            <div className="flex items-center justify-between"><span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#FFF1E8] text-[#FF5A00]"><item.icon size={22}/></span><span className="text-[10px] font-extrabold uppercase tracking-[.16em] text-[#8A8F96]">{item.tag}</span></div>
-            <h3 className="mt-7 text-lg font-extrabold">{item.title}</h3><p className="mt-2 text-sm leading-relaxed text-[#5A6068]">{item.desc}</p>
-            <span className="mt-auto flex items-center gap-2 pt-6 text-xs font-extrabold text-[#FF5A00]">Explorar capacidad <ArrowRight size={15} className="transition group-hover:translate-x-1"/></span>
-          </a>)}
-        </div>
-      </div>
-    </section>
-    <section className="bg-[#0E1116] py-20 text-white lg:py-24"><div className="mx-auto max-w-[1220px] px-5 sm:px-8">
-      <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between"><div><p className="text-xs font-bold uppercase tracking-[.2em] text-[#FF7A36]">AUTOMATA · Experience Lab</p><h2 className="display mt-4 max-w-2xl text-4xl sm:text-6xl">No te lo contamos.<br/>Pruébalo.</h2></div><p className="max-w-sm text-sm leading-relaxed text-white/60">Explora pequeñas experiencias interactivas que muestran cómo pensamos, diseñamos y construimos.</p></div>
-      <div className="mt-10 grid gap-4 md:grid-cols-3">
-        {[{area:"DIGITAL",title:"Flujos para negocios",desc:"Explora pedidos y solicitudes de cita en ejemplos interactivos.",href:"/demos/",action:"Probar flujos"},{area:"EXPERIENCES",title:"Una invitación especial",desc:"Recorre una invitación de boda y prueba su confirmación de asistencia.",href:"/experiences/demo/",action:"Ver invitación"},{area:"STUDIO",title:"Creative Lab",desc:"Convierte un brief sencillo en una primera estructura narrativa.",href:"/studio/lab/",action:"Crear concepto"}].map(item=><a key={item.area} href={item.href} className="group flex min-h-[250px] flex-col rounded-[24px] border border-white/15 bg-white/[.04] p-6 transition hover:-translate-y-1 hover:border-[#FF7A36]/70 hover:bg-white/[.07]"><span className="text-[10px] font-extrabold tracking-[.2em] text-[#FF7A36]">{item.area}</span><h3 className="display mt-8 text-3xl">{item.title}</h3><p className="mt-3 text-sm leading-relaxed text-white/60">{item.desc}</p><span className="mt-auto flex items-center gap-2 pt-7 text-sm font-bold text-white">{item.action} <ArrowUpRight size={16} className="transition group-hover:translate-x-1"/></span></a>)}
-      </div><div className="mt-7 text-center"><a href="/proyectos/" className="inline-flex min-h-12 items-center gap-2 rounded-full border border-white/25 px-6 text-sm font-bold text-white transition hover:border-[#FF7A36] hover:text-[#FF7A36]">Explorar todo el laboratorio <ArrowRight size={16}/></a></div>
-    </div></section>
-    <section className="bg-[#F4F3F0] py-20 lg:py-24"><div className="mx-auto grid max-w-[1220px] gap-10 px-5 sm:px-8 lg:grid-cols-[.8fr_1.2fr] lg:items-center">
-      <div><p className="text-xs font-bold uppercase tracking-[.2em] text-[#FF5A00]">Cómo pensamos</p><h2 className="display mt-4 text-4xl sm:text-6xl">Primero el propósito. Después la tecnología.</h2></div>
-      <div className="grid gap-5 sm:grid-cols-2">{[["01","Comprender","Escuchamos el contexto y el resultado que se busca."],["02","Diseñar","Elegimos una solución adecuada, no la más complicada."],["03","Construir","Prototipamos, probamos e implementamos por etapas."],["04","Acompañar","Medimos, corregimos y mejoramos con el uso real."]].map(([n,t,d])=><div key={n} className="border-t border-[#D8D5CE] pt-5"><span className="text-xs font-bold text-[#FF5A00]">{n}</span><h3 className="mt-2 text-xl font-extrabold">{t}</h3><p className="mt-2 text-sm leading-relaxed text-[#5A6068]">{d}</p></div>)}</div>
-    </div></section>
-    <section className="mx-auto max-w-[1220px] px-5 py-20 text-center sm:px-8 lg:py-28"><p className="text-xs font-bold uppercase tracking-[.2em] text-[#FF5A00]">Cada proyecto empieza distinto</p><h2 className="display mx-auto mt-4 max-w-3xl text-4xl sm:text-6xl">La solución correcta empieza con una buena conversación.</h2><p className="mx-auto mt-5 max-w-xl text-sm leading-relaxed text-[#5A6068]">Cuéntanos qué quieres resolver, crear o comunicar. Te ayudamos a ordenar la idea antes de decidir qué construir.</p><a href="/contacto/" className="mt-8 inline-flex min-h-14 items-center gap-3 rounded-full bg-[#0E1116] px-7 text-sm font-bold text-white hover:bg-[#FF5A00]">Hablemos <ArrowRight size={18}/></a></section>
-  </>;
-}
-function DigitalPage() {
-  const items = [
-    [Code2,"Sitios y experiencias web","Presencia digital clara, rápida y pensada para orientar consultas.","web-presence"],
-    [MonitorSmartphone,"Aplicaciones y sistemas","Herramientas a medida para ordenar información y procesos.","business-automation"],
-    [Bot,"Asistentes digitales","Atención inicial en web y mensajería, con reglas y transferencia humana.","digital-assistants"],
-    [Workflow,"Automatización e integraciones","Conectamos tareas repetitivas y sistemas cuando aporta valor.","business-automation"],
-    [Sparkles,"IA aplicada","Clasificación, asistencia y generación con supervisión y límites claros.","digital-assistants"],
-  ] as const;
-  return <><Hero page="digital"/><section className="mx-auto max-w-[1220px] px-5 py-20 sm:px-8"><div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">{items.map(([Icon,title,desc,productId])=><article key={title} className="flex flex-col rounded-3xl border border-[#E8E6E1] p-7"><span className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#FFF1E8] text-[#FF5A00]"><Icon size={24}/></span><h2 className="mt-7 text-xl font-extrabold">{title}</h2><p className="mt-3 text-sm leading-relaxed text-[#5A6068]">{desc}</p><div className="mt-6 flex flex-wrap gap-4"><button onClick={()=>openChatWithProduct("digital",productId,"explore")} className="automata-learn-bubble"><MessageCircle size={15}/> Saber más</button><button onClick={()=>openChatWithProduct("digital",productId,"proposal")} className="inline-flex min-h-11 items-center gap-2 text-sm font-bold text-[#0E1116] hover:text-[#FF5A00]">Solicitar propuesta <ArrowUpRight size={16}/></button></div></article>)}</div>
-    <div className="mt-14 rounded-[28px] bg-[#0E1116] p-8 text-white sm:p-12"><p className="text-xs font-bold uppercase tracking-[.2em] text-[#FF7A36]">Explora el funcionamiento</p><h2 className="display mt-4 max-w-2xl text-4xl sm:text-5xl">Prueba nuestras demostraciones interactivas.</h2><p className="mt-4 max-w-xl text-sm leading-relaxed text-white/65">Los ejemplos actuales de restaurante, consultorio y peluquería son simulaciones. Sirven para explorar flujos, no para registrar operaciones reales.</p><a href="/demos/" className="mt-7 inline-flex min-h-12 items-center gap-2 rounded-full bg-[#FF5A00] px-6 text-sm font-bold text-white">Abrir demos <ArrowUpRight size={17}/></a></div>
-  </section></>;
-}
-function ExperiencesPage() {
-  return <><Hero page="experiences"/><section className="mx-auto max-w-[1220px] px-5 py-20 sm:px-8"><div className="grid gap-12 lg:grid-cols-[1fr_1fr] lg:items-center">
-    <div><p className="text-xs font-bold uppercase tracking-[.2em] text-[#FF5A00]">Producto en desarrollo · Bodas y celebraciones</p><h2 className="display mt-4 text-4xl sm:text-5xl">Un álbum que todos ayudan a crear.</h2><p className="mt-5 text-base leading-relaxed text-[#5A6068]">Una experiencia personalizada para que los invitados compartan fotografías del evento y la pareja pueda reunir esos recuerdos en un álbum comunitario.</p>
-      <div className="mt-8 flex flex-wrap gap-3"><button onClick={()=>openChatWithProduct("experiences","event-experience","explore")} className="automata-learn-bubble"><MessageCircle size={15}/> Saber más</button><button onClick={()=>openChatWithProduct("experiences","event-experience","proposal")} className="inline-flex min-h-12 items-center gap-2 rounded-full border border-[#E8E6E1] px-6 text-sm font-bold text-[#0E1116] transition hover:border-[#FF5A00] hover:text-[#FF5A00]">Solicitar propuesta <ArrowUpRight size={17}/></button><a href="/experiences/demo/" className="inline-flex min-h-12 items-center gap-3 rounded-full bg-[#0E1116] px-6 text-sm font-bold text-white transition hover:bg-[#FF5A00]">Ver experiencia <ArrowUpRight size={17}/></a></div>
-      <ul className="mt-7 space-y-4">{[{icon:<QrCode size={22}/>,title:"Acceso mediante QR",desc:"Tarjetas y puntos de acceso para que los invitados participen."},{icon:<Camera size={22}/>,title:"Fotografías compartidas",desc:"Un recorrido sencillo para aportar imágenes desde el teléfono."},{icon:<Heart size={22}/>,title:"Álbum comunitario",desc:"Una colección personalizada para los novios y sus invitados."}].map(item=><li key={item.title} className="flex gap-4"><span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#FFF1E8] text-[#FF5A00]">{item.icon}</span><span><strong className="block text-sm">{item.title}</strong><span className="mt-1 block text-sm text-[#5A6068]">{item.desc}</span></span></li>)}</ul>
-    </div>
-    <div className="rounded-[30px] bg-[#FFF1E8] p-8 sm:p-10"><div className="mx-auto flex max-w-sm flex-col items-center rounded-[24px] border border-[#F2D9CA] bg-white p-8 text-center shadow-sm"><span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#FF5A00] text-white"><QrCode size={34}/></span><p className="mt-6 text-xs font-bold uppercase tracking-[.18em] text-[#FF5A00]">Un día para recordar</p><h3 className="display mt-3 text-3xl">Tu celebración</h3><p className="mt-3 text-sm text-[#5A6068]">Un ejemplo conceptual de experiencia para bodas.</p><div className="mt-6 grid h-32 w-32 grid-cols-5 gap-1 rounded-lg bg-[#F4F3F0] p-2">{Array.from({length:25},(_,i)=><span key={i} className={((i*7+i%3)%5<2)?"bg-[#0E1116]":"bg-white"}/>)}</div><span className="mt-4 text-[10px] text-[#8A8F96]">Representación gráfica, no código QR funcional</span></div></div>
-  </div><div className="mt-12 flex gap-3 rounded-2xl border border-[#E8E6E1] p-5 text-sm leading-relaxed text-[#5A6068]"><CheckCircle2 className="mt-0.5 shrink-0 text-[#FF5A00]" size={20}/><p>Antes de ofrecerlo como servicio cerrado definiremos consentimiento de los invitados, privacidad del álbum, capacidad de almacenamiento, tiempo de conservación y forma de entrega.</p></div></section></>;
-}
-function StudioPage() {
-  const lines: [string,string,string][] = [
-    ["Producción audiovisual","Videos promocionales, piezas de marca y contenidos para campañas.","audiovisual-production"],
-    ["Fotografía y contenido","Material visual para productos, personas, espacios y comunicación.","audiovisual-production"],
-    ["Publicidad y campañas","Concepto, narrativa y piezas adaptadas a cada canal.","creative-campaigns"],
-    ["Producción híbrida con IA","Combinación de grabación real, edición y herramientas generativas.","audiovisual-production"]
-  ];
-  return <><Hero page="studio"/><section className="mx-auto max-w-[1220px] px-5 py-20 sm:px-8"><div className="grid gap-4 sm:grid-cols-2">{lines.map(([title,desc,productId],i)=><article key={title} className="flex flex-col rounded-[28px] bg-[#0E1116] p-8 text-white"><span className="text-xs font-bold text-[#FF7A36]">0{i+1} / STUDIO</span><h2 className="display mt-10 text-3xl sm:text-4xl">{title}</h2><p className="mt-4 max-w-md text-sm leading-relaxed text-white/65">{desc}</p><div className="mt-6 flex flex-wrap gap-4"><button onClick={()=>openChatWithProduct("studio",productId,"explore")} className="automata-learn-bubble automata-learn-bubble-dark"><MessageCircle size={15}/> Saber más</button><button onClick={()=>openChatWithProduct("studio",productId,"proposal")} className="inline-flex min-h-11 items-center gap-2 text-sm font-bold text-white/80 hover:text-[#FF7A36]">Solicitar propuesta <ArrowUpRight size={16}/></button></div></article>)}</div><div className="mt-8 rounded-[28px] border border-[#E8E6E1] bg-[#FFF8F3] p-7 sm:p-9"><p className="text-xs font-bold uppercase tracking-[.2em] text-[#FF5A00]">Creative Lab · Prototipo interactivo</p><h2 className="display mt-4 max-w-2xl text-3xl sm:text-4xl">Convierte una idea en una primera dirección creativa.</h2><p className="mt-3 max-w-2xl text-sm leading-relaxed text-[#5A6068]">Define objetivo, público y formato. Explora una estructura narrativa y prepara un brief preliminar para una pieza audiovisual.</p><a href="/studio/lab/" className="mt-6 inline-flex min-h-12 items-center gap-2 rounded-full bg-[#0E1116] px-6 text-sm font-bold text-white transition hover:bg-[#FF5A00]">Explorar Creative Lab <ArrowUpRight size={17}/></a></div><p className="mt-7 text-xs leading-relaxed text-[#8A8F96]">La galería de trabajos se incorporará cuando tengamos piezas aprobadas para publicación. No usamos imágenes conceptuales como evidencia de proyectos realizados.</p></section></>;
-}
-function ProjectsPage() {
-  const showcases = [
-    {area:"DIGITAL",status:"Demo interactiva · simulación",title:"Flujos para negocios",desc:"Explora pedidos de restaurante y solicitudes de cita para consultorio y peluquería.",href:"/demos/",action:"Explorar flujos"},
-    {area:"EXPERIENCES",status:"Demo interactiva · sin persistencia",title:"Invitación para celebrar",desc:"Recorre una invitación de boda y prueba la confirmación de asistencia en el navegador.",href:"/experiences/demo/",action:"Probar invitación"},
-    {area:"STUDIO",status:"Prototipo interactivo · reglas locales",title:"Creative Lab",desc:"Construye un brief preliminar y una secuencia narrativa para una pieza audiovisual.",href:"/studio/lab/",action:"Crear un concepto"}
-  ];
-  return <><Hero page="projects"/><section className="mx-auto max-w-[1220px] px-5 py-20 sm:px-8"><div className="max-w-2xl"><p className="text-xs font-bold uppercase tracking-[.2em] text-[#FF5A00]">Explora haciendo</p><h2 className="display mt-4 text-4xl sm:text-5xl">Un laboratorio abierto de capacidades.</h2><p className="mt-4 text-sm leading-relaxed text-[#5A6068]">Cada pieza muestra una parte distinta de nuestro trabajo. Indicamos su estado y sus límites para que puedas distinguir una demostración de un servicio conectado a producción.</p></div><div className="mt-10 grid gap-4 lg:grid-cols-3">{showcases.map((item,i)=><article key={item.title} className="flex min-h-[330px] flex-col rounded-[28px] border border-[#E8E6E1] bg-white p-7 transition hover:-translate-y-1 hover:border-[#FF5A00]/60 hover:shadow-lg"><span className="text-xs font-extrabold tracking-[.18em] text-[#FF5A00]">{item.area} · 0{i+1}</span><span className="mt-5 inline-flex self-start rounded-full bg-[#F4F3F0] px-3 py-1.5 text-[10px] font-bold text-[#6E6A63]">{item.status}</span><h2 className="display mt-7 text-3xl">{item.title}</h2><p className="mt-3 text-sm leading-relaxed text-[#5A6068]">{item.desc}</p><a href={item.href} className="mt-auto inline-flex items-center gap-2 pt-8 text-sm font-extrabold text-[#FF5A00]">{item.action} <ArrowRight size={16}/></a></article>)}</div><div className="mt-8 rounded-[28px] border border-dashed border-[#D8D5CE] p-7"><span className="text-xs font-bold uppercase tracking-[.2em] text-[#8A8F96]">Proyectos y casos reales</span><h2 className="display mt-4 text-3xl">Publicaremos trabajo con contexto y permiso.</h2><p className="mt-3 max-w-2xl text-sm leading-relaxed text-[#5A6068]">Los prototipos no se presentan como clientes, resultados ni casos de éxito. Esta sección crecerá con piezas aprobadas, alcance explicado y evidencia verificable.</p></div></section></>;
-}
-function ContactPage() {
-  const openAssistant = () => openChatWithSource("contact");
-  const [name, setName] = useState("");
-  const [organization, setOrganization] = useState("");
-  const [area, setArea] = useState("No estoy seguro");
-  const [objective, setObjective] = useState("");
-
-  const prepareWhatsAppBrief = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const lines = [
-      "Hola, AUTOMATA. Quiero conversar sobre un proyecto.",
-      name.trim() ? "Nombre: " + name.trim() : "",
-      organization.trim() ? "Negocio / organización: " + organization.trim() : "",
-      "Área de interés: " + area,
-      "¿Qué necesito resolver?: " + objective.trim(),
-      "",
-      "Quisiera conocer los siguientes pasos."
-    ].filter(Boolean);
-    trackEvent("whatsapp_click");
-    window.open("https://wa.me/59176192899?text=" + encodeURIComponent(lines.join("\n")), "_blank", "noopener,noreferrer");
-  };
-
-  return <>
-    <Hero page="contact"/>
-    <section className="mx-auto max-w-[900px] px-5 py-16 sm:px-8 lg:py-20">
-      <div className="mx-auto max-w-2xl text-center">
-        <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#FFF1E8] text-[#FF5A00]"><Bot size={30}/></span>
-        <h2 className="display mt-7 text-4xl sm:text-5xl">Cuéntanos qué tienes en mente.</h2>
-        <p className="mx-auto mt-5 max-w-xl text-sm leading-relaxed text-[#5A6068]">Puedes preparar una consulta para WhatsApp o conversar primero con nuestro asistente. No enviamos este formulario a un servidor ni guardamos sus respuestas: tú revisas el mensaje y decides si lo envías desde WhatsApp.</p>
-      </div>
-      <form onSubmit={prepareWhatsAppBrief} className="mx-auto mt-10 max-w-2xl rounded-[28px] border border-[#E8E6E1] bg-white p-6 shadow-sm sm:p-9">
-        <div className="grid gap-5 sm:grid-cols-2">
-          <label className="block text-sm font-semibold text-[#272B31]">Tu nombre <span className="font-normal text-[#8A8F96]">(opcional)</span>
-            <input value={name} onChange={event => setName(event.target.value)} maxLength={80} autoComplete="name" className="mt-2 min-h-12 w-full rounded-xl border border-[#DAD8D2] px-4 font-normal outline-none transition focus:border-[#FF5A00] focus:ring-2 focus:ring-[#FF5A00]/15" placeholder="¿Cómo te llamas?"/>
-          </label>
-          <label className="block text-sm font-semibold text-[#272B31]">Negocio u organización <span className="font-normal text-[#8A8F96]">(opcional)</span>
-            <input value={organization} onChange={event => setOrganization(event.target.value)} maxLength={100} autoComplete="organization" className="mt-2 min-h-12 w-full rounded-xl border border-[#DAD8D2] px-4 font-normal outline-none transition focus:border-[#FF5A00] focus:ring-2 focus:ring-[#FF5A00]/15" placeholder="Nombre o actividad"/>
-          </label>
-        </div>
-        <label className="mt-5 block text-sm font-semibold text-[#272B31]">¿Qué área te interesa?
-          <select value={area} onChange={event => setArea(event.target.value)} className="mt-2 min-h-12 w-full rounded-xl border border-[#DAD8D2] bg-white px-4 font-normal outline-none transition focus:border-[#FF5A00] focus:ring-2 focus:ring-[#FF5A00]/15">
-            <option>Digital</option><option>Experiences</option><option>Studio</option><option>Una combinación de áreas</option><option>No estoy seguro</option>
-          </select>
-        </label>
-        <label className="mt-5 block text-sm font-semibold text-[#272B31]">¿Qué necesitas resolver?
-          <textarea required value={objective} onChange={event => setObjective(event.target.value)} minLength={12} maxLength={1200} rows={5} className="mt-2 w-full resize-y rounded-xl border border-[#DAD8D2] px-4 py-3 font-normal outline-none transition focus:border-[#FF5A00] focus:ring-2 focus:ring-[#FF5A00]/15" placeholder="Cuéntanos brevemente qué quieres conseguir, qué problema tienes o qué idea quieres explorar."/>
-          <span className="mt-1 block text-right text-xs font-normal text-[#8A8F96]">{objective.length}/1200</span>
-        </label>
-        <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-          <button type="submit" className="inline-flex min-h-14 flex-1 items-center justify-center gap-3 rounded-full bg-[#FF5A00] px-6 text-sm font-bold text-white transition hover:bg-[#E14E00]">Preparar mensaje en WhatsApp <ArrowUpRight size={18}/></button>
-          <button type="button" onClick={openAssistant} className="inline-flex min-h-14 items-center justify-center gap-3 rounded-full border border-[#DAD8D2] px-6 text-sm font-bold text-[#272B31] transition hover:border-[#FF5A00] hover:text-[#FF5A00]">Hablar con el asistente <Bot size={18}/></button>
-        </div>
-        <p className="mt-4 text-center text-xs leading-relaxed text-[#8A8F96]">El botón abre WhatsApp con un borrador. El mensaje solo se comparte si tú lo envías.</p>
-      </form>
-    </section>
-  </>;
-}
+function HomePage() { return <ImmersiveHome/>; }
+function DigitalPage() { return <DigitalExperience/>; }
+function ExperiencesPage() { return <ExperiencesExperience/>; }
+function StudioPage() { return <StudioExperience/>; }
+function ProjectsPage() { return <ProjectsExperience/>; }
+function ContactPage() { return <ContactExperience/>; }
 export default function V2App() {
   const page = currentPage();
   useEffect(() => { if (window.location.pathname.replace(/\/+$/, "") !== "/demos") trackEvent("page_view"); }, []);
   if (window.location.pathname.replace(/\/+$/, "") === "/demos") return <LegacyDigital/>;
-  return <div className="min-h-screen overflow-x-clip bg-white text-[#0E1116]"><Header page={page}/><CookieConsent/><main>{page === "home" ? <HomePage/> : page === "digital" ? <DigitalPage/> : page === "experiences" ? <ExperiencesPage/> : page === "studio" ? <StudioPage/> : page === "projects" ? <ProjectsPage/> : <ContactPage/>}</main><Footer/><ChatWidget/></div>;
+  return <div className="showroom-site min-h-screen overflow-x-clip bg-[#090b0f] text-white"><Header page={page}/><CookieConsent/><main>{page === "home" ? <HomePage/> : page === "digital" ? <DigitalPage/> : page === "experiences" ? <ExperiencesPage/> : page === "studio" ? <StudioPage/> : page === "projects" ? <ProjectsPage/> : <ContactPage/>}</main><Footer/><ChatWidget/></div>;
 }

@@ -180,7 +180,7 @@ export default function ChatWidget() {
 
   useEffect(() => {
     const show = (event: Event) => {
-      const detail = (event as CustomEvent<{ source?: unknown; productId?: unknown; action?: unknown }>).detail;
+      const detail = (event as CustomEvent<{ source?: unknown; productId?: unknown; action?: unknown; draft?: unknown }>).detail;
       const requestedSource = detail?.source;
       const source = typeof requestedSource === "string" && CHAT_SOURCES.includes(requestedSource as ChatSource)
         ? requestedSource as ChatSource
@@ -192,6 +192,7 @@ export default function ChatWidget() {
       const nextContext: AssistantContext = { productId: selectedProduct?.id, action };
       setChatSource(source);
       setAssistantContext(nextContext);
+      if (typeof detail?.draft === "string") setInput(detail.draft.slice(0, 1800));
       setMessages((previous) => previous.length === 1 && previous[0].role === "bot"
         ? [{ role: "bot", text: selectedProduct ? greetingForSource(source, selectedProduct.name) : greetingForSource(source) }]
         : previous);
@@ -374,8 +375,8 @@ export default function ChatWidget() {
         <p className="automata-chat-note"><Sparkles size={12} /> Asistente con IA de Automata · proveedores alternativos. No incluyas datos sensibles. Escribir una autorización en el chat no envía mensajes; el envío se inicia al pulsar Continuar por WhatsApp.</p>
       </section>}
       <button ref={launcherRef} type="button" className={`automata-chat-launcher${launcherSuppressed ? " automata-chat-launcher-suppressed" : ""}`} onClick={() => { if (!open) { trackEvent("chat_open"); setOpen(true); } else { closeChat(); } }} aria-label={open ? "Cerrar asistente" : "Abrir asistente"} aria-expanded={open} aria-controls="automata-chat-panel" aria-haspopup="dialog">
-        {open ? <X size={24} /> : <MessageCircle size={24} />}
-        {!open && <span>¿Hablamos?</span>}
+        {open ? <X size={24} /> : <Bot size={24} />}
+        {!open && <span>Tu asesor IA</span>}
       </button>
     </div>
   );

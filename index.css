@@ -116,3 +116,53 @@ label{font-size:13px;font-weight:700;letter-spacing:.02em}
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
 }
+
+
+/* AUTOMATA SHOWROOM · lenguaje visual inmersivo */
+.showroom{--night:#090b0f;--panel:#12161d;--orange:#ff641f;background:var(--night);color:#f7f5f1}
+.showroom .display{font-family:Archivo,Inter,sans-serif;letter-spacing:-.065em;line-height:.9}
+.showroom-grid{background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:54px 54px;mask-image:linear-gradient(to bottom,black,transparent 90%)}
+.showroom-glow{background:radial-gradient(circle,rgba(255,100,31,.23),rgba(255,100,31,.07) 35%,transparent 70%)}
+.showroom-orbit{border:1px solid rgba(255,255,255,.12);border-radius:50%;position:absolute;inset:8%;transform:rotate(-22deg) scaleY(.58)}
+.showroom-orbit.two{inset:17%;transform:rotate(34deg) scaleY(.68);border-color:rgba(255,100,31,.28)}
+.showroom-mascot{position:relative;filter:drop-shadow(0 24px 42px rgba(255,90,20,.18));animation:showroom-float 5s ease-in-out infinite}
+@keyframes showroom-float{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-13px) rotate(2deg)}}
+.showroom-scan{background:linear-gradient(90deg,transparent,rgba(255,111,48,.55),transparent);height:1px;animation:showroom-scan 4s ease-in-out infinite}
+@keyframes showroom-scan{0%,100%{transform:translateY(0);opacity:0}35%,65%{opacity:1}50%{transform:translateY(220px)}}
+.showroom-card{background:linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.025));border:1px solid rgba(255,255,255,.11);transition:transform .3s,border-color .3s,background .3s}
+.showroom-card:hover{transform:translateY(-7px);border-color:rgba(255,100,31,.65);background:linear-gradient(145deg,rgba(255,100,31,.12),rgba(255,255,255,.035))}
+.showroom-tab[aria-pressed="true"]{background:#ff641f;color:#100d0b;border-color:#ff641f}
+.showroom-tab{border:1px solid rgba(255,255,255,.17);color:rgba(255,255,255,.72);transition:all .2s}
+.showroom-tab:focus-visible,.showroom a:focus-visible,.showroom button:focus-visible{outline:3px solid #ff9a70;outline-offset:4px}
+.showroom-panel{background:linear-gradient(135deg,#191e26,#101319);border:1px solid rgba(255,255,255,.12)}
+.showroom-pill{border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.055)}
+.showroom .chat-preview{border:1px solid rgba(255,255,255,.1);background:#0c0f14}
+.showroom .chat-preview-bot{background:#202630;color:#f4f2ee;border-radius:15px 15px 15px 4px}
+.showroom .chat-preview-user{background:#ff641f;color:#17100c;border-radius:15px 15px 4px 15px}
+.showroom .showroom-muted{color:rgba(255,255,255,.58)}
+@media(prefers-reduced-motion:reduce){.showroom-mascot,.showroom-scan{animation:none!important}.showroom-card{transition:none}}
+
+/* SISTEMA VISUAL SHOWROOM PARA TODAS LAS RUTAS V2 */
+.showroom-site{background:#090b0f;color:#f7f5f1}
+.showroom-site>header{background:rgba(9,11,15,.88)!important;border-color:rgba(255,255,255,.1)!important}
+.showroom-site>header nav a{color:rgba(255,255,255,.72)!important}
+.showroom-site>header nav a:hover,.showroom-site>header nav a[aria-current=page]{color:#ff966b!important}
+.showroom-site>header button[aria-label="Abrir menú"],.showroom-site>header button[aria-label="Cerrar menú"]{border-color:rgba(255,255,255,.2)!important;color:white}
+.showroom-site>footer{background:#0d1015!important;border-color:rgba(255,255,255,.12)!important;color:#fff}
+.showroom-site>footer p,.showroom-site>footer div{color:rgba(255,255,255,.5)}
+.showroom-site .automata-chat-panel{border-color:rgba(255,255,255,.14);background:#10141b;color:#fff}
+.showroom-site .automata-chat-messages{background:#0c1016}
+.showroom-site .automata-chat-message.bot{background:#1b222d;border-color:rgba(255,255,255,.1);color:#fff}
+.showroom-site .automata-chat-compose,.showroom-site .automata-chat-note{background:#10141b;border-color:rgba(255,255,255,.1);color:rgba(255,255,255,.5)}
+.showroom-site .automata-chat-compose input{background:#1b222d;border-color:rgba(255,255,255,.15);color:white}
+.showroom-site .automata-chat-header{background:#ff641f;color:#160e0a}
+.showroom-site .automata-chat-header small{color:rgba(22,14,10,.65)}
+.showroom-site .automata-chat-avatar{background:#170e09;color:#ff966b}
+.showroom-site .automata-chat-close{background:rgba(0,0,0,.12);color:#160e0a}
+.showroom-site .automata-chat-quick button{background:#171d26;color:#ff966b;border-color:#ff641f}
+.showroom-site .showroom-subpage{background:#090b0f;color:#f7f5f1}
+.showroom-site .showroom-subpage input,.showroom-site .showroom-subpage select,.showroom-site .showroom-subpage textarea{color:white}
+.showroom-site .showroom-subpage input::placeholder,.showroom-site .showroom-subpage textarea::placeholder{color:rgba(255,255,255,.35)}
+.showroom-site .showroom-subpage input:focus,.showroom-site .showroom-subpage select:focus,.showroom-site .showroom-subpage textarea:focus{border-color:#ff641f;box-shadow:0 0 0 3px rgba(255,100,31,.16)}
+.showroom-site .showroom-subpage button:focus-visible,.showroom-site .showroom-subpage a:focus-visible{outline:3px solid #ffb18b;outline-offset:4px}
+@media(prefers-reduced-motion:reduce){.showroom-site *{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
