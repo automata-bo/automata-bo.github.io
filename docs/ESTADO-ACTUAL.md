@@ -272,3 +272,11 @@ Se inspeccionaron directamente capturas de Inicio móvil, Studio escritorio y Cr
   - `65a02bb88f6b6200090a690d7f37732cc4b8795a`
   - `6dc98d0c217f66aaad64ab905fddf6862c6b2128`
 - En el momento de esta actualización, los commits nuevos todavía no muestran ejecuciones de workflow/checks en la consulta de GitHub. No declarar estas modificaciones validadas por CI hasta que exista una ejecución terminada.
+
+## 15. Investigación de previsualización navegable (12 nov 2026)
+
+- Se consultó la cuenta Cloudflare conectada mediante la API de solo lectura: la lista de proyectos Cloudflare Pages devolvió `[]`. No existe actualmente un proyecto Pages identificado que pueda reutilizarse para publicar una previsualización aislada.
+- El repositorio se construye con Vite y usa `base: "/"`; las rutas multipágina incluyen nueve entradas. El workflow `visual-preview.yml` compila el sitio, ejecuta Playwright y guarda capturas como artefacto privado de GitHub Actions (retención de 7 días); no publica un servidor navegable.
+- GitHub Actions artifact no equivale a alojamiento público y el sitio GitHub Pages actual está asociado al dominio de producción. No se debe apuntar una rama de revisión al mismo destino ni modificar la configuración Pages existente sin una estrategia aislada.
+- No se creó proyecto, deployment, Worker, dominio ni infraestructura nueva. Tampoco se modificó configuración de producción.
+- Con la evidencia disponible, para dar al usuario una URL navegable se necesita autorizar un destino de preview aislado (por ejemplo, un proyecto Cloudflare Pages separado) o aportar un hosting temporal ya disponible. Hasta entonces, se mantiene la previsualización automatizada por artefactos y capturas; no afirmar que existe URL pública de V2.
