@@ -76,26 +76,22 @@ export default function ImmersiveHome() {
         <span className="auto-kicker"><i /> DIGITAL EXPERIENCES &amp; INTELLIGENT SOLUTIONS</span>
         <span className="auto-index">TARIJA, BOLIVIA · 2026</span>
       </div>
-      <div className="auto-hero-grid">
-        <div className="auto-hero-copy">
-          <Reveal><p className="auto-overline">TECNOLOGÍA + CREATIVIDAD + INTELIGENCIA</p></Reveal>
-          <h1 className="auto-display auto-hero-title">
-            <Reveal delay={80}><span>Beyond</span></Reveal>
-            <Reveal delay={170}><span>Digital<span className="auto-punctuation">.</span></span></Reveal>
-            <Reveal delay={260}><span className="auto-gradient-text">Into</span></Reveal>
-            <Reveal delay={350}><span className="auto-gradient-text">Experiences.</span></Reveal>
-          </h1>
-          <Reveal delay={460}>
-            <p className="auto-hero-description">Diseñamos experiencias digitales y soluciones inteligentes que conectan lo que imaginas con lo que las personas necesitan vivir.</p>
-            <div className="auto-actions">
-              <a className="auto-button auto-button-dark" href="#divisiones">Explorar el estudio <ArrowDownRight size={17} /></a>
-              <button className="auto-button auto-button-line" onClick={openAdvisor}>Conversemos <ArrowUpRight size={17} /></button>
-            </div>
-          </Reveal>
-        </div>
-        <Reveal className="auto-hero-art" delay={220}><ColorField /></Reveal>
+      <div className="auto-hero-center">
+        <Reveal><p className="auto-overline">DIGITAL EXPERIENCES &amp; INTELLIGENT SOLUTIONS</p></Reveal>
+        <h1 className="auto-display auto-hero-title">
+          <Reveal delay={80}><span>Beyond Digital.</span></Reveal>
+          <Reveal delay={190}><span className="auto-hero-into">Into</span></Reveal>
+          <Reveal delay={300}><span className="auto-gradient-text">Experiences.</span></Reveal>
+        </h1>
+        <Reveal delay={430}>
+          <p className="auto-hero-manifesto">100% HUMANO. <span>100% IA.</span> <strong>200% AUTOMATA.</strong></p>
+          <div className="auto-actions">
+            <a className="auto-button auto-button-dark" href="#divisiones">Explorar el estudio <ArrowDownRight size={17} /></a>
+            <button className="auto-button auto-button-line" onClick={openAdvisor}>Conversemos <ArrowUpRight size={17} /></button>
+          </div>
+        </Reveal>
       </div>
-      <div className="auto-hero-bottom"><span>DISEÑO QUE ATRAE</span><span>TECNOLOGÍA QUE RESUELVE</span><span>EXPERIENCIAS QUE PERMANECEN ↓</span></div>
+      <div className="auto-hero-bottom"><span>ESTUDIO DIGITAL</span><span>DISEÑO · TECNOLOGÍA · IA</span><span>DESPLÁZATE ↓</span></div>
     </section>
 
     <section className="auto-divisions" id="divisiones">
