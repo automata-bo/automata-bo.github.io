@@ -73,7 +73,7 @@ export default function NewsletterSignup() {
       window.cancelAnimationFrame(focusTimer);
       document.removeEventListener("keydown", handleKeyDown);
       document.body.style.overflow = previousOverflow;
-      const returnTarget = triggerRef.current?.isConnected ? triggerRef.current : previousFocus;
+      const returnTarget = previousFocus?.isConnected ? previousFocus : triggerRef.current;
       if (returnTarget?.isConnected) returnTarget.focus();
     };
   }, [open]);
