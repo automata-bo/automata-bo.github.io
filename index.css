@@ -68,6 +68,7 @@ label{font-size:13px;font-weight:700;letter-spacing:.02em}
 .automata-chat-root{position:fixed;right:22px;bottom:22px;z-index:1000;font-family:Inter,system-ui,sans-serif}
 .automata-chat-launcher{display:flex;align-items:center;justify-content:center;gap:10px;min-height:58px;padding:0 21px;border:0;border-radius:999px;background:#FF5A00;color:#fff;font-size:14px;font-weight:800;box-shadow:0 12px 32px rgba(14,17,22,.24);cursor:pointer;transition:transform .2s,background .2s}
 .automata-chat-launcher:hover{transform:translateY(-3px);background:#E14E00}
+.automata-chat-launcher-suppressed{visibility:hidden;pointer-events:none}
 .automata-chat-panel{position:absolute;right:0;bottom:74px;display:flex;flex-direction:column;width:min(390px,calc(100vw - 32px));height:min(590px,calc(100dvh - 112px));overflow:hidden;border:1px solid #E8E6E1;border-radius:24px;background:#fff;box-shadow:0 24px 70px rgba(14,17,22,.22);animation:pop .2s ease both}
 .automata-chat-header{display:flex;align-items:center;gap:12px;padding:17px 18px;background:#0E1116;color:#fff}
 .automata-chat-avatar{display:flex;width:42px;height:42px;align-items:center;justify-content:center;border-radius:14px;background:#FF5A00;color:#fff}
