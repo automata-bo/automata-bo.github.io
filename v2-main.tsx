@@ -5,7 +5,7 @@ import ChatWidget from "./ChatWidget";
 import CookieConsent from "./CookieConsent";
 import NewsletterSignup from "./NewsletterSignup";
 import { trackEvent } from "./analytics";
-import logoFull from "./assets/42a5f50319bf92a6-automataF.png";
+import logoFull from "./assets/automata.svg";
 import ImmersiveHome from "./ImmersiveHome";
 import { DigitalExperience, ExperiencesExperience, StudioExperience, ProjectsExperience, ContactExperience } from "./ImmersiveSections";
 
