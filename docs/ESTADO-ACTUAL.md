@@ -216,3 +216,50 @@ La última acción local conocida fue ejecutar `npm install` y `npm run typechec
 - Las pruebas anteriores no sustituyen la revisión manual de teclado/lector de pantalla, chat contra el Worker real, formulario de contacto/WhatsApp ni interacciones de cada demo.
 - El fallo externo de Workers Builds documentado en la sección 11 sigue sin corregirse; no se modificó el trigger ni la configuración Cloudflare.
 - PR #9 sigue abierto como borrador. `main`, GitHub Pages de producción, Worker `automata-chat` y D1 `automata-audience` permanecen sin cambios de publicación. No se ha autorizado merge ni despliegue.
+
+## 13. QA ampliado de demos y validación de AUTOMATA V2 (12 nov 2026)
+
+**HEAD revisado:** `d398e8d508a9c236a96de372de5df4a9880af71a`.
+
+### Cambios recientes incluidos en el HEAD
+
+- Las llamadas a la acción de propuesta/experiencia están en español.
+- El consentimiento permanece en el flujo normal y no se superpone al hero.
+- El diálogo de newsletter gestiona foco inicial, ciclo de Tab/Shift+Tab, Escape cuando corresponde, bloqueo/restauración de scroll y retorno del foco al disparador.
+- El traspaso del asistente a WhatsApp exige consentimiento explícito antes de habilitar la acción y prepara un brief contextual.
+- El formulario de contacto exige objetivo y prepara un brief contextual antes de abrir WhatsApp.
+- Las demos Digital (restaurante, consultorio y peluquería) se identifican como simulaciones.
+- La demo de invitación comprueba RSVP afirmativo y negativo localmente.
+- Creative Lab aclara que es un prototipo interactivo con estructuras predefinidas: no llama a un modelo IA, no genera video ni guarda los datos ingresados.
+- Las cuatro tarjetas de Studio tienen asignación explícita de producto/contexto:
+  - Producción audiovisual → `audiovisual-production`
+  - Fotografía y contenido → `audiovisual-production`
+  - Publicidad y campañas → `creative-campaigns`
+  - Producción híbrida con IA → `audiovisual-production`
+- La etiqueta “Demos en vivo” se cambió por “Demos interactivas” para no sugerir conexiones productivas inexistentes.
+
+### GitHub Actions verificado para el HEAD
+
+- [Validate Automata site #43221974014](https://github.com/automata-bo/automata-bo.github.io/actions/runs/43221974014): SUCCESS. Build del sitio y type-check del Worker.
+- [Check Automata chat Worker #43221974288](https://github.com/automata-bo/automata-bo.github.io/actions/runs/43221974288): SUCCESS. Typecheck, pruebas de contrato/runtime y Wrangler dry-run.
+- [Build visual preview #43221962963](https://github.com/automata-bo/automata-bo.github.io/actions/runs/43221962963): SUCCESS.
+- El preview comprobó nueve rutas en escritorio y móvil (18 cargas HTTP 200), sin excepciones JavaScript de página.
+- Pasaron los smoke tests de:
+  - Demos Digital: pedido de restaurante, solicitud de cita del consultorio y reserva de peluquería.
+  - Demo de invitación: RSVP positivo y negativo.
+  - Creative Lab: construcción del brief.
+  - Móvil: consentimiento, foco del diálogo newsletter, traspaso del asistente y formulario de contacto.
+- El flujo de WhatsApp fue interceptado en navegador; no abrió WhatsApp real ni envió mensajes.
+- Artefacto `automata-v2-visual-preview`, ID `13945149647`, tamaño aproximado 3.97 MB, disponible hasta el 19 de noviembre de 2026. Contiene el sitio compilado y capturas desktop/móvil; no es un despliegue.
+
+### Inspección visual realizada
+
+Se inspeccionaron directamente capturas de Inicio móvil, Studio escritorio y Creative Lab móvil. La jerarquía visual, la separación del consentimiento respecto al hero, las cuatro tarjetas Studio y la explicación honesta de los límites del Creative Lab se ven coherentes en esas vistas. El resto de capturas está generado en el artefacto, pero no se considera una revisión visual manual exhaustiva de cada pantalla.
+
+### Límites y pendientes
+
+- No se ha realizado todavía una revisión manual completa con lector de pantalla ni auditoría integral de teclado.
+- No se probó el chat contra el Worker productivo, ni se ejecutaron envíos reales de WhatsApp o formularios productivos.
+- Las demos siguen siendo locales/simuladas según su descripción; no equivalen a servicios operativos conectados.
+- El chequeo externo Workers Builds del Worker existente `automata-chat` mantiene el problema de configuración Wrangler `previews` descrito en la sección 11. No se modificó el trigger ni la configuración Cloudflare.
+- El PR #9 permanece en borrador según el último estado conocido. No se ha autorizado merge ni despliegue. `main`, Pages de producción, Worker y D1 deben permanecer intactos.
