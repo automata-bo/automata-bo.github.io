@@ -90,7 +90,7 @@ export default function App() {
               <h1 className="reveal-2 display mt-5 text-[44px] sm:text-[72px] lg:text-[92px]">Tu negocio no necesita más tecnología.<br /><span className="text-[#FF5A00]">Necesita que funcione.</span></h1>
               <p className="reveal-3 mt-6 text-[18px] font-medium leading-snug text-[#5A6068] sm:text-[20px]">Tecnología, creatividad e IA para resolver necesidades reales de tu negocio.</p>
               <div className="reveal-3 mt-8 flex flex-col gap-3 sm:flex-row">
-                <a href="#demos" className="flex min-h-[56px] flex-1 items-center justify-center gap-2 rounded-full bg-[#0E1116] px-7 text-[15px] font-bold text-white sm:flex-none">Ver demos en vivo <ArrowDown size={18} /></a>
+                <a href="#demos" className="flex min-h-[56px] flex-1 items-center justify-center gap-2 rounded-full bg-[#0E1116] px-7 text-[15px] font-bold text-white sm:flex-none">Explorar demos interactivas <ArrowDown size={18} /></a>
                 <button type="button" onClick={openAssistant} className="flex min-h-[56px] flex-1 items-center justify-center gap-2 rounded-full border-2 border-[#0E1116] px-7 text-[15px] font-bold sm:flex-none">Hablar con Autómata <Bot size={18} /></button>
               </div>
             </div>
