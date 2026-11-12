@@ -140,3 +140,11 @@ La última acción local conocida fue ejecutar `npm install` y `npm run typechec
 3. Evaluar semánticamente las ocho respuestas, especialmente honestidad de demos, precios y capacidades.
 4. Completar QA visual y funcional en navegador móvil y escritorio.
 5. Preparar sesiones de campo consentidas solo después de superar las validaciones anteriores.
+
+## 9. Pulido editorial de interfaz (12 nov 2026)
+
+- En `v2-main.tsx` se unificaron al español cuatro llamadas a la acción: tres apariciones de “Request a proposal” pasaron a “Solicitar propuesta” y “View experience” pasó a “Ver experiencia”.
+- Cambio acotado de interfaz; no modifica rutas, lógica del asistente, catálogo, Worker, D1, consentimiento ni analítica.
+- Commit: `12f68e4faf78901d06bb7db64e4ce1e1d0809339`.
+- La compilación y las pruebas del commit nuevo todavía están pendientes de confirmación. No considerar este cambio validado hasta que CI termine.
+- `main`, el PR #9 y producción no se han fusionado ni desplegado.
