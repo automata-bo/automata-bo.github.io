@@ -280,3 +280,14 @@ Se inspeccionaron directamente capturas de Inicio móvil, Studio escritorio y Cr
 - GitHub Actions artifact no equivale a alojamiento público y el sitio GitHub Pages actual está asociado al dominio de producción. No se debe apuntar una rama de revisión al mismo destino ni modificar la configuración Pages existente sin una estrategia aislada.
 - No se creó proyecto, deployment, Worker, dominio ni infraestructura nueva. Tampoco se modificó configuración de producción.
 - Con la evidencia disponible, para dar al usuario una URL navegable se necesita autorizar un destino de preview aislado (por ejemplo, un proyecto Cloudflare Pages separado) o aportar un hosting temporal ya disponible. Hasta entonces, se mantiene la previsualización automatizada por artefactos y capturas; no afirmar que existe URL pública de V2.
+
+
+## 16. Corrección de pruebas de demos y paquete visual (12 nov 2026)
+
+- Se detectó que el smoke test de `/demos/` buscaba los selectores `role=tab` para CONSULTORIO y PELUQUERÍA, aunque los controles se habían convertido en botones nativos con `aria-pressed` dentro de un grupo accesible.
+- Se actualizaron ambos selectores del test a botones por nombre accesible. Commit: `e5a9d9a1b2302c24ea070402000fe9e2f6e70d37`.
+- En ese commit, GitHub Actions confirmó SUCCESS para Validate Automata site, Check Automata chat Worker y Build visual preview.
+- La ejecución de Build visual preview `43228943251` completó captura de las nueve rutas en escritorio y móvil, empaquetado y subida del artefacto `automata-v2-visual-preview` (ID `13947649867`, 3,974,212 bytes; vence el 19 nov 2026).
+- El artefacto contiene el sitio estático compilado y 18 capturas PNG (nueve rutas × escritorio/móvil). Fue descargado e inspeccionado; el contacto visual general del conjunto no mostró páginas vacías ni fallos evidentes de renderizado. Esto no sustituye una auditoría visual detallada de cada pantalla.
+- El artefacto es una instantánea para revisión, no una URL pública ni un despliegue. No se modificó `main`, Pages productivo, Worker, D1 ni configuración Cloudflare.
+- PR #9 permanece abierto como borrador; no se hizo merge ni deploy.
