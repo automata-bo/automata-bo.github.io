@@ -159,6 +159,8 @@ Consulta los avisos y controles que aparecen en el propio sitio antes de compart
 | Modelos de IA | Adaptadores para proveedores configurables |
 | Despliegue | GitHub Actions y Wrangler |
 
+La web obtiene la URL del backend desde la variable de compilación `VITE_AUTOMATA_API_URL` (GitHub Actions: `vars.VITE_AUTOMATA_API_URL`). Chat, analítica y suscripciones comparten esa configuración en `api.ts`. Si no se define, se utiliza la URL del Worker existente `automata-chat`. Las claves de proveedores de IA y credenciales privadas permanecen en el entorno del Worker; nunca se incluyen en el bundle público.
+
 ---
 
 ## Desarrollo local
@@ -195,9 +197,20 @@ El Worker requiere sus bindings y variables de entorno para habilitar las funcio
 
 ## Estructura del proyecto
 
+La rama `main` conserva la V1. La rama de revisión `feature/automata-web-v2-architecture` contiene la primera implementación multipágina V2 y mantiene las demos anteriores bajo `/demos/`.
+
 ```text
 .
-├── App.tsx                  # Sitio institucional, soluciones y demos
+├── index.html               # Entrada institucional V2 en la rama de revisión
+├── v2-main.tsx              # Páginas y navegación institucional V2
+├── v2-entry.tsx             # Montaje React de V2
+├── digital/index.html       # Entrada multipágina Digital
+├── experiences/index.html  # Entrada multipágina Experiences
+├── studio/index.html       # Entrada multipágina Studio
+├── proyectos/index.html    # Entrada multipágina Proyectos
+├── contacto/index.html     # Entrada multipágina Contacto
+├── demos/index.html        # Acceso de transición a la experiencia V1
+├── App.tsx                  # Aplicación V1 preservada
 ├── ChatWidget.tsx           # Asistente y transferencia a atención humana
 ├── CookieConsent.tsx        # Consentimiento de analítica
 ├── NewsletterSignup.tsx     # Registro de suscripciones

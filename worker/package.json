@@ -5,10 +5,14 @@
   "scripts": {
     "dev": "wrangler dev --config wrangler.jsonc",
     "deploy": "wrangler deploy --config wrangler.jsonc",
-    "typecheck": "tsc --noEmit"
+    "pretypecheck": "wrangler types",
+    "typecheck": "tsc --noEmit",
+    "test:contract": "node scripts/check-assistant-contract.mjs",
+    "test:runtime": "node --import tsx --test scripts/test-assistant-runtime.mjs",
+    "test:live": "node --import tsx scripts/test-assistant-live.mjs"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^5.20261109.1",
+    "tsx": "^4.20.6",
     "typescript": "^5.7.2",
     "wrangler": "^4.45.0"
   }

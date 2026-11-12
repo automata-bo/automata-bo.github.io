@@ -1,7 +1,7 @@
 import React, { FormEvent, useEffect, useState } from "react";
 import { ArrowRight, CheckCircle2, X } from "lucide-react";
 
-const API = "https://automata-chat.dgckg-trd1.workers.dev";
+import { AUTOMATA_API_URL } from "./api";
 const CONSENT_VERSION = "2026-11-09-v1";
 
 export default function NewsletterSignup() {
@@ -23,14 +23,60 @@ export default function NewsletterSignup() {
     return () => window.removeEventListener("automata:offer-newsletter", offer);
   }, [alreadyOffered]);
 
+  const triggerRef = React.useRef<HTMLButtonElement>(null);
+  const dialogRef = React.useRef<HTMLElement>(null);
+  const busyRef = React.useRef(busy);
+  busyRef.current = busy;
+
   useEffect(() => {
     if (!open) return;
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape" && !busy) setOpen(false);
+    const previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const getFocusable = () => Array.from(
+      dialogRef.current?.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      ) ?? []
+    ).filter((element) => element.getAttribute("aria-hidden") !== "true");
+
+    const focusTimer = window.requestAnimationFrame(() => {
+      getFocusable()[0]?.focus();
+    });
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        if (!busyRef.current) {
+          event.preventDefault();
+          setOpen(false);
+        }
+        return;
+      }
+      if (event.key !== "Tab") return;
+      const focusable = getFocusable();
+      if (!focusable.length) {
+        event.preventDefault();
+        dialogRef.current?.focus();
+        return;
+      }
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && (document.activeElement === first || !dialogRef.current?.contains(document.activeElement))) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && (document.activeElement === last || !dialogRef.current?.contains(document.activeElement))) {
+        event.preventDefault();
+        first.focus();
+      }
     };
-    window.addEventListener("keydown", closeOnEscape);
-    return () => window.removeEventListener("keydown", closeOnEscape);
-  }, [open, busy]);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.cancelAnimationFrame(focusTimer);
+      document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = previousOverflow;
+      const returnTarget = previousFocus?.isConnected ? previousFocus : triggerRef.current;
+      if (returnTarget?.isConnected) returnTarget.focus();
+    };
+  }, [open]);
 
   const submit = async (event: FormEvent) => {
     event.preventDefault();
@@ -38,7 +84,7 @@ export default function NewsletterSignup() {
     setBusy(true);
     setStatus(null);
     try {
-      const response = await fetch(API + "/api/subscribe", {
+      const response = await fetch(AUTOMATA_API_URL + "/api/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ channel, contact: contact.trim(), consent: true, consentVersion: CONSENT_VERSION }),
@@ -57,12 +103,12 @@ export default function NewsletterSignup() {
 
   return (
     <>
-      <button type="button" onClick={() => setOpen(true)} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-[#E8E6E1] bg-white px-5 text-[13px] font-extrabold text-[#0E1116] transition hover:border-[#FF5A00] hover:text-[#FF5A00]">
+      <button ref={triggerRef} type="button" onClick={() => setOpen(true)} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-[#E8E6E1] bg-white px-5 text-[13px] font-extrabold text-[#0E1116] transition hover:border-[#FF5A00] hover:text-[#FF5A00]">
         Recibir novedades <ArrowRight size={16} />
       </button>
       {open && (
         <div className="fixed inset-0 z-[1100] flex items-center justify-center overflow-y-auto bg-[#0E1116]/65 p-4 backdrop-blur-sm" onMouseDown={(event) => { if (event.target === event.currentTarget && !busy) setOpen(false); }}>
-          <section role="dialog" aria-modal="true" aria-labelledby="newsletter-title" className="pop relative my-auto w-full max-w-[520px] rounded-[28px] border border-[#E8E6E1] bg-[#F4F3F0] p-5 shadow-[0_28px_90px_rgba(0,0,0,.3)] sm:p-8">
+          <section ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="newsletter-title" tabIndex={-1} className="pop relative my-auto w-full max-w-[520px] rounded-[28px] border border-[#E8E6E1] bg-[#F4F3F0] p-5 shadow-[0_28px_90px_rgba(0,0,0,.3)] sm:p-8">
             <button type="button" onClick={() => setOpen(false)} disabled={busy} aria-label="Cerrar registro de novedades" className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full border border-[#E8E6E1] bg-white text-[#5A6068] transition hover:text-[#FF5A00] disabled:opacity-40">
               <X size={18} />
             </button>

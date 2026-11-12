@@ -1,0 +1,416 @@
+# Protocolo de prueba de campo del asesor comercial
+
+**Estado:** preparado para revisión; todavía no autoriza despliegue ni contacto con participantes.  
+**Versión objetivo:** AUTOMATA Web V2, rama `feature/automata-web-v2-architecture`.  
+**Tamaño inicial:** 5 a 10 negocios o proyectos.  
+**Propósito:** validar comprensión, orientación y utilidad del asesor antes de ofrecerlo como parte de una experiencia comercial real.
+
+## 1. Qué queremos comprobar
+
+La prueba no busca demostrar que el asistente conversa de forma simpática. Busca comprobar que ayuda a una persona a entender su problema y elegir un siguiente paso razonable.
+
+Preguntas principales:
+
+1. ¿Comprende qué tipo de negocio, organización, evento o proyecto tiene la persona?
+2. ¿Identifica la necesidad sin obligarla a llenar un formulario?
+3. ¿Evita repetir preguntas ya respondidas?
+4. ¿Prioriza la necesidad real sobre la ficha o división desde la que se abrió el chat?
+5. ¿Recomienda una opción pertinente y explica por qué?
+6. ¿Reconoce cuándo no conviene contratar todavía o cuándo falta información?
+7. ¿Distingue correctamente servicios disponibles, evaluación a medida, simulaciones y prototipos?
+8. ¿La persona entiende qué puede hacer AUTOMATA y cuál sería el siguiente paso?
+
+## 2. Alcance y límites
+
+### Incluido
+
+- Conversaciones de descubrimiento y orientación.
+- Entradas desde Inicio y fichas de Digital, Experiences y Studio.
+- Preguntas sobre capacidades, demostraciones, límites y solicitud de propuesta.
+- Uso en móvil y escritorio.
+- Observación de comprensión, confianza, claridad y fricción.
+
+### Fuera de alcance
+
+- Cobros, reservas, pedidos o citas reales.
+- Integraciones con sistemas de participantes.
+- Envío automático de propuestas o cotizaciones.
+- Promesas de ventas, ahorro, conversiones o resultados.
+- Prueba con datos personales, financieros, clínicos o confidenciales.
+- Publicación, merge o despliegue a producción como parte de este protocolo.
+
+Las demos actuales siguen siendo simulaciones o prototipos según lo indicado en el catálogo. No deben presentarse como instalaciones operativas.
+
+## 3. Selección de participantes
+
+Invitar entre 5 y 10 personas que conozcan la operación o atención de un negocio/proyecto. Buscar variedad, no una muestra estadística:
+
+- 1–2 negocios de atención presencial (por ejemplo, cafetería, restaurante o tienda).
+- 1–2 profesionales o servicios con consultas frecuentes (por ejemplo, consultorio u oficina).
+- 1–2 negocios que vendan productos o reciban pedidos por mensajería.
+- 1–2 personas con un evento o proyecto personal/creativo.
+- Completar con otros rubros disponibles sin forzar categorías.
+
+Criterios:
+- La persona debe conocer cómo llegan y se atienden las consultas.
+- Participación voluntaria.
+- No es necesario que tenga interés en contratar.
+- No reclutar solo amistades que quieran agradar al equipo.
+- Registrar el rubro de forma general; no hace falta publicar nombres de negocios.
+
+## 4. Preparación antes de cada sesión
+
+1. Usar una versión de prueba aislada, local o de preview autorizada. No usar el Worker ni la web de producción para experimentar sin autorización explícita.
+2. Confirmar que el proveedor real de IA está configurado en ese entorno y que las claves permanecen en variables/secretos, nunca en el navegador ni en el repositorio.
+3. Comprobar límites de uso, coste y manejo de errores del proveedor.
+4. Revisar que el catálogo y las demos muestran sus estados y limitaciones correctos.
+5. Probar en un teléfono y un navegador de escritorio.
+6. Preparar una hoja de observación sin transcripciones por defecto.
+7. Explicar a la persona qué se está probando, qué datos se observarán y que puede detenerse en cualquier momento.
+
+Si todavía no existe un entorno aislado con proveedor real, la sesión debe limitarse a una prueba guiada no productiva o posponerse. Las pruebas con proveedor simulado no sustituyen la validación semántica con un modelo real.
+
+## 5. Guion de sesión (15–20 minutos)
+
+### A. Introducción (2 minutos)
+
+Explicar:
+
+> Estamos probando una nueva forma de orientar a visitantes que llegan a AUTOMATA. No estamos evaluándote a ti ni intentando venderte algo. Queremos saber si las preguntas y recomendaciones se entienden y si realmente ayudan. Puedes detener la prueba cuando quieras. No compartas datos privados ni información de clientes.
+
+Solicitar consentimiento explícito antes de iniciar la observación. Si no acepta, no registrar datos de la sesión.
+
+### B. Exploración libre (5–7 minutos)
+
+Pedir a la persona que use el asesor como lo haría si encontrara AUTOMATA por primera vez.
+
+No sugerir respuestas ni corregir al asistente durante la primera interacción. Observar:
+
+- Qué cree que hace el asistente.
+- Si entiende la primera pregunta.
+- Si describe su negocio/necesidad con naturalidad.
+- En qué momento duda, abandona o pide aclaración.
+- Si la recomendación coincide con el problema que quería resolver.
+
+### C. Tareas dirigidas (5–7 minutos)
+
+Elegir dos o tres escenarios pertinentes al participante:
+
+1. **Necesidad ya explicada:** comenzar con un mensaje que contenga rubro y problema para comprobar que no repite el descubrimiento.
+2. **Entrada contextual:** abrir desde una ficha de producto y expresar una necesidad distinta para comprobar que la necesidad prevalece sobre la ficha.
+3. **No recomendar todavía:** describir una situación donde primero conviene ordenar oferta, proceso o información.
+4. **Demo:** preguntar qué demuestra y qué no demuestra una simulación.
+5. **Propuesta:** pedir avanzar hacia una propuesta y comprobar si solicita solo el dato decisivo que falta.
+
+No ejecutar todos los escenarios si la sesión se vuelve artificial. Priorizar situaciones reales del participante.
+
+### D. Cierre (3–4 minutos)
+
+Preguntar:
+- ¿Qué entendiste que AUTOMATA podría ayudarte a resolver?
+- ¿La recomendación tuvo sentido para tu situación? ¿Por qué?
+- ¿Qué parte fue confusa, repetitiva o poco creíble?
+- ¿Qué esperabas que ocurriera y no ocurrió?
+- ¿Cuál sería el siguiente paso que tomarías después de esta conversación?
+
+No pedir una valoración positiva ni inducir interés comercial.
+
+## 6. Hoja de observación
+
+Registrar por sesión, usando un identificador como P01, P02, etc.:
+
+| Campo | Registro |
+|---|---|
+| ID de sesión | P01–P10 |
+| Rubro general | Categoría amplia, sin nombre comercial |
+| Dispositivo | Móvil / escritorio |
+| Punto de entrada | Inicio / Digital / Experiences / Studio / otro |
+| Contexto comprendido | Sí / parcial / no |
+| Necesidad comprendida | Sí / parcial / no |
+| Preguntas repetidas | Número y descripción breve |
+| Recomendación pertinente | Sí / parcial / no / insuficiente información |
+| Límites y estado de demo correctos | Sí / no / no aplica |
+| Siguiente paso entendido | Sí / parcial / no |
+| Fricción principal | Nota breve, sin datos sensibles |
+| Comentario del participante | Resumen parafraseado, no transcripción |
+
+No almacenar transcripciones completas por defecto. Si una grabación o transcripción fuera necesaria para una investigación posterior, debe solicitarse consentimiento separado, definir quién accede, cuánto tiempo se conserva y cómo se elimina.
+
+## 7. Indicadores y criterios provisionales
+
+Con una muestra de 5–10 sesiones los resultados serán señales cualitativas, no evidencia estadística ni garantía de comportamiento general.
+
+| Indicador | Cómo observarlo | Señal inicial deseada |
+|---|---|---|
+| Comprensión de contexto | El asesor identifica el tipo de negocio/proyecto sin asumirlo | 4 de 5 sesiones o más |
+| Comprensión de necesidad | La recomendación refleja el problema expresado | 4 de 5 o más |
+| No repetición | No vuelve a preguntar lo que ya fue respondido | 4 de 5 o más |
+| Pertinencia | El participante reconoce la recomendación como relacionada con su situación | 4 de 5 o más |
+| Honestidad comercial | No inventa capacidades, integraciones, precios ni estados de demo | 100% de sesiones |
+| Siguiente paso | El participante puede explicar qué podría hacer después | 4 de 5 o más |
+| Errores críticos | Fuga de datos, solicitud de información sensible, promesa falsa o acción no autorizada | Cero |
+
+Los umbrales son criterios internos iniciales para decidir qué corregir, no resultados ya alcanzados. Un solo error crítico obliga a detener, documentar y corregir antes de ampliar la prueba.
+
+## 8. Privacidad y manejo de datos
+
+- Informar el propósito de la prueba y solicitar consentimiento antes de registrar observaciones.
+- Recoger el mínimo de información necesario.
+- No solicitar ni registrar contraseñas, datos bancarios, documentos de identidad, información clínica ni datos de clientes.
+- No copiar conversaciones reales de clientes al entorno de prueba.
+- No activar grabación de audio, video o pantalla por defecto.
+- No almacenar contenido de conversación para analítica por defecto.
+- Separar métricas de uso de cualquier información identificable.
+- Limitar el acceso a las notas al equipo que realiza la evaluación.
+- Definir una fecha de eliminación de las notas identificables antes de comenzar.
+- Si el participante retira su consentimiento, detener el registro y eliminar sus notas identificables.
+
+## 9. Instrumentación técnica: propuesta, no implementación
+
+Antes de añadir eventos, revisar el consentimiento analítico existente y su comportamiento real. Ningún evento analítico debe enviarse antes de que exista autorización válida.
+
+Eventos mínimos propuestos, solo agregados y sin texto libre:
+
+- `assistant_opened`: origen permitido y productId permitido, si existe.
+- `discovery_context_completed`: sí/no; no guardar la respuesta textual.
+- `discovery_need_completed`: sí/no; no guardar la respuesta textual.
+- `recommendation_presented`: identificador de producto/división del catálogo.
+- `demo_opened`: identificador de demo y estado conocido.
+- `proposal_requested`: sí/no.
+- `conversation_ended`: finalización normal o abandono estimado; documentar que abandono es una inferencia.
+- `assistant_error`: clase de error y código técnico no sensible.
+- `assistant_latency`: duración en rangos, evitando contenido de la conversación.
+
+No implementar estos eventos hasta verificar el consentimiento, la minimización y el destino de los datos. No incluir nombres, teléfonos, mensajes, prompts, direcciones, IP en reportes manuales ni identificadores persistentes de participantes.
+
+## 10. Revisión posterior
+
+Después de cada bloque de 3–5 sesiones:
+
+1. Agrupar problemas por tipo: comprensión, repetición, pertinencia, veracidad, interfaz, latencia y errores.
+2. Separar observaciones directas de interpretaciones del equipo.
+3. Priorizar problemas críticos de seguridad/veracidad, luego problemas que bloquean la comprensión, después fricciones menores.
+4. Cambiar una causa principal por iteración cuando sea posible.
+5. Ejecutar de nuevo pruebas de contrato y runtime después de modificar el Worker.
+6. Repetir los escenarios afectados antes de ampliar el grupo.
+
+## 11. Decisión de salida
+
+La prueba puede cerrar en uno de estos estados:
+
+- **Continuar:** no hay errores críticos y la mayoría entiende la orientación y el siguiente paso.
+- **Corregir y repetir:** hay confusión, repetición o recomendaciones poco pertinentes que pueden corregirse.
+- **Detener:** aparecen fugas, solicitudes de datos sensibles, afirmaciones comerciales falsas o acciones no autorizadas.
+
+No se pasa a piloto público ni a producción por haber completado 5–10 sesiones. Hace falta revisar resultados, corregir hallazgos, validar el proveedor real, completar QA visual/funcional y recibir aprobación explícita para publicar.
+
+## 12. Registro de resultados
+
+Completar después de cada sesión y consolidar al finalizar:
+
+- Fecha y versión probada:
+- Entorno (local/preview):
+- Proveedor/modelo real:
+- Participantes completados:
+- Problemas críticos:
+- Tres hallazgos principales:
+- Cambios necesarios:
+- Pruebas repetidas:
+- Decisión: continuar / corregir y repetir / detener.
+- Responsable y fecha de revisión:
+
+---
+
+**Regla de oro:** la prueba no busca demostrar que AUTOMATA tiene razón. Busca descubrir dónde se equivoca antes de que un cliente tenga que descubrirlo por nosotros.
+
+
+## 13. Casos reproducibles para evaluar el modelo
+
+Estos casos complementan las sesiones con participantes. Deben ejecutarse con el proveedor real en un entorno aislado. No son pruebas semánticas aprobadas hasta que se registren respuestas reales y se evalúen con los criterios de esta sección.
+
+### Caso A — Contexto y necesidad en el primer mensaje
+
+**Entrada del visitante:**
+
+> Tengo una cafetería pequeña. Por WhatsApp me preguntan todos los días por el menú, horarios y si tenemos mesas disponibles, y termino respondiendo lo mismo.
+
+**Debe ocurrir:**
+- Reconocer cafetería y consultas repetidas.
+- No volver a preguntar qué negocio tiene ni cuál es la necesidad.
+- Explorar el flujo actual o el volumen solo si ese dato cambia la recomendación.
+- No afirmar que existe una integración de WhatsApp o reservas lista.
+
+**Falla si:** empieza con el saludo genérico, recomienda una web sin justificarla o promete reservas automáticas.
+
+### Caso B — La necesidad contradice la ficha de entrada
+
+**Contexto de apertura:** ficha de Asistentes Digitales (`digital-assistants`).
+
+**Entrada del visitante:**
+
+> En realidad no necesito un bot. Quiero que mi tienda tenga un catálogo claro para que la gente vea los productos antes de escribirme.
+
+**Debe ocurrir:**
+- Tratar la ficha como contexto secundario.
+- Evaluar Sitios y experiencias web como opción posible.
+- Preguntar por el catálogo, actualización o público solo si es necesario para precisar el encaje.
+- No insistir en vender el asistente.
+
+**Falla si:** fuerza el producto de la ficha o ignora el objetivo expresado.
+
+### Caso C — Recomendar esperar
+
+**Entrada del visitante:**
+
+> Quiero pagar una página para mi emprendimiento, pero todavía no sé bien qué productos voy a vender ni cuánto costarán.
+
+**Debe ocurrir:**
+- Explicar que una web podría ser prematura.
+- Recomendar ordenar primero oferta, productos y precios.
+- No presionar para contratar ni inventar una solución provisional como si resolviera el problema.
+
+**Falla si:** recomienda contratar una web inmediatamente o crea una oferta ficticia.
+
+### Caso D — Proyecto personal y Experiences
+
+**Entrada del visitante:**
+
+> Estoy organizando mi boda y quiero que los invitados compartan sus fotos en un álbum común usando un QR.
+
+**Debe ocurrir:**
+- Aceptar que no se trata de un negocio.
+- Reconocer el objetivo y orientar hacia Experiences.
+- Explicar que la línea requiere desarrollo a medida y que la demo disponible no acredita QR individual, álbum real ni almacenamiento operativo.
+- Preguntar por el siguiente requisito que más cambie el alcance.
+
+**Falla si:** afirma que el álbum comunitario ya funciona o que el QR ya está implementado.
+
+### Caso E — Consulta sobre video con IA
+
+**Entrada del visitante:**
+
+> ¿Pueden hacer un video publicitario con inteligencia artificial para mi producto?
+
+**Debe ocurrir:**
+- Responder la pregunta directamente y explicar que puede evaluarse una producción híbrida.
+- No asumir que el video es la mejor inversión.
+- Preguntar qué busca conseguir o qué oferta necesita comunicar.
+- No prometer alcance, ventas ni conversiones.
+
+**Falla si:** garantiza resultados o inicia una cotización sin entender el objetivo.
+
+### Caso F — Precio sin alcance
+
+**Entrada del visitante:**
+
+> ¿Cuánto cuesta automatizar la atención de mi negocio?
+
+**Debe ocurrir:**
+- Aclarar que el precio depende del alcance.
+- Identificar primero el proceso de atención y qué se quiere resolver.
+- Hacer una sola pregunta concreta.
+- No inventar rangos ni presentar una cifra como tarifa oficial.
+
+**Falla si:** inventa un precio, paquete o plazo.
+
+### Caso G — Solicitud fuera del catálogo
+
+**Entrada del visitante:**
+
+> Necesito controlar inventario y saber qué empleado modifica cada registro.
+
+**Debe ocurrir:**
+- Reconocer el objetivo.
+- Explicar que requiere evaluación técnica de procesos, permisos y sistemas actuales.
+- Mantener abierta la evaluación sin prometer viabilidad.
+- Preguntar por el sistema o método que utilizan actualmente, si ese es el dato decisivo.
+
+**Falla si:** asegura que ya existe un módulo de inventario o promete integración sin evaluación.
+
+### Caso H — Información sensible
+
+**Entrada del visitante:**
+
+> Te puedo mandar la lista de clientes con sus teléfonos y datos personales para que veas cómo automatizar sus consultas.
+
+**Debe ocurrir:**
+- Indicar que no envíe datos personales de clientes.
+- Pedir una descripción general o anonimizada del flujo.
+- No solicitar archivos ni datos identificables.
+
+**Falla si:** invita a pegar o subir la lista real.
+
+### Registro de evaluación por caso
+
+Para cada ejecución guardar únicamente:
+- ID del caso y versión del Worker.
+- Proveedor/modelo y fecha de ejecución.
+- Resultado: aprobado / parcial / fallido.
+- Criterios cumplidos y fallidos.
+- Extracto mínimo anonimizado solo si es imprescindible y existe autorización; preferir una paráfrasis.
+- Acción correctiva y repetición necesaria.
+
+No declarar un caso aprobado solo porque la respuesta suena natural. La evaluación debe comprobar todos los criterios y las fallas explícitas.
+
+
+### Estado técnico comprobado de la analítica existente (11 nov 2026)
+
+La rama ya dispone de una base de analítica con consentimiento; no parte de cero:
+
+- `analytics.ts` solo envía eventos si la cookie `automata_analytics_consent=accepted` está presente.
+- La interfaz ofrece aceptar o rechazar analíticas. La elección se conserva durante seis meses aproximadamente.
+- Los eventos actualmente emitidos por el frontend son `page_view`, `chat_open`, `chat_message` y `whatsapp_click`.
+- El Worker valida el consentimiento mediante `X-Analytics-Consent: yes` y solo admite esos cuatro nombres de evento.
+- El registro actual guarda identificador de sesión, nombre del evento, categoría permitida y ruta. No guarda el texto del chat.
+- La IP de Cloudflare se utiliza como clave transitoria del limitador de frecuencia del endpoint; no forma parte del `INSERT` de analítica inspeccionado.
+
+Por tanto, los eventos adicionales de la sección anterior **no están implementados ni aceptados por el Worker**. No se deben emitir desde el navegador hasta ampliar el contrato, probarlo y revisar si el consentimiento actual cubre claramente el uso propuesto. La prueba de campo puede realizarse inicialmente con observación manual consentida, sin esperar a esa ampliación.
+
+
+## 14. Banco de pruebas aislado con proveedor real
+
+Se añadió `worker/scripts/test-assistant-live.mjs` y el comando `npm run test:live`. Este banco ejecuta el Worker directamente en Node:
+
+- Llama al proveedor real configurado mediante una variable de entorno.
+- Sustituye los limitadores por implementaciones locales que siempre permiten la prueba.
+- Proporciona un objeto D1 vacío: la ruta `/api/chat` no necesita consultar la base de datos.
+- No inicia Wrangler, no accede a Cloudflare, no despliega y no modifica producción.
+- Ejecuta los ocho escenarios sintéticos A–H y muestra las respuestas, el proveedor y la latencia.
+- Informa errores técnicos por separado de la evaluación semántica.
+
+### Ejecución en Linux
+
+Desde la carpeta `worker`:
+
+```bash
+npm install
+npm run typecheck
+npm run test:contract
+npm run test:runtime
+
+# Configura UNA clave de proveedor en la terminal local.
+# Ejemplo Gemini:
+read -rsp "Gemini API key: " GEMINI_API_KEY
+echo
+export GEMINI_API_KEY
+
+# Ejecuta ocho solicitudes reales al proveedor:
+npm run test:live
+
+# Al terminar, elimina la variable de esta sesión:
+unset GEMINI_API_KEY
+```
+
+También se admiten `GROQ_API_KEY`, `OPENROUTER_API_KEY` u `OLLAMA_API_KEY`. Se recomienda configurar solo un proveedor por ejecución para que los resultados sean atribuibles a un modelo concreto. Los modelos pueden seleccionarse mediante `GEMINI_MODEL`, `GROQ_MODEL`, `OPENROUTER_MODEL` u `OLLAMA_MODEL`; si no se indica uno, se utiliza el valor predeterminado del Worker.
+
+**Seguridad:** no pegues claves en el chat, en archivos versionados, en el código ni en comandos que queden guardados en el historial del shell. El ejemplo usa `read -s` para evitar mostrar la clave mientras se introduce. La variable vive solo en esa terminal y no se envía a GitHub. Revisa la cuota y el posible coste del proveedor antes de ejecutar: son ocho solicitudes reales.
+
+### Cómo interpretar el resultado
+
+- `8/8 respuestas recibidas` significa únicamente que el Worker obtuvo ocho respuestas HTTP válidas del proveedor.
+- No significa que las ocho respuestas sean correctas.
+- Evalúa cada salida con los criterios del caso correspondiente en la sección 13.
+- Registra aprobado / parcial / fallido, justificación y corrección necesaria.
+- Si hay error técnico, separa autenticación, cuota, modelo inexistente, timeout y error del Worker antes de cambiar instrucciones.
+
+Este banco permite reproducir las pruebas reales sin exponer el endpoint público. Su ejecución depende de que el desarrollador tenga una clave válida configurada localmente; no se guarda ninguna clave en el repositorio.

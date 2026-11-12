@@ -1,0 +1,343 @@
+name: Build visual preview
+on:
+  push:
+    branches:
+      - feature/automata-web-v2-architecture
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: visual-preview-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install site dependencies
+        run: npm install
+      - name: Build feature branch
+        run: npm run build
+      - name: Install Chromium for screenshots
+        run: |
+          npm install --no-save --package-lock=false playwright
+          npx playwright install --with-deps chromium
+      - name: Capture desktop and mobile pages
+        run: |
+          mkdir -p preview-shots
+          npm run preview -- --host 127.0.0.1 > /tmp/automata-preview.log 2>&1 &
+          echo $! > /tmp/automata-preview.pid
+          ready=0
+          for attempt in $(seq 1 30); do
+            if curl --silent --fail http://127.0.0.1:4173/ > /dev/null; then ready=1; break; fi
+            sleep 2
+          done
+          if [ "$ready" -ne 1 ]; then
+            cat /tmp/automata-preview.log
+            echo "Preview server did not become ready."
+            exit 1
+          fi
+          node --input-type=module <<'NODE'
+          import { chromium } from "playwright";
+          const browser = await chromium.launch({ headless: true });
+          const routes = [
+            ["/", "home"],
+            ["/digital/", "digital"],
+            ["/experiences/", "experiences"],
+            ["/studio/", "studio"],
+            ["/proyectos/", "proyectos"],
+            ["/contacto/", "contacto"],
+            ["/experiences/demo/", "invitacion-demo"],
+            ["/studio/lab/", "creative-lab"],
+            ["/demos/", "flujos-demo"]
+          ];
+          const failures = [];
+          for (const [route, name] of routes) {
+            for (const viewport of [
+              { label: "desktop", width: 1440, height: 1000 },
+              { label: "mobile", width: 390, height: 844 }
+            ]) {
+              const page = await browser.newPage({ viewport: { width: viewport.width, height: viewport.height }, deviceScaleFactor: 1 });
+              const runtimeErrors = [];
+              page.on("pageerror", error => runtimeErrors.push(error.message));
+              try {
+                const response = await page.goto("http://127.0.0.1:4173" + route, { waitUntil: "domcontentloaded", timeout: 15000 });
+                if (!response || !response.ok()) {
+                  throw new Error(`HTTP ${response?.status() ?? "no response"}`);
+                }
+                await page.screenshot({ path: `preview-shots/${name}-${viewport.label}.png`, fullPage: true, animations: "disabled" });
+                if (runtimeErrors.length) {
+                  throw new Error(`Browser runtime errors: ${runtimeErrors.join("; ")}`);
+                }
+                console.log(`OK ${route} [${viewport.label}] HTTP ${response.status()}`);
+              } catch (error) {
+                failures.push(`${route} [${viewport.label}]: ${error.message}`);
+                console.error(failures.at(-1));
+              } finally {
+                await page.close();
+              }
+            }
+          }
+          const smokePage = await browser.newPage({
+            viewport: { width: 390, height: 844 },
+            deviceScaleFactor: 1
+          });
+          try {
+            await smokePage.addInitScript(() => {
+              window.__automataOpenedUrl = "";
+              window.open = ((url) => {
+                window.__automataOpenedUrl = String(url ?? "");
+                return null;
+              });
+            });
+            await smokePage.goto("http://127.0.0.1:4173/", { waitUntil: "domcontentloaded", timeout: 15000 });
+            const consent = smokePage.locator('aside[aria-label="Preferencias de cookies"]');
+            const consentBox = await consent.boundingBox();
+            const primaryCtaBox = await smokePage.getByRole("link", { name: /Explorar lo que hacemos/ }).boundingBox();
+            const secondaryCtaBox = await smokePage.getByRole("button", { name: /Iniciar una conversación/ }).boundingBox();
+            const assistantLauncher = smokePage.locator(".automata-chat-launcher");
+            if (!consentBox || !primaryCtaBox || !secondaryCtaBox || !(await assistantLauncher.count())) {
+              throw new Error("Consent notice, hero actions or assistant launcher are missing.");
+            }
+            if (consentBox.x < primaryCtaBox.x + primaryCtaBox.width
+              && consentBox.x + consentBox.width > primaryCtaBox.x
+              && consentBox.y < primaryCtaBox.y + primaryCtaBox.height
+              && consentBox.y + consentBox.height > primaryCtaBox.y) {
+              throw new Error("Cookie consent notice overlaps the primary hero CTA.");
+            }
+            await smokePage.waitForFunction(() => {
+              const launcher = document.querySelector(".automata-chat-launcher");
+              return !!launcher && getComputedStyle(launcher).visibility === "hidden";
+            });
+            await smokePage.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+            await assistantLauncher.waitFor({ state: "visible" });
+            await smokePage.evaluate(() => window.scrollTo(0, 0));
+            await smokePage.waitForFunction(() => {
+              const launcher = document.querySelector(".automata-chat-launcher");
+              return !!launcher && getComputedStyle(launcher).visibility === "hidden";
+            });
+            await smokePage.getByRole("button", { name: "Rechazar analíticas" }).click();
+            if (await consent.count()) {
+              throw new Error("Cookie consent notice did not close after rejecting analytics.");
+            }
+            await smokePage.getByRole("button", { name: "Preferencias de cookies" }).click();
+            await smokePage.waitForFunction(() => {
+              const panel = document.querySelector('aside[aria-label="Preferencias de cookies"]');
+              if (!panel) return false;
+              const rect = panel.getBoundingClientRect();
+              return rect.top >= 0 && rect.top < window.innerHeight;
+            }, undefined, { timeout: 5000 }).catch(() => {
+              throw new Error("Footer cookie preferences did not reopen and scroll to the notice.");
+            });
+            await smokePage.getByRole("button", { name: "Abrir menú" }).click();
+            const mobileNav = smokePage.getByRole("navigation", { name: "Navegación móvil" });
+            if (!(await mobileNav.isVisible())) {
+              throw new Error("Mobile navigation did not open.");
+            }
+            await mobileNav.getByRole("link", { name: "Digital" }).click();
+            await smokePage.waitForURL("**/digital/");
+            const newsletterTrigger = smokePage.getByRole("button", { name: /Recibir novedades/ });
+            await newsletterTrigger.click();
+            const newsletterDialog = smokePage.getByRole("dialog", { name: /Las próximas ideas llegan por aquí/ });
+            await newsletterDialog.waitFor({ state: "visible" });
+            const closeNewsletter = newsletterDialog.getByRole("button", { name: "Cerrar registro de novedades" });
+            if (!(await closeNewsletter.evaluate((element) => element === document.activeElement))) {
+              throw new Error("Newsletter dialog did not move keyboard focus to its first control.");
+            }
+            await smokePage.keyboard.press("Shift+Tab");
+            const lastNewsletterControl = newsletterDialog.locator('a[href*="wa.me"]');
+            if (!(await lastNewsletterControl.evaluate((element) => element === document.activeElement))) {
+              throw new Error("Shift+Tab did not wrap focus to the last newsletter dialog control.");
+            }
+            await smokePage.keyboard.press("Tab");
+            if (!(await closeNewsletter.evaluate((element) => element === document.activeElement))) {
+              throw new Error("Tab did not wrap focus to the first newsletter dialog control.");
+            }
+            await smokePage.keyboard.press("Escape");
+            await newsletterDialog.waitFor({ state: "hidden" });
+            if (!(await newsletterTrigger.evaluate((element) => element === document.activeElement))) {
+              throw new Error("Closing the newsletter dialog did not restore focus to its trigger.");
+            }
+            if (await smokePage.locator("body").evaluate((element) => element.style.overflow === "hidden")) {
+              throw new Error("Closing the newsletter dialog did not restore page scrolling.");
+            }
+
+            await smokePage.getByRole("button", { name: /Conversemos sobre tu proyecto/ }).click();
+            const chatDialog = smokePage.getByRole("dialog", { name: "Asistente virtual de Automata" });
+            await chatDialog.waitFor({ state: "visible" });
+            if (!(await chatDialog.getByText(/Estabas explorando AUTOMATA Digital/).count())) {
+              throw new Error("Assistant did not preserve the Digital page context.");
+            }
+            const chatInput = chatDialog.getByRole("textbox", { name: "Escribe tu consulta" });
+            await chatInput.fill("Quiero hablar con una persona");
+            await chatDialog.getByRole("button", { name: "Enviar mensaje" }).click();
+            const handoff = chatDialog.locator(".automata-handoff");
+            await handoff.waitFor({ state: "visible" });
+            const whatsappButton = handoff.getByRole("button", { name: /Continuar por WhatsApp/ });
+            if (await whatsappButton.isEnabled()) {
+              throw new Error("WhatsApp handoff was enabled before explicit data-sharing consent.");
+            }
+            await handoff.locator('input[type="checkbox"]').check();
+            if (!(await whatsappButton.isEnabled())) {
+              throw new Error("WhatsApp handoff stayed disabled after explicit consent.");
+            }
+            await whatsappButton.click();
+            const openedUrl = await smokePage.evaluate(() =>
+              window.__automataOpenedUrl ?? ""
+            );
+            if (!openedUrl.startsWith("https://wa.me/59176192899?text=") || !decodeURIComponent(openedUrl).includes("BRIEF DE CIERRE HUMANO")) {
+              throw new Error("WhatsApp handoff did not prepare the expected contextual brief URL.");
+            }
+
+            await smokePage.goto("http://127.0.0.1:4173/contacto/", { waitUntil: "domcontentloaded", timeout: 15000 });
+            const contactLauncher = smokePage.locator(".automata-chat-launcher");
+            await smokePage.waitForFunction(() => {
+              const launcher = document.querySelector(".automata-chat-launcher");
+              return !!launcher && getComputedStyle(launcher).visibility === "hidden";
+            });
+            await smokePage.evaluate(() => {
+              const target = document.querySelector("[data-chat-launcher-suppress]");
+              if (target) window.scrollTo(0, target.getBoundingClientRect().bottom + window.scrollY + 20);
+            });
+            await contactLauncher.waitFor({ state: "visible" });
+            await smokePage.evaluate(() => window.scrollTo(0, 0));
+            await smokePage.waitForFunction(() => {
+              const launcher = document.querySelector(".automata-chat-launcher");
+              return !!launcher && getComputedStyle(launcher).visibility === "hidden";
+            });
+            await smokePage.evaluate(() => { window.__automataOpenedUrl = ""; });
+            const contactForm = smokePage.locator("form").filter({ has: smokePage.getByRole("button", { name: /Preparar mensaje en WhatsApp/ }) });
+            const objectiveField = contactForm.locator("textarea");
+            if (await contactForm.evaluate((form) => form.checkValidity())) {
+              throw new Error("Contact form accepted an empty required objective.");
+            }
+            await contactForm.getByLabel("Tu nombre").fill("Prueba QA");
+            await contactForm.getByLabel("Negocio u organización").fill("Negocio de prueba");
+            await contactForm.locator("select").selectOption({ label: "Digital" });
+            await objectiveField.fill("Necesito automatizar consultas y reservas por WhatsApp.");
+            if (!(await contactForm.evaluate((form) => form.checkValidity()))) {
+              throw new Error("Contact form rejected a valid objective.");
+            }
+            await contactForm.getByRole("button", { name: /Preparar mensaje en WhatsApp/ }).click();
+            const contactUrl = await smokePage.evaluate(() => window.__automataOpenedUrl ?? "");
+            const contactMessage = decodeURIComponent(contactUrl);
+            if (!contactUrl.startsWith("https://wa.me/59176192899?text=")
+              || !contactMessage.includes("Nombre: Prueba QA")
+              || !contactMessage.includes("Negocio / organización: Negocio de prueba")
+              || !contactMessage.includes("Área de interés: Digital")
+              || !contactMessage.includes("automatizar consultas y reservas")) {
+              throw new Error("Contact form did not prepare the expected WhatsApp brief.");
+            }
+            await smokePage.goto("http://127.0.0.1:4173/demos/", { waitUntil: "domcontentloaded", timeout: 15000 });
+            await smokePage.getByRole("button", { name: "Añadir" }).first().click();
+            await smokePage.getByRole("button", { name: "Registrar pedido" }).click();
+            await smokePage.getByText("Pedido registrado. Simulación lista.").waitFor({ state: "visible" });
+            await smokePage.getByRole("button", { name: "CONSULTORIO" }).click();
+            await smokePage.getByLabel("Nombre", { exact: true }).fill("Paciente QA");
+            await smokePage.getByLabel("Fecha tentativa").fill("2027-01-10");
+            await smokePage.getByRole("button", { name: "Solicitar cita" }).click();
+            await smokePage.getByText(/Solicitud registrada\. Simulación: la confirmación real la da la atención humana/).waitFor({ state: "visible" });
+            await smokePage.getByRole("button", { name: "PELUQUERÍA" }).click();
+            await smokePage.getByLabel("Nombre", { exact: true }).fill("Cliente QA");
+            await smokePage.getByRole("button", { name: "Reservar" }).click();
+            await smokePage.getByText(/Solicitud registrada\. Simulación: la disponibilidad se confirma en la versión real/).waitFor({ state: "visible" });
+            console.log("OK Digital demos smoke test: restaurant order, clinic appointment and salon reservation");
+
+            await smokePage.goto("http://127.0.0.1:4173/experiences/", { waitUntil: "domcontentloaded", timeout: 15000 });
+            await smokePage.getByRole("link", { name: /Ver experiencia/ }).click();
+            await smokePage.waitForURL("**/experiences/demo/");
+            const invitationForm = smokePage.locator("form");
+            await invitationForm.getByLabel("Nombre y apellido").fill("Invitada QA");
+            await invitationForm.getByRole("button", { name: "Sí, ahí estaré" }).click();
+            await invitationForm.getByLabel(/Cantidad de personas/).selectOption("3");
+            await invitationForm.getByRole("button", { name: "Confirmar respuesta" }).click();
+            const invitationStatus = smokePage.getByRole("status");
+            await invitationStatus.waitFor({ state: "visible" });
+            if (!(await invitationStatus.getByText(/Invitada QA/).count())
+              || !(await invitationStatus.getByText(/3 personas/).count())
+              || !(await invitationStatus.getByText(/No se envió ni guardó en un servidor/).count())) {
+              throw new Error("Invitation demo did not show the expected local-only RSVP confirmation.");
+            }
+            await invitationStatus.getByRole("button", { name: "Editar respuesta" }).click();
+            await invitationForm.getByRole("button", { name: "No podré asistir" }).click();
+            await invitationForm.getByRole("button", { name: "Confirmar respuesta" }).click();
+            if (!(await smokePage.getByRole("status").getByText(/no asistencia/).count())) {
+              throw new Error("Invitation demo did not handle a negative RSVP.");
+            }
+
+            await smokePage.goto("http://127.0.0.1:4173/experiences/", { waitUntil: "domcontentloaded", timeout: 15000 });
+            await smokePage.getByRole("button", { name: "Saber más" }).click();
+            const experiencesChat = smokePage.getByRole("dialog", { name: "Asistente virtual de Automata" });
+            await experiencesChat.getByText(/Veo que estabas explorando Experiencias para bodas y celebraciones/).waitFor({ state: "visible" });
+
+            await smokePage.goto("http://127.0.0.1:4173/studio/", { waitUntil: "domcontentloaded", timeout: 15000 });
+            await smokePage.getByRole("button", { name: "Saber más" }).first().click();
+            const studioChat = smokePage.getByRole("dialog", { name: "Asistente virtual de Automata" });
+            await studioChat.getByText(/Veo que estabas explorando Producción audiovisual/).waitFor({ state: "visible" });
+            await studioChat.getByRole("button", { name: "Cerrar chat" }).click();
+            await smokePage.getByRole("button", { name: "Saber más" }).nth(1).click();
+            const photographyChat = smokePage.getByRole("dialog", { name: "Asistente virtual de Automata" });
+            await photographyChat.getByText(/Veo que estabas explorando Producción audiovisual/).waitFor({ state: "visible" });
+            await photographyChat.getByRole("button", { name: "Cerrar chat" }).click();
+            await smokePage.getByRole("button", { name: "Saber más" }).nth(2).click();
+            const campaignsChat = smokePage.getByRole("dialog", { name: "Asistente virtual de Automata" });
+            await campaignsChat.getByText(/Veo que estabas explorando Publicidad y campañas/).waitFor({ state: "visible" });
+            await campaignsChat.getByRole("button", { name: "Cerrar chat" }).click();
+            await smokePage.getByRole("button", { name: "Saber más" }).nth(3).click();
+            const hybridChat = smokePage.getByRole("dialog", { name: "Asistente virtual de Automata" });
+            await hybridChat.getByText(/Veo que estabas explorando Producción audiovisual/).waitFor({ state: "visible" });
+            await hybridChat.getByRole("button", { name: "Cerrar chat" }).click();
+
+            await smokePage.goto("http://127.0.0.1:4173/studio/", { waitUntil: "domcontentloaded", timeout: 15000 });
+            await smokePage.getByRole("link", { name: /Explorar Creative Lab/ }).click();
+            await smokePage.waitForURL("**/studio/lab/");
+            const creativeForm = smokePage.locator("form");
+            await creativeForm.getByLabel("Marca o negocio").fill("Marca QA");
+            await creativeForm.getByLabel("¿Qué producto o servicio comunicamos?").fill("una experiencia digital");
+            await creativeForm.getByLabel("Objetivo").selectOption("conversion");
+            await creativeForm.getByLabel("Formato").selectOption("spot");
+            await creativeForm.getByRole("button", { name: /Construir concepto/ }).click();
+            const creativeOutput = smokePage.locator("section").filter({ has: smokePage.getByRole("heading", { name: "Tu primera dirección." }) });
+            await creativeOutput.getByText(/Motivar una consulta o compra/).waitFor({ state: "visible" });
+            await creativeOutput.getByText(/Spot audiovisual · 30–45 s/).waitFor({ state: "visible" });
+            await creativeOutput.getByText(/35–45 s · Cierre/).waitFor({ state: "visible" });
+            await smokePage.context().grantPermissions(["clipboard-read", "clipboard-write"], { origin: "http://127.0.0.1:4173" });
+            await creativeOutput.getByRole("button", { name: /Copiar brief completo/ }).click();
+            await creativeOutput.getByRole("button", { name: /Brief copiado/ }).waitFor({ state: "visible" });
+            console.log("OK demos smoke test: invitation RSVP and Studio creative brief");
+            console.log("OK mobile smoke test: consent, newsletter focus, assistant handoff and contact form");
+
+          } catch (error) {
+            failures.push(`mobile smoke test: ${error.message}`);
+            console.error(failures.at(-1));
+          } finally {
+            await smokePage.close();
+          }
+          await browser.close();
+          if (failures.length) {
+            throw new Error(`Visual preview checks failed:\\n${failures.join("\\n")}`);
+          }
+          NODE
+      - name: Package interactive preview
+        run: |
+          mkdir -p preview-package
+          cp -R dist preview-package/site
+          cp -R preview-shots preview-package/screenshots
+          cat > preview-package/README.txt <<'EOF'
+          AUTOMATA V2 · Visual preview from the feature branch
+          
+          The screenshots show desktop (1440px) and mobile (390px) captures.
+          The site/ directory contains the built static site.
+          This artifact is a review snapshot. It is not a production deployment.
+          EOF
+      - uses: actions/upload-artifact@v4
+        with:
+          name: automata-v2-visual-preview
+          path: preview-package/
+          retention-days: 7

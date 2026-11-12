@@ -1,5 +1,7 @@
-const API = "https://automata-chat.dgckg-trd1.workers.dev";
-const sessionId = typeof crypto !== "undefined" && "randomUUID" in crypto ? crypto.randomUUID() : "session-" + Date.now();
+import { AUTOMATA_API_URL } from "./api";
+const sessionId = typeof crypto !== "undefined" && "randomUUID" in crypto
+  ? crypto.randomUUID()
+  : (Date.now().toString(16) + Math.random().toString(16).slice(2)).slice(0, 32);
 
 function hasAnalyticsConsent() {
   return typeof document !== "undefined" && document.cookie.split("; ").some((item) => item === "automata_analytics_consent=accepted");
@@ -11,7 +13,7 @@ export function setAnalyticsConsent(accepted: boolean) {
 
 export function trackEvent(event: "page_view" | "chat_open" | "chat_message" | "whatsapp_click", category?: string) {
   if (!hasAnalyticsConsent()) return;
-  void fetch(API + "/api/events", {
+  void fetch(AUTOMATA_API_URL + "/api/events", {
     method: "POST",
     headers: { "Content-Type": "application/json", "X-Analytics-Consent": "yes" },
     body: JSON.stringify({ sessionId, event, category, page: window.location.pathname }),

@@ -1,11 +1,46 @@
 import React, { FormEvent, useEffect, useRef, useState } from "react";
 import { trackEvent } from "./analytics";
 import { Bot, MessageCircle, Send, Sparkles, X, ArrowUpRight } from "lucide-react";
+import { AUTOMATA_API_URL } from "./api";
 
 type Message = { role: "bot" | "user"; text: string };
+type ChatSource = "home" | "digital" | "experiences" | "studio" | "projects" | "contact";
+type AssistantContext = { productId?: string; action?: "explore" | "experience" | "proposal" };
+import { PRODUCT_CATALOG } from "./worker/src/product-catalog";
+const CHAT_SOURCES: ChatSource[] = ["home", "digital", "experiences", "studio", "projects", "contact"];
+function currentChatSource(): ChatSource {
+  const path = window.location.pathname.replace(/\/+$/, "") || "/";
+  if (path === "/digital") return "digital";
+  if (path === "/experiences") return "experiences";
+  if (path === "/studio") return "studio";
+  if (path === "/proyectos") return "projects";
+  if (path === "/contacto") return "contact";
+  return "home";
+}
 const WHATSAPP_NUMBER = "59176192899";
-const quick = ["¿Qué hace Automata?", "¿Hacen publicidad con IA?", "Tengo un negocio de vinos", "Quiero automatizar pedidos por WhatsApp"];
-const CHAT_API_URL = "https://automata-chat.dgckg-trd1.workers.dev";
+function greetingForSource(source: ChatSource, productName?: string) {
+  const origins: Record<ChatSource, string> = {
+    home: "",
+    digital: "Estabas explorando AUTOMATA Digital. ",
+    experiences: "Estabas explorando AUTOMATA Experiences. ",
+    studio: "Estabas explorando AUTOMATA Studio. ",
+    projects: "Llegaste desde nuestros proyectos y demostraciones. ",
+    contact: "Llegaste desde la sección de contacto. "
+  };
+  const productContext = productName
+    ? `Veo que estabas explorando ${productName}; lo tendré como referencia, sin asumir que sea lo que necesitas. `
+    : origins[source];
+  return `¡Hola! Soy el asistente de AUTOMATA. ${productContext}Primero quiero entender tu contexto para orientarte bien: ¿qué tipo de negocio o proyecto tienes?`;
+}
+function quickQuestionsForSource(_source: ChatSource) {
+  return [
+    "Tengo un restaurante o cafetería",
+    "Tengo una tienda o negocio de servicios",
+    "Estoy organizando un evento o celebración",
+    "Tengo una marca, proyecto o idea",
+    "Otro contexto"
+  ];
+}
 const LOCAL_SESSION_ID = () => typeof crypto !== "undefined" && "randomUUID" in crypto ? crypto.randomUUID() : `session-${Date.now()}-${Math.random().toString(36).slice(2)}`;
 function normalize(value: string) {
   return value.toLocaleLowerCase("es").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9\s]/g, " ").replace(/\s+/g, " ").trim();
@@ -18,7 +53,8 @@ function requestsHumanHandoff(value: string) {
   const directRequest = /\b(quiero|quisiera|necesito|puedo|podria|prefiero)\b.{0,45}\b(hablar|contactar|comunicarme|comunicar|pasar|derivar|conectar|llamar|llamada)\b/.test(text);
   const wantsPersonDirectly = /\b(quiero|quisiera|necesito)\s+(un|una)\s+(humano|humana|humnao|persona|asesor|asesora|agente)\b/.test(text);
   const explicitWhatsAppHandoff = /\b(continuar|pasar|ir|seguir)\b.{0,25}\bwhatsapp\b/.test(text);
-  return (person && contactIntent) || (directRequest && (person || /\b(whatsapp|equipo)\b/.test(text))) || wantsPersonDirectly || explicitWhatsAppHandoff;
+  const callbackRequest = /\b(quiero|quisiera|necesito|me gustaria|podrian|pueden|prefiero)\b.{0,55}\b(que me llamen|llamarme|recibir una llamada|una llamada|me contacten|contactarme|se comuniquen conmigo)\b/.test(text);
+  return (person && contactIntent) || (directRequest && (person || /\b(whatsapp|equipo)\b/.test(text))) || wantsPersonDirectly || explicitWhatsAppHandoff || callbackRequest;
 }
 
 function buildHandoffSummary(messages: Message[]) {
@@ -111,8 +147,11 @@ function buildHandoffSummary(messages: Message[]) {
 }
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
+  const [launcherSuppressed, setLauncherSuppressed] = useState(false);
+  const [chatSource, setChatSource] = useState<ChatSource>(currentChatSource);
+  const [assistantContext, setAssistantContext] = useState<AssistantContext>({});
   const [input, setInput] = useState("");
-  const [messages, setMessages] = useState<Message[]>([{ role: "bot", text: "¡Hola! Soy el asistente virtual de Automata. Puedo contarte qué hacemos y ayudarte a identificar oportunidades para tu negocio. ¿Qué necesitas resolver?" }]);
+  const [messages, setMessages] = useState<Message[]>(() => [{ role: "bot", text: greetingForSource(currentChatSource()) }]);
   const [handoffText, setHandoffText] = useState("");
   const [contactName, setContactName] = useState("");
   const [companyName, setCompanyName] = useState("");
@@ -122,9 +161,43 @@ export default function ChatWidget() {
   const [isThinking, setIsThinking] = useState(false);
   const sessionId = useRef(LOCAL_SESSION_ID());
   const bottomRef = useRef<HTMLDivElement>(null);
+  const launcherRef = useRef<HTMLButtonElement>(null);
+  const composeInputRef = useRef<HTMLInputElement>(null);
+  const wasOpenRef = useRef(false);
+  const closeChatRef = useRef<() => void>(() => {});
 
   useEffect(() => {
-    const show = () => { trackEvent("chat_open"); setOpen(true); };
+    const mobileViewport = window.matchMedia("(max-width: 480px)");
+    if (!mobileViewport.matches || typeof IntersectionObserver === "undefined") return;
+    const targets = Array.from(document.querySelectorAll<HTMLElement>("[data-chat-launcher-suppress]"));
+    if (!targets.length) return;
+    const observer = new IntersectionObserver((entries) => {
+      setLauncherSuppressed(entries.some((entry) => entry.isIntersecting));
+    }, { threshold: 0.01 });
+    targets.forEach((target) => observer.observe(target));
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const show = (event: Event) => {
+      const detail = (event as CustomEvent<{ source?: unknown; productId?: unknown; action?: unknown }>).detail;
+      const requestedSource = detail?.source;
+      const source = typeof requestedSource === "string" && CHAT_SOURCES.includes(requestedSource as ChatSource)
+        ? requestedSource as ChatSource
+        : currentChatSource();
+      const selectedProduct = typeof detail?.productId === "string" && Object.prototype.hasOwnProperty.call(PRODUCT_CATALOG, detail.productId)
+        ? PRODUCT_CATALOG[detail.productId as keyof typeof PRODUCT_CATALOG]
+        : undefined;
+      const action = detail?.action === "experience" || detail?.action === "proposal" || detail?.action === "explore" ? detail.action : undefined;
+      const nextContext: AssistantContext = { productId: selectedProduct?.id, action };
+      setChatSource(source);
+      setAssistantContext(nextContext);
+      setMessages((previous) => previous.length === 1 && previous[0].role === "bot"
+        ? [{ role: "bot", text: selectedProduct ? greetingForSource(source, selectedProduct.name) : greetingForSource(source) }]
+        : previous);
+      trackEvent("chat_open");
+      setOpen(true);
+    };
     window.addEventListener("automata:open-chat", show);
     return () => window.removeEventListener("automata:open-chat", show);
   }, []);
@@ -157,7 +230,13 @@ export default function ChatWidget() {
     const previousBotMessage = [...messages].reverse().find((message) => message.role === "bot")?.text ?? "";
     const affirmative = /^(si|sí|si por favor|sí por favor|de acuerdo|adelante|por supuesto)[.!\s]*$/i.test(text);
     const authorization = /^(autorizo|lo autorizo|autorizo el envío|autorizo compartir)[.!\s]*$/i.test(text);
-    if (handoffRequested && affirmative && /resumen/i.test(previousBotMessage)) setShowHandoff(true);
+    if (handoffRequested && affirmative && /resumen/i.test(previousBotMessage)) {
+      setShowHandoff(true);
+      setHandoffText(buildHandoffSummary(messages));
+      setInput("");
+      setIsThinking(false);
+      return;
+    }
     if (handoffRequested && authorization) {
       setShowHandoff(true);
       setMessages([...conversation, { role: "bot", text: "Tu autorización por escrito no envía la solicitud. Para compartirla, revisa el resumen, marca la casilla de autorización y pulsa «Continuar por WhatsApp». WhatsApp se abrirá para que confirmes el envío desde tu dispositivo." }]);
@@ -171,7 +250,7 @@ export default function ChatWidget() {
 
     let answer = "";
     try {
-        const response = await fetch(`${CHAT_API_URL}/api/chat`, {
+        const response = await fetch(`${AUTOMATA_API_URL}/api/chat`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -179,6 +258,9 @@ export default function ChatWidget() {
           },
           signal: AbortSignal.timeout(60000),
           body: JSON.stringify({
+            source: chatSource,
+            productId: assistantContext.productId,
+            action: assistantContext.action,
             messages: (() => {
               const recent = conversation.slice(1).slice(-20);
               if (recent[0]?.role === "bot") recent.shift();
@@ -190,13 +272,22 @@ export default function ChatWidget() {
           })
         });
         const payload = await response.json().catch(() => ({})) as { answer?: string; error?: string };
-        if (!response.ok || !payload.answer) {
-          throw new Error(payload.error || "No pudimos procesar tu consulta. Inténtalo nuevamente.");
+        if (!response.ok) {
+          answer = payload.error || (response.status === 429
+            ? "Llegaste al límite temporal de consultas. Espera un momento e inténtalo nuevamente."
+            : response.status >= 500
+              ? "El asistente no está disponible en este momento. Inténtalo nuevamente en unos minutos."
+              : "No pudimos procesar tu consulta. Revisa el mensaje e inténtalo nuevamente.");
+        } else if (!payload.answer) {
+          answer = "El asistente respondió sin contenido. Inténtalo nuevamente en unos minutos.";
+        } else {
+          answer = payload.answer;
         }
-        answer = payload.answer;
     } catch (error) {
       console.error("Automata chat request failed:", error);
-      answer = "No pudimos conectar con el asistente de IA. Tu mensaje no se procesó; inténtalo nuevamente en unos minutos.";
+      answer = error instanceof DOMException && error.name === "TimeoutError"
+        ? "La respuesta tardó más de lo esperado. Tu mensaje no se procesó; inténtalo nuevamente."
+        : "No pudimos conectar con el asistente de IA. Tu mensaje no se procesó; revisa tu conexión e inténtalo nuevamente.";
     }
 
     const completedMessages: Message[] = [...conversation, { role: "bot", text: answer }];
@@ -218,6 +309,28 @@ export default function ChatWidget() {
     }
     setOpen(false);
   };
+  closeChatRef.current = closeChat;
+
+  useEffect(() => {
+    if (!open) {
+      if (wasOpenRef.current) {
+        wasOpenRef.current = false;
+        launcherRef.current?.focus();
+      }
+      return;
+    }
+
+    wasOpenRef.current = true;
+    composeInputRef.current?.focus();
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        closeChatRef.current();
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [open]);
 
   const continueOnWhatsApp = () => {
     if (!shareConsent || !handoffText.trim()) return;
@@ -230,15 +343,15 @@ export default function ChatWidget() {
 
   return (
     <div className="automata-chat-root">
-      {open && <section className="automata-chat-panel" role="dialog" aria-modal="false" aria-label="Asistente virtual de Automata">
+      {open && <section id="automata-chat-panel" className="automata-chat-panel" role="dialog" aria-modal="false" aria-label="Asistente virtual de Automata">
         <header className="automata-chat-header">
           <span className="automata-chat-avatar"><Bot size={22} /></span>
           <div><strong>Autómata</strong><small>Asistente virtual de Automata</small></div>
           <button type="button" onClick={closeChat} aria-label="Cerrar chat" className="automata-chat-close"><X size={20} /></button>
         </header>
-        <div className="automata-chat-messages" aria-live="polite">
+        <div className="automata-chat-messages" role="log" aria-live="polite" aria-relevant="additions" aria-atomic="false">
           {messages.map((message, index) => <div key={index} className={`automata-chat-message ${message.role}`}>{message.text}</div>)}
-          {messages.length === 1 && <div className="automata-chat-quick">{quick.map((question) => <button key={question} type="button" disabled={isThinking} onClick={() => send(question)}>{question}</button>)}</div>}
+          {messages.length === 1 && <div className="automata-chat-quick">{quickQuestionsForSource(chatSource).map((question) => <button key={question} type="button" disabled={isThinking} onClick={() => send(question)}>{question}</button>)}</div>}
           {canOfferHandoff && !showHandoff && <button type="button" className="automata-handoff-button" onClick={() => setShowHandoff(true)}>Preparar brief de cierre</button>}
           {showHandoff && <section className="automata-handoff">
             <div className="automata-handoff-heading"><strong>Brief de cierre para el equipo</strong><span>Contexto para continuar sin repetir la conversación</span></div>
@@ -255,12 +368,12 @@ export default function ChatWidget() {
           <div ref={bottomRef} />
         </div>
         <form className="automata-chat-compose" onSubmit={submit}>
-          <input value={input} onChange={(event) => setInput(event.target.value)} placeholder="Escribe tu consulta..." aria-label="Escribe tu consulta" maxLength={1800} disabled={isThinking} />
+          <input ref={composeInputRef} value={input} onChange={(event) => setInput(event.target.value)} placeholder="Escribe tu consulta..." aria-label="Escribe tu consulta" maxLength={1800} disabled={isThinking} />
           <button type="submit" disabled={!input.trim() || isThinking} aria-label="Enviar mensaje"><Send size={18} /></button>
         </form>
         <p className="automata-chat-note"><Sparkles size={12} /> Asistente con IA de Automata · proveedores alternativos. No incluyas datos sensibles. Escribir una autorización en el chat no envía mensajes; el envío se inicia al pulsar Continuar por WhatsApp.</p>
       </section>}
-      <button type="button" className="automata-chat-launcher" onClick={() => { if (!open) { trackEvent("chat_open"); setOpen(true); } else { closeChat(); } }} aria-label={open ? "Cerrar asistente" : "Abrir asistente"}>
+      <button ref={launcherRef} type="button" className={`automata-chat-launcher${launcherSuppressed ? " automata-chat-launcher-suppressed" : ""}`} onClick={() => { if (!open) { trackEvent("chat_open"); setOpen(true); } else { closeChat(); } }} aria-label={open ? "Cerrar asistente" : "Abrir asistente"} aria-expanded={open} aria-controls="automata-chat-panel" aria-haspopup="dialog">
         {open ? <X size={24} /> : <MessageCircle size={24} />}
         {!open && <span>¿Hablamos?</span>}
       </button>

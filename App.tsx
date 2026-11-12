@@ -90,7 +90,7 @@ export default function App() {
               <h1 className="reveal-2 display mt-5 text-[44px] sm:text-[72px] lg:text-[92px]">Tu negocio no necesita más tecnología.<br /><span className="text-[#FF5A00]">Necesita que funcione.</span></h1>
               <p className="reveal-3 mt-6 text-[18px] font-medium leading-snug text-[#5A6068] sm:text-[20px]">Tecnología, creatividad e IA para resolver necesidades reales de tu negocio.</p>
               <div className="reveal-3 mt-8 flex flex-col gap-3 sm:flex-row">
-                <a href="#demos" className="flex min-h-[56px] flex-1 items-center justify-center gap-2 rounded-full bg-[#0E1116] px-7 text-[15px] font-bold text-white sm:flex-none">Ver demos en vivo <ArrowDown size={18} /></a>
+                <a href="#demos" className="flex min-h-[56px] flex-1 items-center justify-center gap-2 rounded-full bg-[#0E1116] px-7 text-[15px] font-bold text-white sm:flex-none">Explorar demos interactivas <ArrowDown size={18} /></a>
                 <button type="button" onClick={openAssistant} className="flex min-h-[56px] flex-1 items-center justify-center gap-2 rounded-full border-2 border-[#0E1116] px-7 text-[15px] font-bold sm:flex-none">Hablar con Autómata <Bot size={18} /></button>
               </div>
             </div>
@@ -138,10 +138,10 @@ export default function App() {
 
         {/* DEMOS */}
         <section id="demos" className="mx-auto max-w-[1220px] px-5 py-16 sm:px-8 lg:py-24">
-          <p className="text-[12px] font-bold uppercase tracking-[0.22em] text-[#FF5A00]">Demos en vivo</p>
+          <p className="text-[12px] font-bold uppercase tracking-[0.22em] text-[#FF5A00]">Demos interactivas</p>
           <h2 className="display mt-4 text-[48px] sm:text-[72px] lg:text-[88px]">No lo leas.<br /><span className="text-[#FF5A00]">Pruébalo.</span></h2>
-          <div className="mt-8 flex flex-col gap-2 sm:flex-row" role="tablist" aria-label="Demostraciones">
-            {([{ id: "restaurante", label: "RESTAURANTE", dot: "#FF5A00" }, { id: "consultorio", label: "CONSULTORIO", dot: "#007AFF" }, { id: "peluqueria", label: "PELUQUERÍA", dot: "#E11D63" }] as const).map((t) => <button key={t.id} role="tab" aria-selected={demo === t.id} onClick={() => setDemo(t.id)} className={`min-h-[56px] flex-1 rounded-full border-2 px-5 text-[14px] font-extrabold transition ${demo === t.id ? "border-[#0E1116] bg-[#0E1116] text-white" : "border-[#E8E6E1] bg-white text-[#5A6068]"}`}><span className="mr-2 inline-block h-[10px] w-[10px] rounded-full" style={{ background: t.dot }} />{t.label}</button>)}
+          <div className="mt-8 flex flex-col gap-2 sm:flex-row" role="group" aria-label="Seleccionar demostración">
+            {([{ id: "restaurante", label: "RESTAURANTE", dot: "#FF5A00" }, { id: "consultorio", label: "CONSULTORIO", dot: "#007AFF" }, { id: "peluqueria", label: "PELUQUERÍA", dot: "#E11D63" }] as const).map((t) => <button key={t.id} type="button" aria-pressed={demo === t.id} onClick={() => setDemo(t.id)} className={`min-h-[56px] flex-1 rounded-full border-2 px-5 text-[14px] font-extrabold transition ${demo === t.id ? "border-[#0E1116] bg-[#0E1116] text-white" : "border-[#E8E6E1] bg-white text-[#5A6068]"}`}><span className="mr-2 inline-block h-[10px] w-[10px] rounded-full" style={{ background: t.dot }} />{t.label}</button>)}
           </div>
 
           <div className="mt-6 overflow-hidden rounded-[32px] border border-[#E8E6E1] bg-[#F4F3F0]">

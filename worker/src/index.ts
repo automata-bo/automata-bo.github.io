@@ -1,3 +1,4 @@
+import { getProduct, PRODUCT_CATALOG } from "./product-catalog";
 interface Env {
   OLLAMA_API_KEY?: string;
   OLLAMA_MODEL?: string;
@@ -27,16 +28,24 @@ Eres Autómata, el asistente comercial oficial de Automata, un estudio de tecnol
 MISIÓN
 Comprender qué necesita la persona, orientarla con honestidad y ayudarla a definir un siguiente paso. Conversa de forma natural y contextual. Recuerda lo que la persona ya explicó dentro del historial enviado; no le pidas repetirlo.
 
-CATÁLOGO CONFIRMADO
-- Publicidad audiovisual con apoyo de IA: conceptos, anuncios, videos promocionales, piezas de producto y campañas.
-- Producción híbrida: combinación de grabación real, edición tradicional y recursos generados con IA.
-- Contenido para redes sociales y apoyo creativo para campañas.
-- Sitios web institucionales y páginas de presentación/captación.
-- Asistentes digitales para responder consultas con información aprobada y derivar casos a personas.
-- Flujos de atención, recepción y organización de consultas y solicitudes por WhatsApp.
-- Diseño de flujos para pedidos y reservas. No confirmes disponibilidad real si no existe una integración conectada.
-- Automatización de tareas y procesos, reportes, registros e integraciones, previa evaluación.
+APERTURA Y DESCUBRIMIENTO COMERCIAL (PRIORIDAD)
+La primera tarea no es vender ni recomendar un producto: es comprender el contexto de la persona. Sigue este orden conversacional, con flexibilidad:
+1. CONTEXTO: identifica qué tipo de negocio, organización, evento o proyecto tiene. Si aún no lo dijo, pregunta de forma sencilla: "¿Qué tipo de negocio o proyecto tienes?". Acepta respuestas abiertas; los ejemplos (restaurante, tienda, consultorio, emprendimiento, evento personal o idea) son ayudas, no categorías obligatorias.
+2. NECESIDAD: cuando conozcas el contexto, descubre qué quiere mejorar, resolver o crear. Si todavía no lo explicó, pregunta: "¿Qué te gustaría mejorar, resolver o crear?". Puedes ofrecer ejemplos pertinentes (atención a clientes, tareas repetitivas, presencia digital, promoción, contenido o una experiencia para un evento), sin convertirlos en un formulario.
+3. ORIENTACIÓN: solo cuando tengas contexto y una necesidad suficientemente clara, evalúa el catálogo y recomienda la división o combinación que mejor encaje: Digital, Experiences y/o Studio. Explica por qué, menciona límites y pregunta por el siguiente dato decisivo si todavía falta información.
 
+REGLAS DE DESCUBRIMIENTO
+- Haz una sola pregunta por turno. No repitas la pregunta de contexto si ya está respondida, ni preguntes la necesidad si la persona ya la explicó en su primer mensaje.
+- Si una respuesta inicial ya contiene negocio/proyecto y necesidad, reconoce ambos y avanza directamente a evaluar la adecuación.
+- El origen de página y el producto seleccionado son pistas secundarias, nunca sustituyen lo que la persona declara. Aunque llegue desde una ficha concreta, no presupongas que esa solución es la adecuada ni empieces recitando el catálogo.
+- Si la persona solo quiere conocer un producto o una demostración, responde a esa consulta; no fuerces el descubrimiento completo.
+- Si pide directamente una propuesta, explica brevemente que primero necesitas comprender el proyecto y comienza por el dato más importante que aún falte. Si ya dio contexto y necesidad, no vuelvas al inicio.
+- Admite personas sin negocio: eventos personales, proyectos culturales, ideas en etapa inicial y consultas exploratorias.
+- La necesidad es el criterio principal de orientación; el rubro aporta contexto. Una misma actividad puede requerir soluciones de distintas divisiones o una combinación.
+- No reveles etiquetas internas, estados de conversación ni puntuaciones de clasificación.
+
+FUENTE DE VERDAD DEL CATÁLOGO
+Las capacidades, estados comerciales, demostraciones, requisitos y límites se incorporan desde el catálogo tipado compartido. No inventes servicios adicionales ni contradigas sus fichas.
 REGLAS COMERCIALES
 - No inventes precios, plazos, clientes, resultados, casos de éxito, integraciones, funcionalidades ni disponibilidad.
 - No prometas ventas, crecimiento, ahorro cuantificado ni resultados garantizados.
@@ -284,9 +293,15 @@ export default {
         const id = crypto.randomUUID();
         const unsubscribeToken = crypto.randomUUID() + crypto.randomUUID().replace(/-/g, "");
         const consentText = "Acepto recibir novedades, lanzamientos y promociones de Automata por el canal que seleccioné. Puedo solicitar la baja cuando quiera.";
-        const result = await env.DB.prepare("INSERT OR IGNORE INTO subscribers (id, channel, contact, normalized_contact, consent_text, consent_version, unsubscribe_token) VALUES (?, ?, ?, ?, ?, ?, ?)")
-          .bind(id, body.channel, contact, normalized, consentText, "2026-11-09-v1", unsubscribeToken).run();
-        if (!result.meta.changes) return json({ error: "Ese contacto ya está registrado. Si quieres actualizar tus preferencias, contacta a Automata." }, 409, origin);
+        const result = await env.DB.prepare(
+          "INSERT INTO subscribers (id, channel, contact, normalized_contact, consent_text, consent_version, unsubscribe_token) VALUES (?, ?, ?, ?, ?, ?, ?) " +
+          "ON CONFLICT(channel, normalized_contact) DO UPDATE SET " +
+          "contact = excluded.contact, consent_text = excluded.consent_text, consent_version = excluded.consent_version, " +
+          "unsubscribe_token = excluded.unsubscribe_token, status = 'active', " +
+          "created_at = strftime('%Y-%m-%dT%H:%M:%fZ','now'), unsubscribed_at = NULL " +
+          "WHERE subscribers.status = 'unsubscribed'"
+        ).bind(id, body.channel, contact, normalized, consentText, "2026-11-09-v1", unsubscribeToken).run();
+        if (!result.meta.changes) return json({ error: "Ese contacto ya tiene una suscripción activa." }, 409, origin);
         return json({ ok: true, message: "Tu suscripción quedó registrada. Gracias por acompañar a Automata." }, 201, origin);
       } catch (error) {
         console.error("Subscription storage failure:", error instanceof Error ? error.name : "unknown");
@@ -336,14 +351,37 @@ export default {
       return json({ error: "Formato de consulta no admitido." }, 415, origin);
     }
 
-    const parsed = await readBoundedJson<{ messages?: unknown }>(request, 48000);
+    const parsed = await readBoundedJson<{ messages?: unknown; source?: unknown; productId?: unknown; action?: unknown }>(request, 48000);
     if (!parsed.ok) return json({ error: parsed.status === 413 ? "La consulta es demasiado extensa." : "No pudimos leer tu consulta." }, parsed.status, origin);
 
     const contents = parseMessages(parsed.value.messages);
     if (!contents) return json({ error: "La conversación no tiene un formato válido o es demasiado extensa." }, 400, origin);
 
+    const sourceLabels: Record<string, string> = {
+      home: "Inicio",
+      digital: "Digital",
+      experiences: "Experiences",
+      studio: "Studio",
+      projects: "Proyectos",
+      contact: "Contacto",
+    };
+    const source = typeof parsed.value.source === "string" && Object.prototype.hasOwnProperty.call(sourceLabels, parsed.value.source)
+      ? sourceLabels[parsed.value.source]
+      : "No identificado";
+    const productId = getProduct(parsed.value.productId)?.id;
+    const selectedProduct = productId ? getProduct(productId) : undefined;
+    const productCatalogContext = Object.values(PRODUCT_CATALOG).map((product) =>
+      `- ${product.name} | División: ${product.division} | Estado: ${product.statusLabel}. ${product.summary} Necesidades: ${product.suitableNeeds.join("; ")}. Capacidades: ${product.capabilities.join("; ")}. Demo: ${product.demo.status}; ${product.demo.scope} Límites: ${product.limitations.join("; ")}. Requisitos: ${product.prerequisites.join("; ")}. Precio: depende del alcance; sin precio público.`
+    ).join("\n");
+    const requestedAction = parsed.value.action === "experience" || parsed.value.action === "proposal" || parsed.value.action === "explore" ? parsed.value.action : "";
+    const actionLabel = requestedAction === "experience" ? "ver una demostración" : requestedAction === "proposal" ? "solicitar una propuesta" : requestedAction === "explore" ? "explorar la solución" : "";
+    const productContext = selectedProduct
+      ? `\n\nCONTEXTO DE PRODUCTO SELECCIONADO (CATÁLOGO CONTROLADO)\nProducto: ${selectedProduct.name}. División: ${selectedProduct.division}. Estado comercial: ${selectedProduct.statusLabel}. Descripción: ${selectedProduct.summary}. Necesidades para las que puede encajar: ${selectedProduct.suitableNeeds.join("; ")}. Capacidades descritas: ${selectedProduct.capabilities.join("; ")}. Público orientativo: ${selectedProduct.audience.join("; ")}. Demo: ${selectedProduct.demo.status}; ${selectedProduct.demo.scope}${selectedProduct.demo.route ? ` Ruta: ${selectedProduct.demo.route}.` : ""} Requisitos previos: ${selectedProduct.prerequisites.join("; ")}. Límites confirmados: ${selectedProduct.limitations.join("; ")}. Precio: no hay precio público confirmado; depende del alcance. Acción desde la que abrió el asesor: ${actionLabel || "sin acción específica"}.\nEl visitante mostró interés en este producto, pero todavía no ha confirmado su problema ni su intención de compra. Usa esta ficha como contexto secundario: primero comprende qué tipo de negocio o proyecto tiene y qué necesita resolver, salvo que ya lo haya explicado o solo esté preguntando por la ficha/demostración. No recites la ficha automáticamente ni supongas que este producto es la recomendación correcta. Si la acción fue solicitar propuesta, ayuda a descubrir el alcance antes de preparar un brief. Si pidió demostración y el estado de demo es "none", dilo y ofrece una explicación guiada; nunca inventes un enlace. Si la demo es simulada o prototipo, explica claramente su alcance y límites antes de presentarla como ejemplo.`
+      : "";
+    const contextualSystemInstruction = `${SYSTEM_INSTRUCTION}\n\nCATÁLOGO VIGENTE (FUENTE ÚNICA: PRODUCT_CATALOG)\n${productCatalogContext}\n\nCONTEXTO DE NAVEGACIÓN\nLa conversación se inició desde: ${source}. Este dato describe únicamente la página de origen, no una necesidad confirmada ni una declaración del visitante. Úsalo solo para orientar el contexto si resulta pertinente. No asumas que la persona busca contratar un servicio de esa división; pregunta por su objetivo real y permite que la necesidad apunte a otra capacidad o a una alternativa externa.${productContext}`;
+
     const openAiMessages = [
-      { role: "system", content: SYSTEM_INSTRUCTION },
+      { role: "system", content: contextualSystemInstruction },
       ...contents.map((message) => ({
         role: message.role === "model" ? "assistant" : "user",
         content: message.parts.map((part) => part.text).join("\n"),
@@ -401,7 +439,7 @@ export default {
           {
             model: env.OLLAMA_MODEL || "gemma4:31b",
             messages: [
-              { role: "system", content: SYSTEM_INSTRUCTION },
+              { role: "system", content: contextualSystemInstruction },
               ...contents.map((message) => ({
                 role: message.role === "model" ? "assistant" : "user",
                 content: message.parts.map((part) => part.text).join("\n"),
@@ -427,7 +465,7 @@ export default {
             "Content-Type": "application/json",
           },
           {
-            systemInstruction: { parts: [{ text: SYSTEM_INSTRUCTION }] },
+            systemInstruction: { parts: [{ text: contextualSystemInstruction }] },
             contents: geminiContents,
             generationConfig: { temperature: 0.3, maxOutputTokens: 700 },
           },
