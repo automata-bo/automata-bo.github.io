@@ -50,7 +50,7 @@ function Header({ page }: { page: PageKey }) {
   const openAssistant = () => openChatWithSource(page);
   return <header className="sticky top-0 z-50 border-b border-[#E8E6E1] bg-white/95 backdrop-blur">
     <div className="mx-auto flex h-[76px] max-w-[1220px] items-center justify-between gap-4 px-5 sm:px-8">
-      <a href="/" aria-label="AUTOMATA, inicio" className="shrink-0"><img src={logoFull} alt="AUTOMATA" className="h-9 w-auto sm:h-10" /></a>
+      <a href="/" aria-label="AUTOMATA, inicio" className="shrink-0"><img src={logoFull} alt="AUTOMATA" className="h-11 w-auto sm:h-12" /></a>
       <nav className="hidden items-center gap-6 lg:flex" aria-label="Navegación principal">
         {nav.map(item => <a key={item.href} href={item.href} aria-current={window.location.pathname.replace(/\/+$/, "") === item.href.replace(/\/+$/, "") ? "page" : undefined} className="text-sm font-semibold text-[#5A6068] transition hover:text-[#FF5A00]">{item.label}</a>)}
       </nav>
