@@ -243,6 +243,19 @@ jobs:
             await smokePage.getByRole("button", { name: "Saber más" }).first().click();
             const studioChat = smokePage.getByRole("dialog", { name: "Asistente virtual de Automata" });
             await studioChat.getByText(/Veo que estabas explorando Producción audiovisual/).waitFor({ state: "visible" });
+            await studioChat.getByRole("button", { name: "Cerrar chat" }).click();
+            await smokePage.getByRole("button", { name: "Saber más" }).nth(1).click();
+            const photographyChat = smokePage.getByRole("dialog", { name: "Asistente virtual de Automata" });
+            await photographyChat.getByText(/Veo que estabas explorando Producción audiovisual/).waitFor({ state: "visible" });
+            await photographyChat.getByRole("button", { name: "Cerrar chat" }).click();
+            await smokePage.getByRole("button", { name: "Saber más" }).nth(2).click();
+            const campaignsChat = smokePage.getByRole("dialog", { name: "Asistente virtual de Automata" });
+            await campaignsChat.getByText(/Veo que estabas explorando Publicidad y campañas/).waitFor({ state: "visible" });
+            await campaignsChat.getByRole("button", { name: "Cerrar chat" }).click();
+            await smokePage.getByRole("button", { name: "Saber más" }).nth(3).click();
+            const hybridChat = smokePage.getByRole("dialog", { name: "Asistente virtual de Automata" });
+            await hybridChat.getByText(/Veo que estabas explorando Producción audiovisual/).waitFor({ state: "visible" });
+            await hybridChat.getByRole("button", { name: "Cerrar chat" }).click();
 
             await smokePage.goto("http://127.0.0.1:4173/studio/", { waitUntil: "domcontentloaded", timeout: 15000 });
             await smokePage.getByRole("link", { name: /Explorar Creative Lab/ }).click();
