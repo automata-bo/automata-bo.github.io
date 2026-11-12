@@ -263,3 +263,12 @@ Se inspeccionaron directamente capturas de Inicio móvil, Studio escritorio y Cr
 - Las demos siguen siendo locales/simuladas según su descripción; no equivalen a servicios operativos conectados.
 - El chequeo externo Workers Builds del Worker existente `automata-chat` mantiene el problema de configuración Wrangler `previews` descrito en la sección 11. No se modificó el trigger ni la configuración Cloudflare.
 - El PR #9 permanece en borrador según el último estado conocido. No se ha autorizado merge ni despliegue. `main`, Pages de producción, Worker y D1 deben permanecer intactos.
+
+## 14. Precisión de demos y semántica accesible (12 nov 2026)
+
+- En el hero de `App.tsx`, el CTA «Ver demos en vivo» se cambió a «Explorar demos interactivas». Las tres demos son simulaciones locales y no deben presentarse como servicios conectados en tiempo real.
+- Los controles de selección de demo dejaron de declararse como `tablist/tab`, porque no implementaban el patrón de teclado de pestañas (flechas y foco itinerante). Ahora son un grupo de botones nativos con `aria-pressed`, coherentes con su comportamiento toggle y operables mediante teclado estándar.
+- Commits:
+  - `65a02bb88f6b6200090a690d7f37732cc4b8795a`
+  - `6dc98d0c217f66aaad64ab905fddf6862c6b2128`
+- En el momento de esta actualización, los commits nuevos todavía no muestran ejecuciones de workflow/checks en la consulta de GitHub. No declarar estas modificaciones validadas por CI hasta que exista una ejecución terminada.
