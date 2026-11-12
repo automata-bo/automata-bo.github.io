@@ -33,14 +33,20 @@ jobs:
           mkdir -p preview-shots
           npm run preview -- --host 127.0.0.1 > /tmp/automata-preview.log 2>&1 &
           echo $! > /tmp/automata-preview.pid
+          ready=0
           for attempt in $(seq 1 30); do
-            if curl --silent --fail http://127.0.0.1:4173/ > /dev/null; then break; fi
+            if curl --silent --fail http://127.0.0.1:4173/ > /dev/null; then ready=1; break; fi
             sleep 2
           done
+          if [ "$ready" -ne 1 ]; then
+            cat /tmp/automata-preview.log
+            echo "Preview server did not become ready."
+            exit 1
+          fi
           node --input-type=module <<'NODE'
           import { chromium } from "playwright";
           const browser = await chromium.launch({ headless: true });
-          const pages = [
+          const routes = [
             ["/", "home"],
             ["/digital/", "digital"],
             ["/experiences/", "experiences"],
@@ -51,18 +57,37 @@ jobs:
             ["/studio/lab/", "creative-lab"],
             ["/demos/", "flujos-demo"]
           ];
-          for (const [route, name] of pages) {
+          const failures = [];
+          for (const [route, name] of routes) {
             for (const viewport of [
               { label: "desktop", width: 1440, height: 1000 },
               { label: "mobile", width: 390, height: 844 }
             ]) {
               const page = await browser.newPage({ viewport: { width: viewport.width, height: viewport.height }, deviceScaleFactor: 1 });
-              await page.goto("http://127.0.0.1:4173" + route, { waitUntil: "domcontentloaded", timeout: 15000 });
-              await page.screenshot({ path: `preview-shots/${name}-${viewport.label}.png`, fullPage: true, animations: "disabled" });
-              await page.close();
+              const runtimeErrors = [];
+              page.on("pageerror", error => runtimeErrors.push(error.message));
+              try {
+                const response = await page.goto("http://127.0.0.1:4173" + route, { waitUntil: "domcontentloaded", timeout: 15000 });
+                if (!response || !response.ok()) {
+                  throw new Error(`HTTP ${response?.status() ?? "no response"}`);
+                }
+                await page.screenshot({ path: `preview-shots/${name}-${viewport.label}.png`, fullPage: true, animations: "disabled" });
+                if (runtimeErrors.length) {
+                  throw new Error(`Browser runtime errors: ${runtimeErrors.join("; ")}`);
+                }
+                console.log(`OK ${route} [${viewport.label}] HTTP ${response.status()}`);
+              } catch (error) {
+                failures.push(`${route} [${viewport.label}]: ${error.message}`);
+                console.error(failures.at(-1));
+              } finally {
+                await page.close();
+              }
             }
           }
           await browser.close();
+          if (failures.length) {
+            throw new Error(`Visual preview checks failed:\\n${failures.join("\\n")}`);
+          }
           NODE
       - name: Package interactive preview
         run: |
