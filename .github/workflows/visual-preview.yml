@@ -234,6 +234,16 @@ jobs:
               throw new Error("Invitation demo did not handle a negative RSVP.");
             }
 
+            await smokePage.goto("http://127.0.0.1:4173/experiences/", { waitUntil: "domcontentloaded", timeout: 15000 });
+            await smokePage.getByRole("button", { name: "Saber más" }).click();
+            const experiencesChat = smokePage.getByRole("dialog", { name: "Asistente virtual de Automata" });
+            await experiencesChat.getByText(/Veo que estabas explorando Experiencias para bodas y celebraciones/).waitFor({ state: "visible" });
+
+            await smokePage.goto("http://127.0.0.1:4173/studio/", { waitUntil: "domcontentloaded", timeout: 15000 });
+            await smokePage.getByRole("button", { name: "Saber más" }).first().click();
+            const studioChat = smokePage.getByRole("dialog", { name: "Asistente virtual de Automata" });
+            await studioChat.getByText(/Veo que estabas explorando Producción audiovisual/).waitFor({ state: "visible" });
+
             await smokePage.goto("http://127.0.0.1:4173/studio/", { waitUntil: "domcontentloaded", timeout: 15000 });
             await smokePage.getByRole("link", { name: /Explorar Creative Lab/ }).click();
             await smokePage.waitForURL("**/studio/lab/");
