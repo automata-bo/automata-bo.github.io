@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap');
 @tailwind base;
 @tailwind components;
@@ -211,7 +212,6 @@ label{font-size:13px;font-weight:700;letter-spacing:.02em}
 
 
 /* AUTOMATA EDITORIAL SYSTEM · adaptación del lenguaje visual de referencia */
-@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
 .automata-editorial{
   --auto-white:#fff;--auto-ink:#080808;--auto-muted:#666;--auto-blue:#2563ff;--auto-violet:#7c3aed;--auto-pink:#ec4899;--auto-orange:#ff7a3d;--auto-cyan:#22d3ee;
@@ -357,3 +357,12 @@ label{font-size:13px;font-weight:700;letter-spacing:.02em}
  .automata-editorial *, .automata-editorial *:before, .automata-editorial *:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}
  .auto-reveal{opacity:1;filter:none;transform:none}
 }
+
+
+/* Editorial header integration */
+.showroom-site>header{background:rgba(255,255,255,.94)!important;border-color:rgba(0,0,0,.12)!important;color:#080808!important}
+.showroom-site>header nav a{color:#555!important}
+.showroom-site>header nav a:hover,.showroom-site>header nav a[aria-current=page]{color:#7c3aed!important}
+.showroom-site>header button[aria-label="Abrir menú"],.showroom-site>header button[aria-label="Cerrar menú"]{border-color:rgba(0,0,0,.18)!important;color:#080808!important}
+.showroom-site>header button.bg-\[\#FF5A00\]{background:#080808!important}
+.showroom-site>header button.bg-\[\#FF5A00\]:hover{background:#7c3aed!important}
