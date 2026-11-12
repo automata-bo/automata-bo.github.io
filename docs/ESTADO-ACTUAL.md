@@ -184,3 +184,16 @@ La última acción local conocida fue ejecutar `npm install` y `npm run typechec
 - PR #9 continúa abierto como borrador.
 - `main`, GitHub Pages de producción, Worker `automata-chat` y D1 `automata-audience` permanecen fuera de los cambios de esta rama.
 - No se ha autorizado merge ni despliegue.
+
+
+## 12. Consentimiento sin bloquear el hero (12 nov 2026)
+
+- La inspección visual detectó que el aviso inicial de consentimiento podía cubrir parte de la acción principal del hero.
+- Se cambió el aviso de posición fija superpuesta a un bloque de flujo normal entre la navegación y el contenido principal. La elección de aceptar o rechazar analítica sigue siendo explícita.
+- El enlace «Preferencias de cookies» del footer conserva la capacidad de reabrir el aviso y ahora solicita desplazar la vista hasta él.
+- Cambios:
+  - `CookieConsent.tsx`: consentimiento en flujo normal, sin semántica de diálogo modal; navegación al aviso al reabrir preferencias.
+  - `v2-main.tsx`: aviso montado inmediatamente después del header y antes del contenido de cada página V2.
+- Commits de implementación: `2cc44d00d311e9cb0d95d24c7ea2eb574ea734e7` y `398f275013b05d988fe092a987dc5a08c5a1acae`.
+- **Pendiente de validación:** repetir build y las 18 capturas para confirmar que el aviso ya no tapa CTA y que la re apertura desde el footer funciona. No considerar el arreglo validado hasta revisar el nuevo artefacto.
+- Sin cambios en `main`, hosting, Worker, D1 ni configuración Cloudflare.
