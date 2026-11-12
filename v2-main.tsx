@@ -235,5 +235,5 @@ export default function V2App() {
   const page = currentPage();
   useEffect(() => { if (window.location.pathname.replace(/\/+$/, "") !== "/demos") trackEvent("page_view"); }, []);
   if (window.location.pathname.replace(/\/+$/, "") === "/demos") return <LegacyDigital/>;
-  return <div className="min-h-screen overflow-x-clip bg-white text-[#0E1116]"><Header page={page}/><main>{page === "home" ? <HomePage/> : page === "digital" ? <DigitalPage/> : page === "experiences" ? <ExperiencesPage/> : page === "studio" ? <StudioPage/> : page === "projects" ? <ProjectsPage/> : <ContactPage/>}</main><Footer/><ChatWidget/><CookieConsent/></div>;
+  return <div className="min-h-screen overflow-x-clip bg-white text-[#0E1116]"><Header page={page}/><CookieConsent/><main>{page === "home" ? <HomePage/> : page === "digital" ? <DigitalPage/> : page === "experiences" ? <ExperiencesPage/> : page === "studio" ? <StudioPage/> : page === "projects" ? <ProjectsPage/> : <ContactPage/>}</main><Footer/><ChatWidget/></div>;
 }
