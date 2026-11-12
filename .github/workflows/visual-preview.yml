@@ -216,12 +216,12 @@ jobs:
             await smokePage.getByRole("button", { name: "Añadir" }).first().click();
             await smokePage.getByRole("button", { name: "Registrar pedido" }).click();
             await smokePage.getByText("Pedido registrado. Simulación lista.").waitFor({ state: "visible" });
-            await smokePage.getByRole("tab", { name: "CONSULTORIO" }).click();
+            await smokePage.getByRole("button", { name: "CONSULTORIO" }).click();
             await smokePage.getByLabel("Nombre", { exact: true }).fill("Paciente QA");
             await smokePage.getByLabel("Fecha tentativa").fill("2027-01-10");
             await smokePage.getByRole("button", { name: "Solicitar cita" }).click();
             await smokePage.getByText(/Solicitud registrada\. Simulación: la confirmación real la da la atención humana/).waitFor({ state: "visible" });
-            await smokePage.getByRole("tab", { name: "PELUQUERÍA" }).click();
+            await smokePage.getByRole("button", { name: "PELUQUERÍA" }).click();
             await smokePage.getByLabel("Nombre", { exact: true }).fill("Cliente QA");
             await smokePage.getByRole("button", { name: "Reservar" }).click();
             await smokePage.getByText(/Solicitud registrada\. Simulación: la disponibilidad se confirma en la versión real/).waitFor({ state: "visible" });
