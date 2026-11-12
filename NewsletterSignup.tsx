@@ -25,6 +25,8 @@ export default function NewsletterSignup() {
 
   const triggerRef = React.useRef<HTMLButtonElement>(null);
   const dialogRef = React.useRef<HTMLElement>(null);
+  const busyRef = React.useRef(busy);
+  busyRef.current = busy;
 
   useEffect(() => {
     if (!open) return;
@@ -43,7 +45,7 @@ export default function NewsletterSignup() {
     });
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        if (!busy) {
+        if (!busyRef.current) {
           event.preventDefault();
           setOpen(false);
         }
@@ -74,7 +76,7 @@ export default function NewsletterSignup() {
       const returnTarget = triggerRef.current?.isConnected ? triggerRef.current : previousFocus;
       if (returnTarget?.isConnected) returnTarget.focus();
     };
-  }, [open, busy]);
+  }, [open]);
 
   const submit = async (event: FormEvent) => {
     event.preventDefault();
