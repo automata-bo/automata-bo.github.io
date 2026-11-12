@@ -109,7 +109,7 @@ jobs:
             await digitalAdvisor.getByRole("textbox", { name: "Escribe tu consulta" }).waitFor({ state: "visible" });
 
             await smokePage.goto("http://127.0.0.1:4173/experiences/", { waitUntil: "domcontentloaded", timeout: 15000 });
-            await smokePage.getByRole("button", { name: "Participación" }).click();
+            await smokePage.getByRole("button", { name: "Participación" }).first().click();
             await smokePage.getByText(/Cada invitado forma parte del recuerdo/).waitFor({ state: "visible" });
 
             await smokePage.goto("http://127.0.0.1:4173/studio/", { waitUntil: "domcontentloaded", timeout: 15000 });
