@@ -84,6 +84,52 @@ jobs:
               }
             }
           }
+          const smokePage = await browser.newPage({
+            viewport: { width: 390, height: 844 },
+            deviceScaleFactor: 1
+          });
+          try {
+            await smokePage.goto("http://127.0.0.1:4173/", { waitUntil: "domcontentloaded", timeout: 15000 });
+            const consent = smokePage.locator('aside[aria-label="Preferencias de cookies"]');
+            const consentBox = await consent.boundingBox();
+            const primaryCtaBox = await smokePage.getByRole("link", { name: /Explorar lo que hacemos/ }).boundingBox();
+            if (!consentBox || !primaryCtaBox) {
+              throw new Error("Consent notice or primary hero CTA is missing.");
+            }
+            const overlaps = consentBox.x < primaryCtaBox.x + primaryCtaBox.width
+              && consentBox.x + consentBox.width > primaryCtaBox.x
+              && consentBox.y < primaryCtaBox.y + primaryCtaBox.height
+              && consentBox.y + consentBox.height > primaryCtaBox.y;
+            if (overlaps) {
+              throw new Error("Cookie consent notice overlaps the primary hero CTA.");
+            }
+            await smokePage.getByRole("button", { name: "Rechazar analíticas" }).click();
+            if (await consent.count()) {
+              throw new Error("Cookie consent notice did not close after rejecting analytics.");
+            }
+            await smokePage.getByRole("button", { name: "Preferencias de cookies" }).click();
+            await smokePage.waitForFunction(() => {
+              const panel = document.querySelector('aside[aria-label="Preferencias de cookies"]');
+              if (!panel) return false;
+              const rect = panel.getBoundingClientRect();
+              return rect.top >= 0 && rect.top < window.innerHeight;
+            }, { timeout: 5000 }).catch(() => {
+              throw new Error("Footer cookie preferences did not reopen and scroll to the notice.");
+            });
+            await smokePage.getByRole("button", { name: "Abrir menú" }).click();
+            const mobileNav = smokePage.getByRole("navigation", { name: "Navegación móvil" });
+            if (!(await mobileNav.isVisible())) {
+              throw new Error("Mobile navigation did not open.");
+            }
+            await mobileNav.getByRole("link", { name: "Digital" }).click();
+            await smokePage.waitForURL("**/digital/");
+            console.log("OK mobile smoke test: consent, preferences, menu and navigation");
+          } catch (error) {
+            failures.push(`mobile smoke test: ${error.message}`);
+            console.error(failures.at(-1));
+          } finally {
+            await smokePage.close();
+          }
           await browser.close();
           if (failures.length) {
             throw new Error(`Visual preview checks failed:\\n${failures.join("\\n")}`);
