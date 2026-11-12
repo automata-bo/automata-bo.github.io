@@ -93,15 +93,20 @@ jobs:
             const consent = smokePage.locator('aside[aria-label="Preferencias de cookies"]');
             const consentBox = await consent.boundingBox();
             const primaryCtaBox = await smokePage.getByRole("link", { name: /Explorar lo que hacemos/ }).boundingBox();
-            if (!consentBox || !primaryCtaBox) {
-              throw new Error("Consent notice or primary hero CTA is missing.");
+            const secondaryCtaBox = await smokePage.getByRole("button", { name: /Iniciar una conversación/ }).boundingBox();
+            const assistantBox = await smokePage.getByRole("button", { name: "Abrir asistente" }).boundingBox();
+            if (!consentBox || !primaryCtaBox || !secondaryCtaBox || !assistantBox) {
+              throw new Error("Consent notice, hero actions or assistant launcher are missing.");
             }
-            const overlaps = consentBox.x < primaryCtaBox.x + primaryCtaBox.width
-              && consentBox.x + consentBox.width > primaryCtaBox.x
-              && consentBox.y < primaryCtaBox.y + primaryCtaBox.height
-              && consentBox.y + consentBox.height > primaryCtaBox.y;
-            if (overlaps) {
+            const intersects = (a, b) => a.x < b.x + b.width
+              && a.x + a.width > b.x
+              && a.y < b.y + b.height
+              && a.y + a.height > b.y;
+            if (intersects(consentBox, primaryCtaBox)) {
               throw new Error("Cookie consent notice overlaps the primary hero CTA.");
+            }
+            if (intersects(assistantBox, primaryCtaBox) || intersects(assistantBox, secondaryCtaBox)) {
+              throw new Error("Floating assistant launcher overlaps a hero action.");
             }
             await smokePage.getByRole("button", { name: "Rechazar analíticas" }).click();
             if (await consent.count()) {
