@@ -247,6 +247,7 @@ jobs:
             await creativeOutput.getByText(/Motivar una consulta o compra/).waitFor({ state: "visible" });
             await creativeOutput.getByText(/Spot audiovisual · 30–45 s/).waitFor({ state: "visible" });
             await creativeOutput.getByText(/35–45 s · Cierre/).waitFor({ state: "visible" });
+            await smokePage.context().grantPermissions(["clipboard-read", "clipboard-write"], { origin: "http://127.0.0.1:4173" });
             await creativeOutput.getByRole("button", { name: /Copiar brief completo/ }).click();
             await creativeOutput.getByRole("button", { name: /Brief copiado/ }).waitFor({ state: "visible" });
             console.log("OK demos smoke test: invitation RSVP and Studio creative brief");
