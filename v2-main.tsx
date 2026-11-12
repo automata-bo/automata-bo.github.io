@@ -37,7 +37,7 @@ function openChatWithProduct(source: PageKey, productId: string, action: "explor
   window.dispatchEvent(new CustomEvent("automata:open-chat", { detail: { source, productId, action } }));
 }
 function currentPage(): PageKey {
-  const path = window.location.pathname.replace(/\\/+$/, "") || "/";
+  const path = window.location.pathname.replace(/\/+$/, "") || "/";
   if (path === "/digital") return "digital";
   if (path === "/experiences") return "experiences";
   if (path === "/studio") return "studio";
@@ -52,7 +52,7 @@ function Header({ page }: { page: PageKey }) {
     <div className="mx-auto flex h-[76px] max-w-[1220px] items-center justify-between gap-4 px-5 sm:px-8">
       <a href="/" aria-label="AUTOMATA, inicio" className="shrink-0"><img src={logoFull} alt="AUTOMATA" className="h-9 w-auto sm:h-10" /></a>
       <nav className="hidden items-center gap-6 lg:flex" aria-label="Navegación principal">
-        {nav.map(item => <a key={item.href} href={item.href} aria-current={window.location.pathname.replace(/\\/+$/, "") === item.href.replace(/\\/+$/, "") ? "page" : undefined} className="text-sm font-semibold text-[#5A6068] transition hover:text-[#FF5A00]">{item.label}</a>)}
+        {nav.map(item => <a key={item.href} href={item.href} aria-current={window.location.pathname.replace(/\/+$/, "") === item.href.replace(/\/+$/, "") ? "page" : undefined} className="text-sm font-semibold text-[#5A6068] transition hover:text-[#FF5A00]">{item.label}</a>)}
       </nav>
       <div className="flex items-center gap-2">
         <button onClick={openAssistant} className="hidden min-h-11 items-center gap-2 rounded-full bg-[#FF5A00] px-5 text-sm font-bold text-white transition hover:bg-[#E14E00] sm:flex">Conversemos <ArrowUpRight size={16}/></button>
@@ -60,7 +60,7 @@ function Header({ page }: { page: PageKey }) {
       </div>
     </div>
     {open && <nav className="border-t border-[#E8E6E1] bg-white px-5 py-3 lg:hidden" aria-label="Navegación móvil">
-      {nav.map(item => <a key={item.href} href={item.href} onClick={() => setOpen(false)} aria-current={window.location.pathname.replace(/\\/+$/, "") === item.href.replace(/\\/+$/, "") ? "page" : undefined} className="flex min-h-12 items-center border-b border-[#E8E6E1] text-sm font-semibold last:border-0">{item.label}</a>)}
+      {nav.map(item => <a key={item.href} href={item.href} onClick={() => setOpen(false)} aria-current={window.location.pathname.replace(/\/+$/, "") === item.href.replace(/\/+$/, "") ? "page" : undefined} className="flex min-h-12 items-center border-b border-[#E8E6E1] text-sm font-semibold last:border-0">{item.label}</a>)}
       <button onClick={() => { setOpen(false); openAssistant(); }} className="mt-3 flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-[#FF5A00] text-sm font-bold text-white">Conversemos <ArrowUpRight size={16}/></button>
     </nav>}
   </header>;
@@ -105,7 +105,7 @@ function ProjectsPage() { return <ProjectsExperience/>; }
 function ContactPage() { return <ContactExperience/>; }
 export default function V2App() {
   const page = currentPage();
-  useEffect(() => { if (window.location.pathname.replace(/\\/+$/, "") !== "/demos") trackEvent("page_view"); }, []);
-  if (window.location.pathname.replace(/\\/+$/, "") === "/demos") return <LegacyDigital/>;
+  useEffect(() => { if (window.location.pathname.replace(/\/+$/, "") !== "/demos") trackEvent("page_view"); }, []);
+  if (window.location.pathname.replace(/\/+$/, "") === "/demos") return <LegacyDigital/>;
   return <div className="showroom-site min-h-screen overflow-x-clip bg-[#090b0f] text-white"><Header page={page}/><CookieConsent/><main>{page === "home" ? <HomePage/> : page === "digital" ? <DigitalPage/> : page === "experiences" ? <ExperiencesPage/> : page === "studio" ? <StudioPage/> : page === "projects" ? <ProjectsPage/> : <ContactPage/>}</main><Footer/><ChatWidget/></div>;
 }
