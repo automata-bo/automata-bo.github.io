@@ -101,20 +101,27 @@ jobs:
             const consentBox = await consent.boundingBox();
             const primaryCtaBox = await smokePage.getByRole("link", { name: /Explorar lo que hacemos/ }).boundingBox();
             const secondaryCtaBox = await smokePage.getByRole("button", { name: /Iniciar una conversación/ }).boundingBox();
-            const assistantBox = await smokePage.getByRole("button", { name: "Abrir asistente" }).boundingBox();
-            if (!consentBox || !primaryCtaBox || !secondaryCtaBox || !assistantBox) {
+            const assistantLauncher = smokePage.locator(".automata-chat-launcher");
+            if (!consentBox || !primaryCtaBox || !secondaryCtaBox || !(await assistantLauncher.count())) {
               throw new Error("Consent notice, hero actions or assistant launcher are missing.");
             }
-            const intersects = (a, b) => a.x < b.x + b.width
-              && a.x + a.width > b.x
-              && a.y < b.y + b.height
-              && a.y + a.height > b.y;
-            if (intersects(consentBox, primaryCtaBox)) {
+            if (consentBox.x < primaryCtaBox.x + primaryCtaBox.width
+              && consentBox.x + consentBox.width > primaryCtaBox.x
+              && consentBox.y < primaryCtaBox.y + primaryCtaBox.height
+              && consentBox.y + consentBox.height > primaryCtaBox.y) {
               throw new Error("Cookie consent notice overlaps the primary hero CTA.");
             }
-            if (intersects(assistantBox, primaryCtaBox) || intersects(assistantBox, secondaryCtaBox)) {
-              throw new Error("Floating assistant launcher overlaps a hero action.");
-            }
+            await smokePage.waitForFunction(() => {
+              const launcher = document.querySelector(".automata-chat-launcher");
+              return !!launcher && getComputedStyle(launcher).visibility === "hidden";
+            });
+            await smokePage.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+            await assistantLauncher.waitFor({ state: "visible" });
+            await smokePage.evaluate(() => window.scrollTo(0, 0));
+            await smokePage.waitForFunction(() => {
+              const launcher = document.querySelector(".automata-chat-launcher");
+              return !!launcher && getComputedStyle(launcher).visibility === "hidden";
+            });
             await smokePage.getByRole("button", { name: "Rechazar analíticas" }).click();
             if (await consent.count()) {
               throw new Error("Cookie consent notice did not close after rejecting analytics.");
@@ -189,6 +196,21 @@ jobs:
             }
 
             await smokePage.goto("http://127.0.0.1:4173/contacto/", { waitUntil: "domcontentloaded", timeout: 15000 });
+            const contactLauncher = smokePage.locator(".automata-chat-launcher");
+            await smokePage.waitForFunction(() => {
+              const launcher = document.querySelector(".automata-chat-launcher");
+              return !!launcher && getComputedStyle(launcher).visibility === "hidden";
+            });
+            await smokePage.evaluate(() => {
+              const target = document.querySelector("[data-chat-launcher-suppress]");
+              if (target) window.scrollTo(0, target.getBoundingClientRect().bottom + window.scrollY + 20);
+            });
+            await contactLauncher.waitFor({ state: "visible" });
+            await smokePage.evaluate(() => window.scrollTo(0, 0));
+            await smokePage.waitForFunction(() => {
+              const launcher = document.querySelector(".automata-chat-launcher");
+              return !!launcher && getComputedStyle(launcher).visibility === "hidden";
+            });
             await smokePage.evaluate(() => { window.__automataOpenedUrl = ""; });
             const contactForm = smokePage.locator("form").filter({ has: smokePage.getByRole("button", { name: /Preparar mensaje en WhatsApp/ }) });
             const objectiveField = contactForm.locator("textarea");
