@@ -46,9 +46,8 @@ function currentPage(): PageKey {
   return "home";
 }
 function BrandLogo() {
-  const colors = ["#000000", "#2563FF", "#7C3AED", "#EC4899", "#FF7A3D", "#22D3EE", "#2563FF", "#7C3AED"];
-  return <a href="/" aria-label="AUTOMATA, inicio" className="flex items-baseline gap-[.08em] text-[22px] font-black leading-none tracking-[-.06em]">
-    {"AUTOMATA".split("").map((letter, i) => <span key={i} style={{ color: colors[i] }}>{letter}</span>)}
+  return <a href="/" aria-label="AUTOMATA, inicio" className="inline-flex shrink-0 items-center">
+    <img src={logoFull} alt="AUTOMATA" className="h-[23px] w-auto max-w-[190px] object-contain sm:h-[27px]" />
   </a>;
 }
 function Header({ page }: { page: PageKey }) {
@@ -77,7 +76,9 @@ function Header({ page }: { page: PageKey }) {
 function Footer() {
   return <footer className="border-t border-[#E8E6E1] bg-white">
     <div className="mx-auto flex max-w-[1220px] flex-col gap-5 px-5 py-9 sm:px-8 md:flex-row md:items-center md:justify-between">
-      <a href="/" className="display text-xl tracking-tight">AUTOMATA<span className="text-[#FF5A00]">.</span></a>
+      <a href="/" aria-label="AUTOMATA, inicio" className="inline-flex shrink-0 items-center">
+        <img src={logoFull} alt="AUTOMATA" className="h-6 w-auto max-w-[190px] object-contain" />
+      </a>
       <p className="max-w-md text-sm leading-relaxed text-[#5A6068]">Digital Experiences & Intelligent Solutions. Tecnología, creatividad e inteligencia aplicadas a experiencias y soluciones digitales.</p>
       <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm font-semibold text-[#5A6068]">
         {nav.map(item => <a key={item.href} href={item.href} className="hover:text-[#FF5A00]">{item.label}</a>)}
