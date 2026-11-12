@@ -128,7 +128,32 @@ jobs:
             }
             await mobileNav.getByRole("link", { name: "Digital" }).click();
             await smokePage.waitForURL("**/digital/");
-            console.log("OK mobile smoke test: consent, preferences, menu and navigation");
+            const newsletterTrigger = smokePage.getByRole("button", { name: /Recibir novedades/ });
+            await newsletterTrigger.click();
+            const newsletterDialog = smokePage.getByRole("dialog", { name: /Las próximas ideas llegan por aquí/ });
+            await newsletterDialog.waitFor({ state: "visible" });
+            const closeNewsletter = newsletterDialog.getByRole("button", { name: "Cerrar registro de novedades" });
+            if (!(await closeNewsletter.evaluate((element) => element === document.activeElement))) {
+              throw new Error("Newsletter dialog did not move keyboard focus to its first control.");
+            }
+            await smokePage.keyboard.press("Shift+Tab");
+            const lastNewsletterControl = newsletterDialog.locator('a[href*="wa.me"]');
+            if (!(await lastNewsletterControl.evaluate((element) => element === document.activeElement))) {
+              throw new Error("Shift+Tab did not wrap focus to the last newsletter dialog control.");
+            }
+            await smokePage.keyboard.press("Tab");
+            if (!(await closeNewsletter.evaluate((element) => element === document.activeElement))) {
+              throw new Error("Tab did not wrap focus to the first newsletter dialog control.");
+            }
+            await smokePage.keyboard.press("Escape");
+            await newsletterDialog.waitFor({ state: "hidden" });
+            if (!(await newsletterTrigger.evaluate((element) => element === document.activeElement))) {
+              throw new Error("Closing the newsletter dialog did not restore focus to its trigger.");
+            }
+            if (await smokePage.locator("body").evaluate((element) => element.style.overflow === "hidden")) {
+              throw new Error("Closing the newsletter dialog did not restore page scrolling.");
+            }
+            console.log("OK mobile smoke test: consent, navigation and accessible newsletter dialog");
           } catch (error) {
             failures.push(`mobile smoke test: ${error.message}`);
             console.error(failures.at(-1));
