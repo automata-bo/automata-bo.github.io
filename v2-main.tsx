@@ -45,23 +45,32 @@ function currentPage(): PageKey {
   if (path === "/contacto") return "contact";
   return "home";
 }
+function BrandLogo() {
+  const colors = ["#000000", "#2563FF", "#7C3AED", "#EC4899", "#FF7A3D", "#22D3EE", "#2563FF", "#7C3AED"];
+  return <a href="/" aria-label="AUTOMATA, inicio" className="flex items-baseline gap-[.08em] text-[22px] font-black leading-none tracking-[-.06em]">
+    {"AUTOMATA".split("").map((letter, i) => <span key={i} style={{ color: colors[i] }}>{letter}</span>)}
+  </a>;
+}
 function Header({ page }: { page: PageKey }) {
   const [open, setOpen] = useState(false);
-  const openAssistant = () => openChatWithSource(page);
-  return <header className="sticky top-0 z-50 border-b border-[#E8E6E1] bg-white/95 backdrop-blur">
-    <div className="mx-auto flex h-[76px] max-w-[1220px] items-center justify-between gap-4 px-5 sm:px-8">
-      <a href="/" aria-label="AUTOMATA, inicio" className="shrink-0"><img src={logoFull} alt="AUTOMATA" className="h-11 w-auto sm:h-12" /></a>
-      <nav className="hidden items-center gap-6 lg:flex" aria-label="Navegación principal">
-        {nav.map(item => <a key={item.href} href={item.href} aria-current={window.location.pathname.replace(/\/+$/, "") === item.href.replace(/\/+$/, "") ? "page" : undefined} className="text-sm font-semibold text-[#5A6068] transition hover:text-[#FF5A00]">{item.label}</a>)}
-      </nav>
-      <div className="flex items-center gap-2">
-        <button onClick={openAssistant} className="hidden min-h-11 items-center gap-2 rounded-full bg-[#FF5A00] px-5 text-sm font-bold text-white transition hover:bg-[#E14E00] sm:flex">Conversemos <ArrowUpRight size={16}/></button>
-        <button onClick={() => setOpen(!open)} aria-label={open ? "Cerrar menú" : "Abrir menú"} aria-expanded={open} className="flex h-11 w-11 items-center justify-center rounded-full border border-[#E8E6E1] lg:hidden">{open ? <X size={20}/> : <Menu size={20}/>}</button>
+  const openAssistant = () => { setOpen(false); openChatWithSource(page); };
+  return <header className="sticky top-0 z-50 border-b border-black/10 bg-white/95 text-black backdrop-blur">
+    <div className="mx-auto flex h-[68px] max-w-[1500px] items-center justify-between px-4 sm:px-7 lg:px-10">
+      <BrandLogo/>
+      <div className="flex items-center gap-3 sm:gap-7">
+        <button onClick={openAssistant} className="font-mono text-[11px] font-bold uppercase tracking-[.14em] transition hover:text-[#7C3AED] sm:text-xs">Hablemos <span className="ml-1 inline-block">↗</span></button>
+        <button onClick={() => setOpen(v => !v)} aria-expanded={open} aria-label={open ? "Cerrar menú" : "Abrir menú"} className="flex items-center gap-2 border-l border-black/10 pl-3 sm:pl-6">
+          <span className="font-mono text-[11px] font-bold tracking-[.18em] sm:text-xs">MENU</span>
+          <span className="grid h-9 w-9 place-items-center">{open ? <X size={20}/> : <Menu size={20}/>}</span>
+        </button>
       </div>
     </div>
-    {open && <nav className="border-t border-[#E8E6E1] bg-white px-5 py-3 lg:hidden" aria-label="Navegación móvil">
-      {nav.map(item => <a key={item.href} href={item.href} onClick={() => setOpen(false)} aria-current={window.location.pathname.replace(/\/+$/, "") === item.href.replace(/\/+$/, "") ? "page" : undefined} className="flex min-h-12 items-center border-b border-[#E8E6E1] text-sm font-semibold last:border-0">{item.label}</a>)}
-      <button onClick={() => { setOpen(false); openAssistant(); }} className="mt-3 flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-[#FF5A00] text-sm font-bold text-white">Conversemos <ArrowUpRight size={16}/></button>
+    {open && <nav className="border-t border-black/10 bg-white px-4 py-5 sm:px-7" aria-label="Navegación principal">
+      <div className="mx-auto grid max-w-[1500px] gap-1">
+        {[["/","Inicio"],["/digital/","01 — Digital"],["/experiences/","02 — Experiences"],["/studio/","03 — Studio"],["/proyectos/","04 — Proyectos"],["/contacto/","05 — Contacto"]].map(([href,label]) =>
+          <a key={href} href={href} onClick={() => setOpen(false)} className="flex items-center justify-between py-3 text-left text-2xl font-black uppercase tracking-tight transition hover:text-[#EC4899] sm:text-3xl">{label}<ArrowUpRight size={24}/></a>
+        )}
+      </div>
     </nav>}
   </header>;
 }
