@@ -33,7 +33,7 @@ function StudioDemo(){
   const shots=format==="story"
    ? ["Pieza 1 · Intriga: una pregunta visual o frase breve que conecte con el público.","Pieza 2 · Valor: mostrar "+product+" en contexto y explicar un beneficio concreto.","Pieza 3 · Acción: resolver una objeción y cerrar con «"+s.cta+"»."]
    : format==="spot"
-   ? ["0–5 s · Apertura: "+s.hook,"5–18 s · Desarrollo: "+s.idea,"18–30 s · Detalle: planos cercanos de "+product+" y una prueba visual del beneficio.","Cierre · Marca "+name+" y llamada a la acción: «"+s.cta+"»."]
+   ? ["0–5 s · Apertura: "+s.hook,"5–18 s · Desarrollo: "+s.idea,"18–35 s · Detalle: planos cercanos de "+product+" y una prueba visual del beneficio.","35–45 s · Cierre: marca "+name+" y llamada a la acción: «"+s.cta+"»."]
    : ["0–3 s · Gancho: "+s.hook,"3–12 s · Desarrollo: "+s.idea,"12–22 s · Producto: plano protagonista de "+product+".","22–30 s · Cierre: "+name+" · «"+s.cta+"»."];
   return {name,product,shots,s};
  },[brand,detail,format,goal]);
