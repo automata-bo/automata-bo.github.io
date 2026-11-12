@@ -2,6 +2,9 @@
   "name": "automata-chat-worker",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
     "dev": "wrangler dev --config wrangler.jsonc",
     "deploy": "wrangler deploy --config wrangler.jsonc",
@@ -12,8 +15,8 @@
     "test:live": "node --import tsx scripts/test-assistant-live.mjs"
   },
   "devDependencies": {
-    "tsx": "^4.20.6",
-    "typescript": "^5.7.2",
-    "wrangler": "^4.45.0"
+    "tsx": "4.23.15",
+    "typescript": "5.9.3",
+    "wrangler": "4.160.1"
   }
 }
