@@ -186,14 +186,33 @@ La última acción local conocida fue ejecutar `npm install` y `npm run typechec
 - No se ha autorizado merge ni despliegue.
 
 
-## 12. Consentimiento sin bloquear el hero (12 nov 2026)
+## 12. Consentimiento y acciones del hero sin solapamientos (12 nov 2026)
 
-- La inspección visual detectó que el aviso inicial de consentimiento podía cubrir parte de la acción principal del hero.
-- Se cambió el aviso de posición fija superpuesta a un bloque de flujo normal entre la navegación y el contenido principal. La elección de aceptar o rechazar analítica sigue siendo explícita.
-- El enlace «Preferencias de cookies» del footer conserva la capacidad de reabrir el aviso y ahora solicita desplazar la vista hasta él.
+### Correcciones implementadas
+
+- El aviso inicial de consentimiento pasó de una posición fija superpuesta a un bloque de flujo normal entre la navegación y el contenido principal. La elección de aceptar o rechazar analítica sigue siendo explícita.
+- El enlace «Preferencias de cookies» del footer reabre el aviso y desplaza la vista hasta él.
+- En móvil, el lanzador del asistente ahora es un botón circular compacto con etiqueta accesible; las acciones del hero se alinean al inicio para dejar espacio libre.
 - Cambios:
-  - `CookieConsent.tsx`: consentimiento en flujo normal, sin semántica de diálogo modal; navegación al aviso al reabrir preferencias.
-  - `v2-main.tsx`: aviso montado inmediatamente después del header y antes del contenido de cada página V2.
-- Commits de implementación: `2cc44d00d311e9cb0d95d24c7ea2eb574ea734e7` y `398f275013b05d988fe092a987dc5a08c5a1acae`.
-- **Pendiente de validación:** repetir build y las 18 capturas para confirmar que el aviso ya no tapa CTA y que la re apertura desde el footer funciona. No considerar el arreglo validado hasta revisar el nuevo artefacto.
-- Sin cambios en `main`, hosting, Worker, D1 ni configuración Cloudflare.
+  - `CookieConsent.tsx`: consentimiento en flujo normal, semántica de región complementaria y desplazamiento al reabrir preferencias.
+  - `v2-main.tsx`: aviso inmediatamente después del header; botones del hero alineados al inicio.
+  - `index.css`: lanzador circular de 54 px en móvil y texto visual oculto, manteniendo nombre accesible.
+  - `.github/workflows/visual-preview.yml`: pruebas de solapamiento y smoke test de consentimiento y navegación móvil.
+- Commits de implementación: `2cc44d00d311e9cb0d95d24c7ea2eb574ea734e7`, `398f275013b05d988fe092a987dc5a08c5a1acae`, `7b90b1f93bacf2c10c2df1e2bc808885c4375bc1`, `814e98571f3313c926849e855267b473ed7e4fac` y `38186cc300edb5957373908b0f45c87e7b2c2ea2`.
+
+### Validación completada
+
+- GitHub Actions para el commit `38186cc300edb5957373908b0f45c87e7b2c2ea2`:
+  - [Validate Automata site #43218003268](https://github.com/automata-bo/automata-bo.github.io/actions/runs/43218003268): SUCCESS. Build del sitio y type-check del Worker aprobados.
+  - [Check Automata chat Worker #43218002988](https://github.com/automata-bo/automata-bo.github.io/actions/runs/43218002988): SUCCESS. Typecheck, contrato, runtime simulado, sintaxis del banco live y Wrangler dry-run aprobados.
+  - [Build visual preview #43218003122](https://github.com/automata-bo/automata-bo.github.io/actions/runs/43218003122): SUCCESS.
+- Las 18 capturas (nueve rutas en escritorio y móvil) se generaron sin errores HTTP ni excepciones JavaScript.
+- Smoke test móvil aprobado: el consentimiento no invade el CTA principal, el lanzador no invade ninguno de los dos CTA del hero, rechazar analítica cierra el aviso, las preferencias se reabren desde el footer y el menú móvil permite navegar a Digital.
+- Se inspeccionaron visualmente las capturas actualizadas de Inicio en escritorio y móvil: el aviso queda fuera del hero y el asistente no tapa las acciones.
+- Artefacto `automata-v2-visual-preview`: 3.97 MB, disponible hasta el 19 de noviembre de 2026. Incluye sitio compilado y capturas; no es un despliegue.
+
+### Límites que siguen pendientes
+
+- Las pruebas anteriores no sustituyen la revisión manual de teclado/lector de pantalla, chat contra el Worker real, formulario de contacto/WhatsApp ni interacciones de cada demo.
+- El fallo externo de Workers Builds documentado en la sección 11 sigue sin corregirse; no se modificó el trigger ni la configuración Cloudflare.
+- PR #9 sigue abierto como borrador. `main`, GitHub Pages de producción, Worker `automata-chat` y D1 `automata-audience` permanecen sin cambios de publicación. No se ha autorizado merge ni despliegue.
