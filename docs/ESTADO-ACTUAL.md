@@ -291,3 +291,36 @@ Se inspeccionaron directamente capturas de Inicio móvil, Studio escritorio y Cr
 - El artefacto contiene el sitio estático compilado y 18 capturas PNG (nueve rutas × escritorio/móvil). Fue descargado e inspeccionado; el contacto visual general del conjunto no mostró páginas vacías ni fallos evidentes de renderizado. Esto no sustituye una auditoría visual detallada de cada pantalla.
 - El artefacto es una instantánea para revisión, no una URL pública ni un despliegue. No se modificó `main`, Pages productivo, Worker, D1 ni configuración Cloudflare.
 - PR #9 permanece abierto como borrador; no se hizo merge ni deploy.
+
+## 17. QA funcional del asistente y ajuste del lanzador móvil (12 nov 2026)
+
+### Ajuste visual/funcional
+
+- En móvil (hasta 480 px), el lanzador flotante del asistente se oculta mientras el bloque de acciones principales del hero está visible y reaparece al salir de esa zona.
+- La regla se implementa mediante `IntersectionObserver`; en escritorio se conserva el comportamiento habitual.
+- Se amplió el smoke test Playwright para comprobar el estado oculto/visible del lanzador en Inicio y Contacto.
+- Archivos: `ChatWidget.tsx`, `v2-main.tsx`, `index.css`, `.github/workflows/visual-preview.yml`.
+- Commits: `28810b33e6dc639c885aa5ba789c4eb143f03b0f`, `c178cb5dc8d85279126e0f359c9fd482a805f7fc`, `d6ac22bf7272c2c57bf6f472ed92a50c5bc12ff0`, `0f4a0bb974911db2201500ec21d27dd76cd00d67`.
+
+### Validación técnica
+
+- Para el HEAD `0f4a0bb974911db2201500ec21d27dd76cd00d67`, GitHub Actions confirmó SUCCESS en:
+  - Validate Automata site, ejecución `43238540925`.
+  - Check Automata chat Worker, ejecución `43238540764`.
+  - Build visual preview, ejecución `43238540905`.
+- El preview generó correctamente las 18 capturas (nueve rutas × escritorio/móvil) y el paquete de revisión. Artefacto `automata-v2-visual-preview`, ID `13953123265`; vence el 19 nov 2026.
+- El smoke test cubre la visibilidad contextual del lanzador, el consentimiento, navegación móvil, foco del diálogo newsletter, transferencia del asistente con consentimiento explícito, formulario de contacto y demos interactivas.
+- El flujo de WhatsApp se intercepta en Playwright; no se abre una sesión real ni se envía un mensaje.
+
+### QA del modelo: pendiente de ejecución real
+
+- Se inspeccionaron `worker/scripts/test-assistant-live.mjs` y `docs/PRUEBA-DE-CAMPO.md`.
+- El banco `npm run test:live` ejecuta ocho escenarios sintéticos con un proveedor real desde Node, limitadores locales y D1 aislada. No accede a Cloudflare ni despliega; cada escenario consume cuota o puede generar coste del proveedor.
+- No se ejecutó porque requiere que el responsable configure localmente una clave de proveedor. No solicitar ni copiar claves en ChatGPT, GitHub, el navegador ni archivos versionados.
+- Las pruebas de contrato/runtime con proveedor simulado no demuestran calidad semántica del modelo. La evaluación real debe registrar aprobado/parcial/fallido por caso A–H según `docs/PRUEBA-DE-CAMPO.md`.
+- No se probó el Worker productivo, no se enviaron formularios ni WhatsApp reales y no se realizó prueba de campo con participantes.
+
+### Estado de publicación
+
+- PR #9 sigue abierto como borrador; `main`, Pages productivo, Worker `automata-chat` y D1 `automata-audience` permanecen intactos.
+- No se autorizó merge, deploy, publicación de preview ni cambios de infraestructura.
