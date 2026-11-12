@@ -148,3 +148,11 @@ La última acción local conocida fue ejecutar `npm install` y `npm run typechec
 - Commit: `12f68e4faf78901d06bb7db64e4ce1e1d0809339`.
 - La compilación y las pruebas del commit nuevo todavía están pendientes de confirmación. No considerar este cambio validado hasta que CI termine.
 - `main`, el PR #9 y producción no se han fusionado ni desplegado.
+
+## 10. Aislamiento de previsualización (12 nov 2026)
+
+- Se detectó que `.github/workflows/preview-deploy.yml` desplegaba automáticamente un Worker independiente llamado `automata-v2-preview`, incompatible con la decisión de no crear recursos Cloudflare nuevos.
+- Se eliminó ese workflow de la rama feature. La revisión visual queda cubierta por `.github/workflows/visual-preview.yml`, que compila el sitio y genera capturas de nueve rutas en escritorio y móvil como artefacto de GitHub Actions, sin desplegar infraestructura.
+- Se consultó el inventario de Workers de la cuenta Cloudflare conectada: solo aparece `automata-chat`. No aparece `automata-v2-preview`; por tanto, no se detecta que el flujo anterior haya creado ese Worker.
+- Commit de eliminación: `f433d0091aec9dd28e618689d4ff5629c5ad3e89`.
+- `main`, el Worker `automata-chat` y la base D1 existente no fueron modificados por esta corrección. No se realizó despliegue.
