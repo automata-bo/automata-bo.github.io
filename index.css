@@ -86,7 +86,7 @@ label{font-size:13px;font-weight:700;letter-spacing:.02em}
 .automata-chat-compose button{display:flex;width:46px;height:46px;flex:0 0 46px;align-items:center;justify-content:center;border:0;border-radius:50%;background:#FF5A00;color:#fff;cursor:pointer}
 .automata-chat-compose button:disabled{opacity:.4;cursor:not-allowed}
 .automata-chat-note{display:flex;align-items:center;justify-content:center;gap:5px;margin:0;padding:0 12px 12px;background:#fff;color:#777;font-size:10px;text-align:center}
-@media(max-width:480px){.automata-chat-root{right:14px;bottom:14px}.automata-chat-panel{right:-2px;bottom:70px;width:calc(100vw - 24px);height:min(620px,calc(100dvh - 94px));border-radius:20px}.automata-chat-launcher{min-height:54px;padding:0 17px}}
+@media(max-width:480px){.automata-chat-root{right:14px;bottom:14px}.automata-chat-panel{right:-2px;bottom:70px;width:calc(100vw - 24px);height:min(620px,calc(100dvh - 94px));border-radius:20px}.automata-chat-launcher{width:54px;min-width:54px;min-height:54px;padding:0;border-radius:50%}.automata-chat-launcher span{display:none}}
 @media(prefers-reduced-motion:reduce){.automata-chat-panel,.automata-chat-launcher{animation:none;transition:none}}
 
 
