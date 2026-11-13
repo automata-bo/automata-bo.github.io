@@ -1063,7 +1063,7 @@ label{font-size:13px;font-weight:700;letter-spacing:.02em}
 }
 
 /* HOME CORRECTION: title left, sequential service reveals on the right */
-.automata-editorial .auto-hero{position:sticky;top:68px;z-index:1;min-height:calc(100svh - 68px)}
+.automata-editorial .auto-hero{position:relative;top:auto;z-index:1;min-height:calc(100svh - 68px)}
 .automata-editorial .auto-transition-track{--transition-progress:0%;position:relative;z-index:3;height:180svh;margin:0;pointer-events:none}
 .automata-editorial .auto-transition-surface{position:sticky;top:68px;width:100%;height:calc(100svh - 68px);background:#07090d;clip-path:polygon(0 calc(100% - var(--transition-progress) + 3%),16% calc(100% - var(--transition-progress) - 1%),34% calc(100% - var(--transition-progress) + 2%),53% calc(100% - var(--transition-progress) - 4%),72% calc(100% - var(--transition-progress) - 8%),88% calc(100% - var(--transition-progress) - 12%),100% calc(100% - var(--transition-progress) - 17%),100% 100%,0 100%);will-change:clip-path}
 .automata-editorial .auto-divisions-redesigned{position:relative;z-index:4;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:1fr auto;column-gap:clamp(36px,7vw,112px);align-content:center;min-height:calc(100svh - 68px);padding:clamp(64px,9vh,112px) clamp(24px,7vw,112px) 30px;background:#07090d}
@@ -1168,9 +1168,6 @@ label{font-size:13px;font-weight:700;letter-spacing:.02em}
 }
 .automata-editorial .auto-divisions-redesigned{
   margin-top:-2px;
-  scroll-snap-align:start;
-  scroll-snap-stop:always;
-  scroll-margin-top:68px;
   border-top:0;
 }
 @media(max-width:640px){
@@ -1184,3 +1181,36 @@ label{font-size:13px;font-weight:700;letter-spacing:.02em}
 
 /* The root scroll padding already accounts for the fixed header. */
 .automata-editorial .auto-divisions-redesigned{scroll-margin-top:0}
+
+
+/* SERVICE DETAIL LINKS INSIDE THE EXISTING FLOATING DIVISION PANELS */
+.automata-editorial .auto-division-modal-subservices{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+  margin-top:18px;
+}
+.automata-editorial .auto-division-modal-subservices a{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+  min-height:94px;
+  padding:15px 38px 15px 15px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:14px;
+  background:rgba(255,255,255,.045);
+  transition:background .2s,border-color .2s,transform .2s;
+}
+.automata-editorial .auto-division-modal-subservices a:hover{
+  transform:translateY(-2px);
+  border-color:rgba(255,150,107,.55);
+  background:rgba(255,100,31,.09);
+}
+.automata-editorial .auto-division-modal-subservices strong{font-size:13px;color:#fff}
+.automata-editorial .auto-division-modal-subservices small{font-size:11px;line-height:1.45;color:rgba(255,255,255,.58)}
+.automata-editorial .auto-division-modal-subservices svg{position:absolute;right:13px;top:15px;color:#ff966b}
+@media(max-width:640px){
+ .automata-editorial .auto-division-modal-subservices{grid-template-columns:1fr;gap:8px}
+ .automata-editorial .auto-division-modal-subservices a{min-height:0;padding:13px 38px 13px 13px}
+}
