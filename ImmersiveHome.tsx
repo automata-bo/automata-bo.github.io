@@ -30,8 +30,18 @@ const demos: Record<DemoKey, { label: string; question: string; answer: string; 
   }
 };
 
-function openAdvisor() {
-  window.dispatchEvent(new CustomEvent("automata:open-chat", { detail: { source: "home" } }));
+function openAdvisor(interest?: "morph-assistant" | "morph-whatsapp") {
+  const detail = interest
+    ? {
+        source: "home",
+        productId: "digital-assistants",
+        action: "explore",
+        draft: interest === "morph-assistant"
+          ? "Quiero conocer MORPH Assistant para mi página web o aplicación."
+          : "Quiero conocer MORPH WhatsApp para la cuenta de WhatsApp Business de mi negocio."
+      }
+    : { source: "home" };
+  window.dispatchEvent(new CustomEvent("automata:open-chat", { detail }));
 }
 
 function Reveal({ children, className = "", delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
@@ -73,7 +83,6 @@ export default function ImmersiveHome() {
 
   return <div className="automata-editorial">
     <section className="auto-hero" id="inicio">
-      <MorphGeometry />
       <div className="auto-hero-top">
         <span className="auto-kicker"><i /> DIGITAL EXPERIENCES &amp; INTELLIGENT SOLUTIONS</span>
         <span className="auto-index">TARIJA, BOLIVIA · 2026</span>
@@ -89,7 +98,7 @@ export default function ImmersiveHome() {
           <p className="auto-hero-manifesto">100% HUMANO. <span>100% IA.</span> <strong>200% AUTOMATA.</strong></p>
           <div className="auto-actions">
             <a className="auto-button auto-button-dark" href="#divisiones">Explorar el estudio <ArrowDownRight size={17} /></a>
-            <button className="auto-button auto-button-line" onClick={openAdvisor}>Conversemos <ArrowUpRight size={17} /></button>
+            <button className="auto-button auto-button-line" onClick={() => openAdvisor()}>Conversemos <ArrowUpRight size={17} /></button>
           </div>
         </Reveal>
       </div>
@@ -113,6 +122,27 @@ export default function ImmersiveHome() {
         </a></Reveal>
       </div>
       <div className="auto-section-foot"><span>COMPRENDER / IMAGINAR / CONSTRUIR</span><span>SCROLL PARA EXPLORAR ↓</span></div>
+    </section>
+
+    <section className="auto-morph-section" id="morph">
+      <MorphGeometry />
+      <div className="auto-morph-inner">
+        <Reveal><p className="auto-overline">MORPH / ASISTENTES INTELIGENTES</p><h2 className="auto-display">La inteligencia<br />que trabaja <span>contigo.</span></h2></Reveal>
+        <Reveal delay={120}><p className="auto-morph-intro">Dos formas de integrar asistencia inteligente en los espacios donde ocurre tu negocio. Una experiencia coherente, diseñada y gestionada por AUTOMATA.</p></Reveal>
+        <div className="auto-morph-products">
+          <Reveal><article className="auto-morph-product">
+            <span className="auto-morph-product-index">01 / WEB &amp; APPS</span>
+            <div><p className="auto-morph-eyebrow">MORPH ASSISTANT</p><h3 className="auto-display">Tu asistente.<br />En tu espacio digital.</h3><p>Un asistente inteligente integrado en tu página web o aplicación. Atiende consultas, orienta a tus visitantes y conecta cada conversación con el siguiente paso.</p></div>
+            <button type="button" onClick={() => openAdvisor("morph-assistant")}>Conocer MORPH Assistant <ArrowUpRight size={17} /></button>
+          </article></Reveal>
+          <Reveal delay={120}><article className="auto-morph-product">
+            <span className="auto-morph-product-index">02 / WHATSAPP BUSINESS</span>
+            <div><p className="auto-morph-eyebrow">MORPH WHATSAPP</p><h3 className="auto-display">Tu negocio.<br />En cada conversación.</h3><p>Un asistente inteligente para la cuenta de WhatsApp Business de tu negocio. Responde, organiza solicitudes y acompaña la atención sin perder el control humano.</p></div>
+            <button type="button" onClick={() => openAdvisor("morph-whatsapp")}>Conocer MORPH WhatsApp <ArrowUpRight size={17} /></button>
+          </article></Reveal>
+        </div>
+        <p className="auto-morph-footnote">MORPH es un servicio gestionado de AUTOMATA. La tecnología trabaja detrás; tu negocio conserva el control de sus canales y conversaciones.</p>
+      </div>
     </section>
 
     <section className="auto-explore" id="explora">
@@ -144,7 +174,7 @@ export default function ImmersiveHome() {
             <div className="auto-message message-automata"><span><Bot size={14} /> AUTOMATA</span><p>{current.answer}</p></div>
           </div>
           <div className="auto-demo-result"><span>POSIBLE RESULTADO</span><p>{current.result}</p></div>
-          <div className="auto-demo-actions"><a className="auto-button auto-button-dark" href={current.href}>Conocer esta capacidad <ArrowUpRight size={16} /></a><button className="auto-button auto-button-line" onClick={openAdvisor}>Conversar con el asesor <MessageCircle size={16} /></button></div>
+          <div className="auto-demo-actions"><a className="auto-button auto-button-dark" href={current.href}>Conocer esta capacidad <ArrowUpRight size={16} /></a><button className="auto-button auto-button-line" onClick={() => openAdvisor()}>Conversar con el asesor <MessageCircle size={16} /></button></div>
         </div>
       </div>
       <div className="auto-project-links"><a href="/proyectos/">Ver todos los proyectos y prototipos <ArrowUpRight size={16} /></a><a href="/demos/">Abrir laboratorio de demos <ArrowUpRight size={16} /></a></div>
@@ -154,7 +184,7 @@ export default function ImmersiveHome() {
       <div className="auto-contact-orbit" aria-hidden="true" />
       <div className="auto-contact-inner">
         <Reveal><p className="auto-overline">04 — EL SIGUIENTE PASO</p><h2 className="auto-display">¿Y si hacemos<br /><span>algo extraordinario?</span></h2><p>Cuéntanos qué quieres conseguir. Primero entendemos la idea; después construimos el camino.</p></Reveal>
-        <Reveal delay={130}><button className="auto-button auto-button-dark" onClick={openAdvisor}>Hablemos de tu proyecto <ArrowUpRight size={18} /></button></Reveal>
+        <Reveal delay={130}><button className="auto-button auto-button-dark" onClick={() => openAdvisor()}>Hablemos de tu proyecto <ArrowUpRight size={18} /></button></Reveal>
       </div>
       <div className="auto-contact-bottom"><span>AUTOMATA · DIGITAL EXPERIENCES &amp; INTELLIGENT SOLUTIONS</span><span>TARIJA / BOLIVIA</span></div>
     </section>
