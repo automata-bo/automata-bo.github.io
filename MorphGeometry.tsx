@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 type Point = { x: number; y: number };
 type ShapeKind = "circle" | "triangle" | "square" | "soft-diamond" | "organic";
 
-const COUNT = 96;
+const COUNT = 56;
 const CENTER = 200;
 const SHAPES: ShapeKind[] = ["circle", "triangle", "square", "soft-diamond", "organic"];
 
@@ -58,6 +58,7 @@ export default function MorphGeometry() {
     let frame = 0;
     let timer = 0;
     let alive = true;
+    let lastPaint = 0;
     let previous: ShapeKind[] = ["circle"];
     let current = initialShape;
 
@@ -79,6 +80,11 @@ export default function MorphGeometry() {
 
       const animate = (now: number) => {
         if (!alive) return;
+        if (now - lastPaint < 33) {
+          frame = requestAnimationFrame(animate);
+          return;
+        }
+        lastPaint = now;
         const raw = Math.min(1, (now - began) / duration);
         const eased = raw < 0.5 ? 4 * raw * raw * raw : 1 - Math.pow(-2 * raw + 2, 3) / 2;
         const next = start.map((point, index) => ({
@@ -112,7 +118,7 @@ export default function MorphGeometry() {
           <stop offset="100%" stopColor="#22d3ee" />
         </linearGradient>
         <filter id="morph-soft-glow" x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur stdDeviation="5" result="blur" />
+          <feGaussianBlur stdDeviation="3" result="blur" />
           <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
         </filter>
       </defs>
