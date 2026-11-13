@@ -15,7 +15,6 @@ export default defineConfig({
         "studio/lab/index.html",
         "proyectos/index.html",
         "contacto/index.html",
-        "demos/index.html"
       ]
     }
   }
