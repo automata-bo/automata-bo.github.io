@@ -101,7 +101,7 @@ jobs:
               window.open = ((url) => { window.__automataOpenedUrl = String(url ?? ""); return null; });
             });
             await smokePage.goto("http://127.0.0.1:4173/", { waitUntil: "domcontentloaded", timeout: 15000 });
-            await smokePage.getByRole("button", { name: /Conversemos/ }).click();
+            await smokePage.getByRole("button", { name: /Let’s talk|Conversemos/ }).click();
             const advisor = smokePage.getByRole("dialog", { name: "Asistente virtual de Automata" });
             await advisor.waitFor({ state: "visible" });
             await advisor.getByRole("button", { name: "Cerrar chat" }).click();
