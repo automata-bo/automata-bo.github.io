@@ -91,13 +91,13 @@ jobs:
               window.open = ((url) => { window.__automataOpenedUrl = String(url ?? ""); return null; });
             });
             await smokePage.goto("http://127.0.0.1:4173/", { waitUntil: "domcontentloaded", timeout: 15000 });
-            await smokePage.getByRole("button", { name: /Conoce a nuestro asesor/ }).click();
+            await smokePage.getByRole("button", { name: /Conversemos/ }).click();
             const advisor = smokePage.getByRole("dialog", { name: "Asistente virtual de Automata" });
             await advisor.waitFor({ state: "visible" });
             await advisor.getByRole("button", { name: "Cerrar chat" }).click();
-            await smokePage.getByRole("button", { name: /Experiencia para eventos/ }).click();
-            await smokePage.getByText(/Quiero que los invitados de mi boda compartan sus fotos/).waitFor({ state: "visible" });
-            await smokePage.getByRole("button", { name: /Idea creativa/ }).click();
+            await smokePage.getByRole("button", { name: /Recuerdos compartidos/ }).click();
+            await smokePage.getByText(/Quiero que los invitados de mi boda compartan sus fotografías/).waitFor({ state: "visible" });
+            await smokePage.getByRole("button", { name: /Una idea que contar/ }).click();
             await smokePage.getByText(/Necesito presentar un producto/).waitFor({ state: "visible" });
 
             await smokePage.goto("http://127.0.0.1:4173/digital/", { waitUntil: "domcontentloaded", timeout: 15000 });
