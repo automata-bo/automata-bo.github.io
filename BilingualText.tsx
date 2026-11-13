@@ -87,7 +87,7 @@ export default function BilingualText({ en, es, delay = 8_000, className = "" }:
             className="bilingual-motion__char"
             key={`${index}-${character}`}
             style={{ "--char-index": index } as React.CSSProperties}
-          >{character === " " ? "\\u00a0" : character}</span>
+          >{character === " " ? "\u00a0" : character}</span>
         ))}
       </span>
     </span>
