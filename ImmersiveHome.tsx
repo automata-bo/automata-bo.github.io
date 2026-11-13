@@ -120,7 +120,7 @@ export default function ImmersiveHome() {
         const rect = track.getBoundingClientRect();
         const height = window.innerHeight || 1;
         const progress = Math.max(0, Math.min(1, (height - rect.top) / height));
-        track.style.setProperty("--transition-progress", progress.toFixed(4));
+        track.style.setProperty("--transition-progress", (progress * 100).toFixed(2) + "%");
       });
     };
     updateProgress();
