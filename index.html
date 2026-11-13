@@ -23,6 +23,13 @@
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/v2-entry.tsx"></script>
+    <script type="module">
+      const startAutomata = () => import("/v2-entry.tsx");
+      if (document.documentElement.dataset.introPending === "true") {
+        document.addEventListener("intro:done", startAutomata, { once: true });
+      } else {
+        startAutomata();
+      }
+    </script>
   </body>
 </html>
