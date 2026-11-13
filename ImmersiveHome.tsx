@@ -4,28 +4,40 @@ import BilingualText from "./BilingualText";
 import { ArrowDownRight, ArrowRight, ArrowUpRight, Bot, Camera, Clapperboard, Heart, MessageCircle, MonitorSmartphone, Workflow } from "lucide-react";
 
 type DemoKey = "digital" | "experiences" | "studio";
-const demos: Record<DemoKey, { label: string; question: string; answer: string; result: string; href: string; tag: string }> = {
+const demos: Record<DemoKey, { label: string; labelEn: string; question: string; questionEn: string; answer: string; answerEn: string; result: string; resultEn: string; href: string; tag: string }> = {
   digital: {
     label: "Atención inteligente",
+    labelEn: "Smart service",
     question: "Tengo un negocio y no alcanzo a responder todos los mensajes.",
+    questionEn: "I run a business and can’t keep up with all the messages.",
     answer: "Diseñamos un recorrido de atención que responde consultas frecuentes y organiza cada solicitud para que tu equipo continúe.",
+    answerEn: "We design a service journey that answers common questions and organizes each request for your team to follow up.",
     result: "Una atención más clara, sin perder el trato humano.",
+    resultEn: "Clearer customer service, without losing the human touch.",
     href: "/digital/",
     tag: "DIGITAL"
   },
   experiences: {
     label: "Recuerdos compartidos",
+    labelEn: "Shared memories",
     question: "Quiero que los invitados de mi boda compartan sus fotografías.",
+    questionEn: "I want wedding guests to share their photos.",
     answer: "Creamos una experiencia con acceso QR y una galería comunitaria para reunir los momentos desde los teléfonos de los invitados.",
+    answerEn: "We create a QR-enabled experience and shared gallery where guests can add moments from their phones.",
     result: "Una memoria colectiva que sigue creciendo después del evento.",
+    resultEn: "A shared memory that keeps growing after the event.",
     href: "/experiences/",
     tag: "EXPERIENCES"
   },
   studio: {
     label: "Una idea que contar",
+    labelEn: "An idea to tell",
     question: "Necesito presentar un producto de una manera diferente.",
+    questionEn: "I need to present a product in a different way.",
     answer: "Exploramos un concepto visual, una narrativa y una pieza audiovisual que puede combinar producción real, diseño y herramientas de IA.",
+    answerEn: "We explore a visual concept, narrative, and audiovisual piece that can combine live production, design, and AI tools.",
     result: "Una dirección creativa con una forma propia.",
+    resultEn: "A creative direction with its own identity.",
     href: "/studio/",
     tag: "STUDIO"
   }
@@ -166,16 +178,16 @@ export default function ImmersiveHome() {
       </div>
       <div className="auto-demo-layout">
         <div className="auto-demo-tabs" role="tablist" aria-label="Explorar ejemplos de AUTOMATA">
-          {(Object.keys(demos) as DemoKey[]).map((key) => <button key={key} type="button" role="tab" aria-selected={active === key} className={"auto-demo-tab " + (active === key ? "active" : "")} onClick={() => setActive(key)}><span>{demos[key].tag}</span><strong>{demos[key].label}</strong><ArrowUpRight size={17} /></button>)}
+          {(Object.keys(demos) as DemoKey[]).map((key) => <button key={key} type="button" role="tab" aria-selected={active === key} className={"auto-demo-tab " + (active === key ? "active" : "")} onClick={() => setActive(key)}><span>{demos[key].tag}</span><strong><BilingualText en={demos[key].labelEn} es={demos[key].label} /></strong><ArrowUpRight size={17} /></button>)}
         </div>
         <div className="auto-demo-preview" role="tabpanel">
-          <div className="auto-demo-preview-top"><span>EXPERIENCIA INTERACTIVA / PREVISUALIZACIÓN</span><span className="auto-demo-status">EJEMPLO SIMULADO</span></div>
+          <div className="auto-demo-preview-top"><span><BilingualText en="INTERACTIVE EXPERIENCE / PREVIEW" es="EXPERIENCIA INTERACTIVA / PREVISUALIZACIÓN" /></span><span className="auto-demo-status"><BilingualText en="SIMULATED EXAMPLE" es="EJEMPLO SIMULADO" /></span></div>
           <div className="auto-conversation">
-            <div className="auto-message message-human"><span><BilingualText en="PERSON" es="PERSONA" /></span><p>{current.question}</p></div>
+            <div className="auto-message message-human"><span><BilingualText en="PERSON" es="PERSONA" /></span><p><BilingualText en={current.questionEn} es={current.question} /></p></div>
             <div className="auto-message-arrow"><ArrowRight /></div>
-            <div className="auto-message message-automata"><span><Bot size={14} /> AUTOMATA</span><p>{current.answer}</p></div>
+            <div className="auto-message message-automata"><span><Bot size={14} /> AUTOMATA</span><p><BilingualText en={current.answerEn} es={current.answer} /></p></div>
           </div>
-          <div className="auto-demo-result"><span><BilingualText en="POSSIBLE OUTCOME" es="POSIBLE RESULTADO" /></span><p>{current.result}</p></div>
+          <div className="auto-demo-result"><span><BilingualText en="POSSIBLE OUTCOME" es="POSIBLE RESULTADO" /></span><p><BilingualText en={current.resultEn} es={current.result} /></p></div>
           <div className="auto-demo-actions"><a className="auto-button auto-button-dark" href={current.href}><BilingualText en="Explore this capability" es="Conocer esta capacidad" /> <ArrowUpRight size={16} /></a><button className="auto-button auto-button-line" onClick={() => openAdvisor()}><BilingualText en="Talk to our advisor" es="Conversar con el asesor" /> <MessageCircle size={16} /></button></div>
         </div>
       </div>
