@@ -23,6 +23,14 @@ jobs:
         run: npm run build
         env:
           VITE_AUTOMATA_API_URL: ${{ vars.VITE_AUTOMATA_API_URL }}
+      - name: Include loading intro assets in Pages artifact
+        run: |
+          mkdir -p dist/intro
+          cp -a intro/. dist/intro/
+          test -s dist/intro/intro.js
+          test -s dist/intro/intro.css
+          test -s dist/intro/logo-blanco.webp
+          test -s dist/intro/logo-color.webp
       - uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
