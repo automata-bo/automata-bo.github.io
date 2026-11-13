@@ -5,11 +5,12 @@ type Props = { en: string; es: string; delay?: number; className?: string };
 /** English-first editorial copy with an independent, accessible Spanish transition. */
 export default function BilingualText({ en, es, delay = 1800, className = "" }: Props) {
   const [spanish, setSpanish] = useState(false);
+  const stagger = delay + [...en].reduce((sum, char) => sum + char.charCodeAt(0), 0) % 1900;
 
   useEffect(() => {
-    const timer = window.setTimeout(() => setSpanish(true), delay);
+    const timer = window.setTimeout(() => setSpanish(true), stagger);
     return () => window.clearTimeout(timer);
-  }, [delay]);
+  }, [stagger]);
 
   return (
     <span className={`bilingual-motion ${className}`} lang={spanish ? "es" : "en"}>
