@@ -195,35 +195,38 @@ El Worker requiere sus bindings y variables de entorno para habilitar las funcio
 
 ---
 
-## Estructura del proyecto
+## Estructura actual de `main`
 
-La rama `main` conserva la V1. La rama de revisión `feature/automata-web-v2-architecture` contiene la primera implementación multipágina V2 y mantiene las demos anteriores bajo `/demos/`.
+La rama `main` es la fuente de verdad y contiene la aplicación V2 activa. La antigua entrada V1 y su ruta de demostración general fueron retiradas. Las páginas públicas comparten el mismo montaje React y la misma navegación; las demos específicas de Experiences y Studio son prototipos independientes.
 
 ```text
 .
-├── index.html               # Entrada institucional V2 en la rama de revisión
-├── v2-main.tsx              # Páginas y navegación institucional V2
-├── v2-entry.tsx             # Montaje React de V2
-├── digital/index.html       # Entrada multipágina Digital
-├── experiences/index.html  # Entrada multipágina Experiences
-├── studio/index.html       # Entrada multipágina Studio
-├── proyectos/index.html    # Entrada multipágina Proyectos
-├── contacto/index.html     # Entrada multipágina Contacto
-├── demos/index.html        # Acceso de transición a la experiencia V1
-├── App.tsx                  # Aplicación V1 preservada
-├── ChatWidget.tsx           # Asistente y transferencia a atención humana
-├── CookieConsent.tsx        # Consentimiento de analítica
-├── NewsletterSignup.tsx     # Registro de suscripciones
-├── analytics.ts             # Eventos permitidos desde el navegador
-├── docs/
-│   ├── ASISTENTE-OPENROUTER.md
-│   └── CAPTACION-ANALITICA.md
+├── index.html                  # Entrada principal y carga de la intro
+├── entry-bootstrap.ts          # Carga de la aplicación V2
+├── v2-entry.tsx                # Montaje React compartido
+├── v2-main.tsx                 # Navegación y composición de páginas
+├── ImmersiveHome.tsx           # Página principal
+├── ImmersiveSections.tsx       # Secciones Digital, Experiences, Studio, Proyectos y Contacto
+├── ChatWidget.tsx              # Asistente y transferencia a atención humana
+├── CookieConsent.tsx           # Consentimiento de analítica
+├── NewsletterSignup.tsx        # Registro de suscripciones
+├── analytics.ts / api.ts       # Analítica y comunicación con el Worker
+├── digital/                    # Entrada de AUTOMATA Digital
+├── experiences/                # Entrada y demo de invitación
+├── studio/                     # Entrada y Creative Lab
+├── proyectos/                  # Entrada de proyectos
+├── contacto/                   # Entrada de contacto
+├── intro/                      # Recursos de la introducción de carga
+├── assets/                     # Identidad visual
+├── docs/                       # Arquitectura, identidad, pruebas y operación
 ├── worker/
-│   ├── src/index.ts         # API, chat, analítica y suscripciones
-│   ├── migrations/          # Esquema de Cloudflare D1
-│   └── wrangler.jsonc       # Configuración del Worker
-└── .github/workflows/       # Verificación y despliegue
+│   ├── src/                    # API, asistente, catálogo y captación
+│   ├── migrations/             # Esquema de Cloudflare D1
+│   └── wrangler.jsonc          # Configuración del Worker
+└── .github/workflows/          # Validación y despliegues de Pages y Worker
 ```
+
+Los prototipos de `/experiences/demo/` y `/studio/lab/` son rutas independientes de demostración; no sustituyen las páginas principales ni forman parte del asistente comercial.
 
 ---
 
