@@ -63,18 +63,31 @@ function Reveal({ children, className = "", delay = 0 }: { children: React.React
   useEffect(() => {
     const node = ref.current;
     if (!node) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setVisible(true);
-      return;
-    }
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
+
+    let observer: IntersectionObserver | undefined;
+    const startObserving = () => {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
         setVisible(true);
-        observer.disconnect();
+        return;
       }
-    }, { threshold: 0.12 });
-    observer.observe(node);
-    return () => observer.disconnect();
+      observer = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer?.disconnect();
+        }
+      }, { threshold: 0.12 });
+      observer.observe(node);
+    };
+
+    if (document.documentElement.dataset.introPending === "true") {
+      document.addEventListener("intro:done", startObserving, { once: true });
+    } else {
+      startObserving();
+    }
+    return () => {
+      document.removeEventListener("intro:done", startObserving);
+      observer?.disconnect();
+    };
   }, []);
   return <div ref={ref} className={"auto-reveal " + (visible ? "is-visible " : "") + className} style={{ transitionDelay: delay + "ms" }}>{children}</div>;
 }
