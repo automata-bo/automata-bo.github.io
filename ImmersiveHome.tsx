@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import MorphGeometry from "./MorphGeometry";
+import BilingualText from "./BilingualText";
 import { ArrowDownRight, ArrowRight, ArrowUpRight, Bot, Camera, Clapperboard, Heart, MessageCircle, MonitorSmartphone, Workflow } from "lucide-react";
 
 type DemoKey = "digital" | "experiences" | "studio";
@@ -97,29 +98,29 @@ export default function ImmersiveHome() {
         <Reveal delay={430}>
           <p className="auto-hero-manifesto">100% HUMANO. <span>100% IA.</span> <strong>200% AUTOMATA.</strong></p>
           <div className="auto-actions">
-            <a className="auto-button auto-button-dark" href="#divisiones">Explorar el estudio <ArrowDownRight size={17} /></a>
+            <a className="auto-button auto-button-dark" href="#divisiones"><BilingualText en="Explore the studio" es="Explorar el estudio" /> <ArrowDownRight size={17} /></a>
             <a className="auto-button auto-button-line" href="#morph">Meet Morph <ArrowUpRight size={17} /></a>
-            <button className="auto-button auto-button-line" onClick={() => openAdvisor()}>Conversemos <ArrowUpRight size={17} /></button>
+            <button className="auto-button auto-button-line" onClick={() => openAdvisor()}><BilingualText en="Let’s talk" es="Conversemos" /> <ArrowUpRight size={17} /></button>
           </div>
         </Reveal>
       </div>
-      <div className="auto-hero-bottom"><span>ESTUDIO DIGITAL</span><span>DISEÑO · TECNOLOGÍA · IA</span><span>DESPLÁZATE ↓</span></div>
+      <div className="auto-hero-bottom"><span><BilingualText en="DIGITAL STUDIO" es="ESTUDIO DIGITAL" /></span><span><BilingualText en="DESIGN · TECHNOLOGY · AI" es="DISEÑO · TECNOLOGÍA · IA" /></span><span>DESPLÁZATE ↓</span></div>
     </section>
 
     <section className="auto-divisions" id="divisiones">
       <div className="auto-section-intro">
-        <Reveal><p className="auto-overline">01 — EL ECOSISTEMA AUTOMATA</p><h2 className="auto-display">Tres divisiones.<br /><span className="auto-gradient-text">Una visión.</span></h2></Reveal>
-        <Reveal delay={120}><p className="auto-section-copy">No hacemos tecnología por hacerla. Unimos disciplinas para crear soluciones útiles, experiencias memorables e historias que merecen ser contadas.</p></Reveal>
+        <Reveal><p className="auto-overline">01 — EL ECOSISTEMA AUTOMATA</p><h2 className="auto-display"><BilingualText en="Three divisions." es="Tres divisiones." /><br /><span className="auto-gradient-text"><BilingualText en="One vision." es="Una visión." /></span></h2></Reveal>
+        <Reveal delay={120}><p className="auto-section-copy"><BilingualText en="We don’t build technology for its own sake. We bring disciplines together to create useful solutions, memorable experiences, and stories worth telling." es="No hacemos tecnología por hacerla. Unimos disciplinas para crear soluciones útiles, experiencias memorables e historias que merecen ser contadas." /></p></Reveal>
       </div>
       <div className="auto-division-list">
         <Reveal><a className="auto-division division-blue" href="/digital/">
-          <span className="auto-division-number">01</span><div className="auto-division-main"><h3 className="auto-display">Digital<span>.</span></h3><p>Construimos herramientas y sistemas que hacen que las cosas funcionen mejor.</p><small>WEB · SISTEMAS · IA · AUTOMATIZACIÓN</small></div><span className="auto-division-arrow"><ArrowUpRight /></span>
+          <span className="auto-division-number">01</span><div className="auto-division-main"><h3 className="auto-display">Digital<span>.</span></h3><p><BilingualText en="We build tools and systems that make things work better." es="Construimos herramientas y sistemas que hacen que las cosas funcionen mejor." /></p><small>WEB · SISTEMAS · IA · AUTOMATIZACIÓN</small></div><span className="auto-division-arrow"><ArrowUpRight /></span>
         </a></Reveal>
         <Reveal delay={90}><a className="auto-division division-pink" href="/experiences/">
-          <span className="auto-division-number">02</span><div className="auto-division-main"><h3 className="auto-display">Experiences<span>.</span></h3><p>Diseñamos momentos participativos que se convierten en recuerdos compartidos.</p><small>EVENTOS · INTERACCIÓN · MEMORIAS DIGITALES</small></div><span className="auto-division-arrow"><ArrowUpRight /></span>
+          <span className="auto-division-number">02</span><div className="auto-division-main"><h3 className="auto-display">Experiences<span>.</span></h3><p><BilingualText en="We design participatory moments that become shared memories." es="Diseñamos momentos participativos que se convierten en recuerdos compartidos." /></p><small>EVENTOS · INTERACCIÓN · MEMORIAS DIGITALES</small></div><span className="auto-division-arrow"><ArrowUpRight /></span>
         </a></Reveal>
         <Reveal delay={180}><a className="auto-division division-orange" href="/studio/">
-          <span className="auto-division-number">03</span><div className="auto-division-main"><h3 className="auto-display">Studio<span>.</span></h3><p>Convertimos ideas en imágenes, narrativas y piezas audiovisuales.</p><small>PRODUCCIÓN · FOTOGRAFÍA · DIRECCIÓN CREATIVA</small></div><span className="auto-division-arrow"><ArrowUpRight /></span>
+          <span className="auto-division-number">03</span><div className="auto-division-main"><h3 className="auto-display">Studio<span>.</span></h3><p><BilingualText en="We turn ideas into images, narratives, and audiovisual pieces." es="Convertimos ideas en imágenes, narrativas y piezas audiovisuales." /></p><small>PRODUCCIÓN · FOTOGRAFÍA · DIRECCIÓN CREATIVA</small></div><span className="auto-division-arrow"><ArrowUpRight /></span>
         </a></Reveal>
       </div>
       <div className="auto-section-foot"><span>COMPRENDER / IMAGINAR / CONSTRUIR</span><span>SCROLL PARA EXPLORAR ↓</span></div>
@@ -128,40 +129,40 @@ export default function ImmersiveHome() {
     <section className="auto-morph-section" id="morph">
       <MorphGeometry />
       <div className="auto-morph-inner">
-        <Reveal><p className="auto-overline">MORPH / ASISTENTES INTELIGENTES</p><h2 className="auto-display">La inteligencia<br />que trabaja <span>contigo.</span></h2></Reveal>
-        <Reveal delay={120}><p className="auto-morph-intro">Dos formas de integrar asistencia inteligente en los espacios donde ocurre tu negocio. Una experiencia coherente, diseñada y gestionada por AUTOMATA.</p></Reveal>
+        <Reveal><p className="auto-overline">MORPH / ASISTENTES INTELIGENTES</p><h2 className="auto-display"><BilingualText en="Intelligence" es="La inteligencia" /><br /><BilingualText en="that works" es="que trabaja" /> <span><BilingualText en="with you." es="contigo." /></span></h2></Reveal>
+        <Reveal delay={120}><p className="auto-morph-intro"><BilingualText en="Two ways to bring intelligent assistance into the spaces where your business happens. One coherent experience, designed and managed by AUTOMATA." es="Dos formas de integrar asistencia inteligente en los espacios donde ocurre tu negocio. Una experiencia coherente, diseñada y gestionada por AUTOMATA." /></p></Reveal>
         <div className="auto-morph-products">
           <Reveal><article className="auto-morph-product">
             <span className="auto-morph-product-index">01 / WEB &amp; APPS</span>
-            <div><p className="auto-morph-eyebrow">MORPH ASSISTANT</p><h3 className="auto-display">Tu asistente.<br />En tu espacio digital.</h3><p>Un asistente inteligente integrado en tu página web o aplicación. Atiende consultas, orienta a tus visitantes y conecta cada conversación con el siguiente paso.</p></div>
+            <div><p className="auto-morph-eyebrow">MORPH ASSISTANT</p><h3 className="auto-display"><BilingualText en="Your assistant." es="Tu asistente." /><br /><BilingualText en="In your digital space." es="En tu espacio digital." /></h3><p><BilingualText en="An intelligent assistant built into your website or app. It answers questions, guides visitors, and connects every conversation to the next step." es="Un asistente inteligente integrado en tu página web o aplicación. Atiende consultas, orienta a tus visitantes y conecta cada conversación con el siguiente paso." /></p></div>
             <button type="button" onClick={() => openAdvisor("morph-assistant")}>Conocer MORPH Assistant <ArrowUpRight size={17} /></button>
           </article></Reveal>
           <Reveal delay={120}><article className="auto-morph-product">
             <span className="auto-morph-product-index">02 / WHATSAPP BUSINESS</span>
-            <div><p className="auto-morph-eyebrow">MORPH WHATSAPP</p><h3 className="auto-display">Tu negocio.<br />En cada conversación.</h3><p>Un asistente inteligente para la cuenta de WhatsApp Business de tu negocio. Responde, organiza solicitudes y acompaña la atención sin perder el control humano.</p></div>
+            <div><p className="auto-morph-eyebrow">MORPH WHATSAPP</p><h3 className="auto-display"><BilingualText en="Your business." es="Tu negocio." /><br /><BilingualText en="In every conversation." es="En cada conversación." /></h3><p><BilingualText en="An intelligent assistant for your business WhatsApp Business account. It responds, organizes requests, and supports customer service while people stay in control." es="Un asistente inteligente para la cuenta de WhatsApp Business de tu negocio. Responde, organiza solicitudes y acompaña la atención sin perder el control humano." /></p></div>
             <button type="button" onClick={() => openAdvisor("morph-whatsapp")}>Conocer MORPH WhatsApp <ArrowUpRight size={17} /></button>
           </article></Reveal>
         </div>
-        <p className="auto-morph-footnote">MORPH es un servicio gestionado de AUTOMATA. La tecnología trabaja detrás; tu negocio conserva el control de sus canales y conversaciones.</p>
+        <p className="auto-morph-footnote"><BilingualText en="MORPH is a managed service by AUTOMATA. Technology works behind the scenes; your business keeps control of its channels and conversations." es="MORPH es un servicio gestionado de AUTOMATA. La tecnología trabaja detrás; tu negocio conserva el control de sus canales y conversaciones." /></p>
       </div>
     </section>
 
     <section className="auto-explore" id="explora">
       <div className="auto-explore-heading">
-        <Reveal><p className="auto-overline">02 — EXPLORA LO QUE PODEMOS HACER</p><h2 className="auto-display">Cada idea<br />abre un <span className="auto-gradient-text">camino.</span></h2></Reveal>
-        <Reveal delay={120}><p className="auto-section-copy">Tres áreas, distintas maneras de resolver un reto. Entra en cada una y descubre sus posibilidades.</p></Reveal>
+        <Reveal><p className="auto-overline">02 — EXPLORA LO QUE PODEMOS HACER</p><h2 className="auto-display"><BilingualText en="Every idea" es="Cada idea" /><br /><BilingualText en="opens a" es="abre un" /> <span className="auto-gradient-text"><BilingualText en="new path." es="camino." /></span></h2></Reveal>
+        <Reveal delay={120}><p className="auto-section-copy"><BilingualText en="Three areas, different ways to solve a challenge. Explore each one and discover what’s possible." es="Tres áreas, distintas maneras de resolver un reto. Entra en cada una y descubre sus posibilidades." /></p></Reveal>
       </div>
       <div className="auto-capability-grid">
-        <Reveal><a className="auto-capability capability-digital" href="/digital/"><span className="auto-capability-meta">01 / DIGITAL <MonitorSmartphone /></span><div><h3 className="auto-display">Sistemas<br />que conectan.</h3><p>Experiencias web, asistentes, automatización e integraciones.</p><span className="auto-text-link">Explorar Digital <ArrowRight size={16} /></span></div></a></Reveal>
-        <Reveal delay={90}><a className="auto-capability capability-experiences" href="/experiences/"><span className="auto-capability-meta">02 / EXPERIENCES <Heart /></span><div><h3 className="auto-display">Momentos<br />que permanecen.</h3><p>Invitaciones, eventos, álbumes colectivos y experiencias interactivas.</p><span className="auto-text-link">Explorar Experiences <ArrowRight size={16} /></span></div></a></Reveal>
-        <Reveal delay={180}><a className="auto-capability capability-studio" href="/studio/"><span className="auto-capability-meta">03 / STUDIO <Clapperboard /></span><div><h3 className="auto-display">Historias<br />con identidad.</h3><p>Producción audiovisual, fotografía y creación híbrida con IA.</p><span className="auto-text-link">Explorar Studio <ArrowRight size={16} /></span></div></a></Reveal>
+        <Reveal><a className="auto-capability capability-digital" href="/digital/"><span className="auto-capability-meta">01 / DIGITAL <MonitorSmartphone /></span><div><h3 className="auto-display"><BilingualText en="Systems" es="Sistemas" /><br /><BilingualText en="that connect." es="que conectan." /></h3><p>Experiencias web, asistentes, automatización e integraciones.</p><span className="auto-text-link">Explorar Digital <ArrowRight size={16} /></span></div></a></Reveal>
+        <Reveal delay={90}><a className="auto-capability capability-experiences" href="/experiences/"><span className="auto-capability-meta">02 / EXPERIENCES <Heart /></span><div><h3 className="auto-display"><BilingualText en="Moments" es="Momentos" /><br /><BilingualText en="that stay with you." es="que permanecen." /></h3><p>Invitaciones, eventos, álbumes colectivos y experiencias interactivas.</p><span className="auto-text-link">Explorar Experiences <ArrowRight size={16} /></span></div></a></Reveal>
+        <Reveal delay={180}><a className="auto-capability capability-studio" href="/studio/"><span className="auto-capability-meta">03 / STUDIO <Clapperboard /></span><div><h3 className="auto-display"><BilingualText en="Stories" es="Historias" /><br /><BilingualText en="with identity." es="con identidad." /></h3><p>Producción audiovisual, fotografía y creación híbrida con IA.</p><span className="auto-text-link">Explorar Studio <ArrowRight size={16} /></span></div></a></Reveal>
       </div>
     </section>
 
     <section className="auto-demo-section" id="proyectos">
       <div className="auto-demo-heading">
-        <Reveal><p className="auto-overline">03 — PROYECTOS Y EXPERIENCIAS</p><h2 className="auto-display">No lo imagines.<br /><span className="auto-gradient-text">Explóralo.</span></h2></Reveal>
-        <Reveal delay={120}><p className="auto-section-copy">Prueba recorridos y prototipos. Cada experiencia indica claramente qué es una simulación y qué está disponible.</p></Reveal>
+        <Reveal><p className="auto-overline">03 — PROYECTOS Y EXPERIENCIAS</p><h2 className="auto-display"><BilingualText en="Don’t just imagine it." es="No lo imagines." /><br /><span className="auto-gradient-text"><BilingualText en="Explore it." es="Explóralo." /></span></h2></Reveal>
+        <Reveal delay={120}><p className="auto-section-copy"><BilingualText en="Try interactive journeys and prototypes. Each experience clearly states what is simulated and what is available." es="Prueba recorridos y prototipos. Cada experiencia indica claramente qué es una simulación y qué está disponible." /></p></Reveal>
       </div>
       <div className="auto-demo-layout">
         <div className="auto-demo-tabs" role="tablist" aria-label="Explorar ejemplos de AUTOMATA">
@@ -184,7 +185,7 @@ export default function ImmersiveHome() {
     <section className="auto-contact">
       <div className="auto-contact-orbit" aria-hidden="true" />
       <div className="auto-contact-inner">
-        <Reveal><p className="auto-overline">04 — EL SIGUIENTE PASO</p><h2 className="auto-display">¿Y si hacemos<br /><span>algo extraordinario?</span></h2><p>Cuéntanos qué quieres conseguir. Primero entendemos la idea; después construimos el camino.</p></Reveal>
+        <Reveal><p className="auto-overline">04 — EL SIGUIENTE PASO</p><h2 className="auto-display"><BilingualText en="What if we made" es="¿Y si hacemos" /><br /><span><BilingualText en="something extraordinary?" es="algo extraordinario?" /></span></h2><p>Cuéntanos qué quieres conseguir. Primero entendemos la idea; después construimos el <BilingualText en="new path." es="camino." /></p></Reveal>
         <Reveal delay={130}><button className="auto-button auto-button-dark" onClick={() => openAdvisor()}>Hablemos de tu proyecto <ArrowUpRight size={18} /></button></Reveal>
       </div>
       <div className="auto-contact-bottom"><span>AUTOMATA · DIGITAL EXPERIENCES &amp; INTELLIGENT SOLUTIONS</span><span>TARIJA / BOLIVIA</span></div>
