@@ -745,7 +745,8 @@ label{font-size:13px;font-weight:700;letter-spacing:.02em}
   margin:0;
   overflow-x:hidden;
   overflow-y:auto;
-  overscroll-behavior:contain;
+  overscroll-behavior-x:contain;
+  overscroll-behavior-y:auto;
   scroll-snap-type:y mandatory;
   scrollbar-width:none;
 }
