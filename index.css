@@ -555,3 +555,18 @@ label{font-size:13px;font-weight:700;letter-spacing:.02em}
 @media(prefers-reduced-motion:reduce){
   .morph-geometry{opacity:.28}
 }
+
+
+/* The spectrum moves independently from the randomized geometry. */
+.morph-geometry-line,
+.morph-geometry-halo{
+  animation:morph-spectrum-drift 22s linear infinite;
+}
+.morph-geometry-halo{animation-duration:28s}
+@keyframes morph-spectrum-drift{
+  from{filter:hue-rotate(0deg) drop-shadow(0 0 5px rgba(124,58,237,.35))}
+  to{filter:hue-rotate(360deg) drop-shadow(0 0 5px rgba(124,58,237,.35))}
+}
+@media(prefers-reduced-motion:reduce){
+  .morph-geometry-line,.morph-geometry-halo{animation:none}
+}
