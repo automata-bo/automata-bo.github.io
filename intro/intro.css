@@ -1,10 +1,13 @@
+html[data-intro-pending="true"] body{background:#060610!important}
+html[data-intro-pending="true"] #root{visibility:hidden!important}
+html[data-intro-pending="true"] #root,html[data-intro-pending="true"] #root *{animation-play-state:paused!important;transition:none!important}
 #ai{position:fixed;inset:0;z-index:2147483000;display:grid;place-items:center}
 #ai.out{pointer-events:none}
 /* ===== Cristal ===== */
-#ai .glass{position:fixed;inset:0;background:rgba(6,6,16,.4);backdrop-filter:blur(14px) saturate(1.5);-webkit-backdrop-filter:blur(14px) saturate(1.5);opacity:0;pointer-events:none;transition:opacity .9s}
+#ai .glass{position:fixed;inset:0;background:rgba(6,6,16,.92);opacity:0;pointer-events:none;transition:opacity .9s}
 #ai.on .glass{opacity:1}
 #ai.out .glass{opacity:0;backdrop-filter:blur(0) saturate(1);-webkit-backdrop-filter:blur(0) saturate(1);transition:opacity 1.4s ease,backdrop-filter 1.4s ease,-webkit-backdrop-filter 1.4s ease}
-#ai.out .stage{opacity:0;transform:translateY(-12px);pointer-events:none}
+#ai.out .stage{opacity:0;transform:translate3d(0,-12px,0);pointer-events:none}
 #ai.gone .glass,#ai.gone .stage,#ai.gone .aura{visibility:hidden}
 #ai .aura{position:fixed;inset:0;pointer-events:none;opacity:0;transition:opacity .9s ease;background:radial-gradient(ellipse 46% 42% at 50% 50%,rgba(101,3,242,.55),rgba(249,38,245,.2) 35%,rgba(0,255,218,.12) 60%,transparent 100%)}
 #ai.formed .aura{opacity:1}
@@ -12,7 +15,7 @@
 #ai .stage.flash{animation:logoGlow 1.9s ease-in-out}
 @keyframes logoGlow{0%,100%{filter:drop-shadow(0 10px 30px rgba(0,0,0,.35)) drop-shadow(0 0 0 rgba(249,38,245,0))}45%{filter:drop-shadow(0 10px 30px rgba(0,0,0,.2)) drop-shadow(0 0 26px rgba(249,38,245,.85))}}
 /* ===== Logo ===== */
-#ai .stage{position:relative;width:min(78vw,440px);aspect-ratio:885/434;cursor:pointer;filter:drop-shadow(0 10px 30px rgba(0,0,0,.35));transition:opacity .9s ease .1s,transform 1.3s ease}
+#ai .stage{position:relative;width:min(78vw,440px);aspect-ratio:885/434;cursor:pointer;filter:drop-shadow(0 10px 30px rgba(0,0,0,.35));transition:opacity .9s ease .1s,transform 1.3s ease;contain:layout paint}
 #ai .stage:focus-visible{outline:1px solid #fff;outline-offset:14px}
 #ai .reel{position:absolute;overflow:hidden;background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(255,255,255,.2);transition:background .5s,box-shadow .5s}
 #ai .reel::before{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(rgba(4,4,14,.8),transparent 30%,transparent 70%,rgba(4,4,14,.8));transition:opacity .5s}
