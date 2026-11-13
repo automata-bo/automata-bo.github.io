@@ -53,9 +53,8 @@ function BrandLogo() {
     <img src={logoFull} alt="AUTOMATA" className="h-[23px] w-auto max-w-[190px] object-contain sm:h-[27px]" />
   </a>;
 }
-function Header({ page }: { page: PageKey }) {
+function Header() {
   const [open, setOpen] = useState(false);
-  const openAssistant = () => { setOpen(false); openChatWithSource(page); };
   return <header className="sticky top-0 z-50 border-b border-black/10 bg-white/70 text-black backdrop-blur-xl">
     <div className="showroom-header-inner relative mx-auto flex h-[68px] max-w-[1500px] items-center justify-between px-4 sm:px-7 lg:px-10">
       <BrandLogo/>
@@ -116,5 +115,5 @@ export default function V2App() {
   const page = currentPage();
   useEffect(() => { if (window.location.pathname.replace(/\/+$/, "") !== "/demos") trackEvent("page_view"); }, []);
   if (window.location.pathname.replace(/\/+$/, "") === "/demos") return <LegacyDigital/>;
-  return <div className="showroom-site min-h-screen overflow-x-clip bg-[#090b0f] text-white"><Header page={page}/><CookieConsent/><main>{page === "home" ? <HomePage/> : page === "digital" ? <DigitalPage/> : page === "experiences" ? <ExperiencesPage/> : page === "studio" ? <StudioPage/> : page === "projects" ? <ProjectsPage/> : <ContactPage/>}</main><Footer/><ChatWidget/></div>;
+  return <div className="showroom-site min-h-screen overflow-x-clip bg-[#090b0f] text-white"><Header/><CookieConsent/><main>{page === "home" ? <HomePage/> : page === "digital" ? <DigitalPage/> : page === "experiences" ? <ExperiencesPage/> : page === "studio" ? <StudioPage/> : page === "projects" ? <ProjectsPage/> : <ContactPage/>}</main><Footer/><ChatWidget/></div>;
 }
