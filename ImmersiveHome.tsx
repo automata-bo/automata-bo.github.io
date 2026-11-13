@@ -31,7 +31,17 @@ const demos: Record<DemoKey, { label: string; question: string; answer: string; 
 };
 
 function openAdvisor(interest?: "morph-assistant" | "morph-whatsapp") {
-  window.dispatchEvent(new CustomEvent("automata:open-chat", { detail: { source: "home", interest } }));
+  const detail = interest
+    ? {
+        source: "home",
+        productId: "digital-assistants",
+        action: "explore",
+        draft: interest === "morph-assistant"
+          ? "Quiero conocer MORPH Assistant para mi página web o aplicación."
+          : "Quiero conocer MORPH WhatsApp para la cuenta de WhatsApp Business de mi negocio."
+      }
+    : { source: "home" };
+  window.dispatchEvent(new CustomEvent("automata:open-chat", { detail }));
 }
 
 function Reveal({ children, className = "", delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
