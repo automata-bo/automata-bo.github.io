@@ -682,3 +682,20 @@ label{font-size:13px;font-weight:700;letter-spacing:.02em}
   .bilingual-motion__char{opacity:1!important;transform:none!important;animation:none!important}
 }
 
+
+
+/* HOME HERO · colored hover feedback for its three actions */
+.automata-editorial .auto-hero-center .auto-button-line:hover{
+  border-color:var(--auto-orange);
+  background:var(--auto-orange);
+  color:#fff;
+}
+
+/* MOBILE HEADER · centered brand with the menu control at the right */
+@media(max-width:639px){
+  .showroom-site>header>div:first-child>a[aria-label="AUTOMATA, inicio"]{
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+  }
+}

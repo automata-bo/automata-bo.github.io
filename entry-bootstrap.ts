@@ -1,7 +1,4 @@
 const startAutomata = () => import("./v2-entry");
 
-if (document.documentElement.dataset.introPending === "true") {
-  document.addEventListener("intro:done", startAutomata, { once: true });
-} else {
-  startAutomata();
-}
+// Mount the real page beneath the intro so the transition reveals the finished layout.
+startAutomata();
