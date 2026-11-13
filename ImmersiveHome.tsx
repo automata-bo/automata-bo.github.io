@@ -118,7 +118,7 @@ export default function ImmersiveHome() {
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(() => {
         const headerOffset = 68;
-        const travel = Math.max(1, track.offsetHeight - window.innerHeight);
+        const travel = Math.max(1, track.offsetHeight - (window.innerHeight - headerOffset));
         const rect = track.getBoundingClientRect();
         const progress = Math.max(0, Math.min(1, (headerOffset - rect.top) / travel));
         track.style.setProperty("--transition-progress", (progress * 100).toFixed(2) + "%");
