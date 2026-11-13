@@ -694,6 +694,11 @@ label{font-size:13px;font-weight:700;letter-spacing:.02em}
 }
 .showroom-header-inner .showroom-brand-logo{position:relative;z-index:1}
 .showroom-menu-button{border-left:0!important;padding-left:0!important}
+.automata-editorial .auto-button-line:hover{
+  background:var(--auto-violet);
+  border-color:var(--auto-violet);
+  color:#fff;
+}
 @media(max-width:640px){
   .showroom-header-inner .showroom-brand-logo{
     position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
