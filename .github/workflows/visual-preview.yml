@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - feature/automata-web-v2-architecture
+      - feat/morph-bilingual-motion
   pull_request:
     branches:
       - main
