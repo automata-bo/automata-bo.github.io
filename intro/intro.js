@@ -8,7 +8,7 @@ const de=document.documentElement,prevOv=de.style.overflow;de.dataset.introPendi
 const ai=document.createElement('div');ai.id='ai';
 ai.style.setProperty('--logo','url("'+base+'logo-blanco.webp")');
 ai.style.setProperty('--logoc','url("'+base+'logo-color.webp")');
-ai.innerHTML='<div class="glass"></div><div class="aura"></div><svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>'+[0,1,2,3].map(i=>'<filter id="mb'+i+'" x="-10%" y="-40%" width="120%" height="180%"><feGaussianBlur stdDeviation="0 0"/></filter>').join('')+'</defs></svg><div class="stage" role="img" aria-label="Automata"></div>';
+ai.innerHTML='<div class="glass"></div><div class="aura"></div><div class="stage" role="img" aria-label="Automata"></div>';
 de.appendChild(ai);
 const loaded=new Promise(r=>document.readyState==='complete'?r():addEventListener('load',r));
 let ended=false;
@@ -59,7 +59,6 @@ function build(){
 }
 function spin(r,i,idx,done){
   const T=2600+i*600,t0=performance.now()+250;
-  let prev=0,pt=t0;
   (function tick(now){
     if(idx!==run)return;
     if(now<t0){requestAnimationFrame(tick);return}
@@ -74,7 +73,7 @@ function spin(r,i,idx,done){
 function reveal(idx,prizes){
   stage.classList.add('win');
   prizes.forEach((el,i)=>{
-    el.animate([{opacity:0,transform:'translateY(-70%)',filter:'blur(8px)'},{opacity:1,transform:'translateY(6%)',filter:'blur(2px)',offset:.65},{opacity:1,transform:'translateY(0)',filter:'blur(0px)'}],
+    el.animate([{opacity:0,transform:'translate3d(0,-70%,0)'},{opacity:1,transform:'translate3d(0,6%,0)',offset:.65},{opacity:1,transform:'translate3d(0,0,0)'}],
       {duration:700,delay:450+i*150,easing:'cubic-bezier(.3,.7,.3,1)',fill:'forwards'}).onfinish=()=>{el.style.opacity=1;el.style.animation='glow .9s ease-out'};
   });
   setTimeout(()=>{if(idx!==run)return;ai.classList.add('formed');stage.classList.add('flash');setTimeout(()=>{loaded.then(()=>{if(idx!==run)return;ai.classList.add('out');setTimeout(end,1500)})},1900)},450+3*150+700);
