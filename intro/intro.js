@@ -4,7 +4,7 @@ const ONCE=true; /* true = solo una vez por sesión; false = en cada visita */
 const FORCE=new URLSearchParams(location.search).get('intro')==='1'; /* ?intro=1 permite volver a probarla */
 try{if(ONCE&&!FORCE&&sessionStorage.getItem('ai-seen'))return;if(ONCE&&!FORCE)sessionStorage.setItem('ai-seen','1')}catch(e){}
 const base=document.currentScript?new URL('.',document.currentScript.src).href:'';
-const de=document.documentElement,prevOv=de.style.overflow;de.style.overflow='hidden';
+const de=document.documentElement,prevOv=de.style.overflow;de.dataset.introPending='true';de.style.overflow='hidden';
 const ai=document.createElement('div');ai.id='ai';
 ai.style.setProperty('--logo','url("'+base+'logo-blanco.webp")');
 ai.style.setProperty('--logoc','url("'+base+'logo-color.webp")');
@@ -12,7 +12,7 @@ ai.innerHTML='<div class="glass"></div><div class="aura"></div><svg width="0" he
 de.appendChild(ai);
 const loaded=new Promise(r=>document.readyState==='complete'?r():addEventListener('load',r));
 let ended=false;
-function end(){if(ended)return;ended=true;de.style.overflow=prevOv;de.dataset.introDone='true';document.dispatchEvent(new CustomEvent('intro:done'));setTimeout(()=>ai.remove(),60)}
+function end(){if(ended)return;ended=true;de.style.overflow=prevOv;setTimeout(()=>{ai.remove();requestAnimationFrame(()=>{de.dataset.introDone='true';delete de.dataset.introPending;document.dispatchEvent(new CustomEvent('intro:done'))})},60)}
 setTimeout(end,20000); /* seguro: nunca bloquea la web más de 20 s */
 
 const E=[0,182,355,525,700],R=[0,172,343],W=700,H=343;
@@ -58,8 +58,7 @@ function build(){
   return {reels,prizes};
 }
 function spin(r,i,idx,done){
-  const T=2600+i*600,t0=performance.now()+250,hpx=r.el.clientHeight,f=document.getElementById('mb'+i).firstElementChild;
-  r.el.style.filter=`url(#mb${i})`;
+  const T=2600+i*600,t0=performance.now()+250;
   let prev=0,pt=t0;
   (function tick(now){
     if(idx!==run)return;
@@ -67,11 +66,8 @@ function spin(r,i,idx,done){
     const k=Math.min((now-t0)/T,1);
     let pos=(1-Math.pow(1-k,3))*(r.n-1);
     if(k>=1){const s=(now-t0-T)/380;if(s<1)pos+=.1*Math.sin(Math.PI*s)*(1-s)*2}
-    const v=Math.abs(pos-prev)/Math.max((now-pt)/1000,.001)*hpx;
-    f.setAttribute('stdDeviation','0 '+Math.min(12,v*.006).toFixed(2));
-    r.st.style.transform=`translateY(${-pos/r.m*100}%)`;
-    prev=pos;pt=now;
-    if(k>=1&&now-t0-T>380){r.st.style.transform=`translateY(${-(r.n-1)/r.m*100}%)`;r.el.style.filter='none';r.el.classList.add('land');done();return}
+    r.st.style.transform=`translate3d(0,${-pos/r.m*100}%,0)`;
+    if(k>=1&&now-t0-T>380){r.st.style.transform=`translate3d(0,${-(r.n-1)/r.m*100}%,0)`;r.el.classList.add('land');done();return}
     requestAnimationFrame(tick);
   })(performance.now());
 }
@@ -86,7 +82,7 @@ function reveal(idx,prizes){
 function play(){
   const idx=++run;ai.classList.remove('out','gone','formed');ai.classList.add('on');
   const {reels,prizes}=build();
-  if(mq.matches){reels.forEach(({el,st,n,m})=>{st.style.transform=`translateY(${-(n-1)/m*100}%)`;el.classList.add('land')});prizes.forEach(p=>p.style.opacity=1);setTimeout(()=>{if(idx!==run)return;ai.classList.add('out','gone');end()},900);return}
+  if(mq.matches){reels.forEach(({el,st,n,m})=>{st.style.transform=`translate3d(0,${-(n-1)/m*100}%,0)`;el.classList.add('land')});prizes.forEach(p=>p.style.opacity=1);setTimeout(()=>{if(idx!==run)return;ai.classList.add('out','gone');end()},900);return}
   let landed=0;
   reels.forEach((r,i)=>spin(r,i,idx,()=>{if(++landed===4)setTimeout(()=>{if(idx===run)reveal(idx,prizes)},250)}));
 }
