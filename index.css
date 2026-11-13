@@ -1061,3 +1061,12 @@ label{font-size:13px;font-weight:700;letter-spacing:.02em}
  .automata-editorial .auto-divisions-redesigned::before,.automata-editorial .auto-division-modal-backdrop,.automata-editorial .auto-division-modal{animation:none}
  .automata-editorial .auto-division-list-redesigned .auto-division{transition:none}
 }
+
+/* SCROLL-BOUND TRANSITION · flexible black surface between hero and divisions */
+.automata-editorial .auto-hero{position:sticky;top:0;z-index:1}
+.automata-editorial .auto-transition-track{--transition-progress:0;position:relative;z-index:3;height:180svh;margin:0;pointer-events:none}
+.automata-editorial .auto-transition-surface{position:sticky;top:0;width:100%;height:100svh;background:#07090d;clip-path:polygon(0 calc((1 - var(--transition-progress)) * 100% + 3%),16% calc((1 - var(--transition-progress)) * 100% - 1%),34% calc((1 - var(--transition-progress)) * 100% + 2%),53% calc((1 - var(--transition-progress)) * 100% - 4%),72% calc((1 - var(--transition-progress)) * 100% - 8%),88% calc((1 - var(--transition-progress)) * 100% - 12%),100% calc((1 - var(--transition-progress)) * 100% - 17%),100% 100%,0 100%);will-change:clip-path}
+.automata-editorial .auto-divisions-redesigned{position:relative;z-index:4;background:#07090d}
+.automata-editorial .auto-divisions-redesigned::before{content:none!important;animation:none!important}
+@media(max-width:640px){.automata-editorial .auto-transition-track{height:155svh}.automata-editorial .auto-transition-surface{height:100svh}}
+@media(prefers-reduced-motion:reduce){.automata-editorial .auto-transition-track{height:0}.automata-editorial .auto-transition-surface{display:none}.automata-editorial .auto-hero{position:relative}}
