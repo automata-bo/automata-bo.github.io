@@ -490,48 +490,117 @@ label{font-size:13px;font-weight:700;letter-spacing:.02em}
 }
 
 
-/* MORPH GEOMETRIC BACKGROUND · isolated hero layer */
-.automata-editorial .auto-hero{
+/* MORPH SERVICES SECTION · isolated dark experience */
+.automata-editorial .auto-morph-section{
   position:relative;
   isolation:isolate;
   overflow:hidden;
+  padding:clamp(88px,11vw,156px) clamp(20px,5vw,76px);
   background:#050505;
   color:#fff;
 }
-.automata-editorial .auto-hero-center,
-.automata-editorial .auto-hero-bottom{
+.automata-editorial .auto-morph-inner{
   position:relative;
   z-index:2;
+  width:min(100%,1500px);
+  margin:0 auto;
 }
-.automata-editorial .auto-hero-center .auto-overline{color:rgba(255,255,255,.68)}
-.automata-editorial .auto-hero-title> .auto-reveal:first-child{color:#fff}
-.automata-editorial .auto-hero-title> .auto-reveal:nth-child(2){color:#fff}
-.automata-editorial .auto-hero-manifesto{color:rgba(255,255,255,.82)}
-.automata-editorial .auto-hero-bottom{
-  color:rgba(255,255,255,.62);
-  border-color:rgba(255,255,255,.18);
+.automata-editorial .auto-morph-inner>.auto-reveal:first-child{max-width:1000px}
+.automata-editorial .auto-morph-inner .auto-overline{color:rgba(255,255,255,.62)}
+.automata-editorial .auto-morph-inner h2{
+  margin:24px 0 0;
+  font-size:clamp(3.2rem,8vw,8.2rem);
+  line-height:.88;
+  letter-spacing:-.065em;
 }
-.automata-editorial .auto-hero .auto-button-dark{
+.automata-editorial .auto-morph-inner h2 span{
+  background:linear-gradient(90deg,#22d3ee,#2563ff,#c026d3,#ff5a00);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+.auto-morph-intro{
+  max-width:590px;
+  margin:28px 0 0;
+  color:rgba(255,255,255,.72);
+  font-size:clamp(15px,1.4vw,18px);
+  line-height:1.65;
+}
+.auto-morph-products{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:16px;
+  margin-top:clamp(44px,6vw,76px);
+}
+.auto-morph-product{
+  position:relative;
+  min-height:430px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  gap:38px;
+  padding:clamp(24px,3vw,42px);
+  border:1px solid rgba(255,255,255,.2);
+  background:rgba(255,255,255,.045);
+  backdrop-filter:blur(5px);
+  transition:background .35s ease,border-color .35s ease,transform .35s ease;
+}
+.auto-morph-product:hover{
+  transform:translateY(-5px);
+  border-color:rgba(255,255,255,.42);
+  background:rgba(255,255,255,.075);
+}
+.auto-morph-product-index,.auto-morph-eyebrow{
+  font:700 9px "JetBrains Mono",monospace;
+  letter-spacing:.16em;
+  color:rgba(255,255,255,.58);
+}
+.auto-morph-eyebrow{margin:0 0 18px;color:#ff8b59}
+.auto-morph-product h3{
+  margin:0;
+  font-size:clamp(2.2rem,4vw,4.3rem);
+  line-height:.92;
+  letter-spacing:-.055em;
+}
+.auto-morph-product>div>p:last-child{
+  max-width:440px;
+  margin:22px 0 0;
+  color:rgba(255,255,255,.68);
+  font-size:14px;
+  line-height:1.7;
+}
+.auto-morph-product button{
+  display:inline-flex;
+  width:fit-content;
+  min-height:48px;
+  align-items:center;
+  gap:10px;
+  padding:0 18px;
+  border:1px solid rgba(255,255,255,.5);
+  border-radius:999px;
   background:#fff;
   color:#080808;
+  font-size:12px;
+  font-weight:800;
+  cursor:pointer;
+  transition:background .2s ease,transform .2s ease;
 }
-.automata-editorial .auto-hero .auto-button-dark:hover{background:#d9d9d9}
-.automata-editorial .auto-hero .auto-button-line{
-  border-color:rgba(255,255,255,.7);
-  color:#fff;
-}
-.automata-editorial .auto-hero .auto-button-line:hover{
-  background:rgba(255,255,255,.1);
+.auto-morph-product button:hover{transform:translateY(-2px);background:#e8e8e8}
+.auto-morph-footnote{
+  margin:28px 0 0;
+  color:rgba(255,255,255,.45);
+  font-size:11px;
+  line-height:1.6;
 }
 .morph-geometry{
   position:absolute;
   z-index:0;
   inset:50% auto auto 50%;
-  width:min(82vw, min(76vh, 820px));
+  width:min(74vw, min(76vh, 780px));
   aspect-ratio:1;
   transform:translate(-50%,-50%);
   pointer-events:none;
-  opacity:.76;
+  opacity:.42;
 }
 .morph-geometry svg{display:block;width:100%;height:100%;overflow:visible}
 .morph-geometry-halo{
@@ -549,24 +618,22 @@ label{font-size:13px;font-weight:700;letter-spacing:.02em}
   stroke-linejoin:round;
   filter:url(#morph-soft-glow);
 }
-@media(max-width:640px){
-  .morph-geometry{width:min(112vw, min(72vh, 620px));opacity:.52}
-}
-@media(prefers-reduced-motion:reduce){
-  .morph-geometry{opacity:.28}
-}
-
-
-/* The spectrum moves independently from the randomized geometry. */
-.morph-geometry-line,
-.morph-geometry-halo{
-  animation:morph-spectrum-drift 22s linear infinite;
-}
+.morph-geometry-line,.morph-geometry-halo{animation:morph-spectrum-drift 22s linear infinite}
 .morph-geometry-halo{animation-duration:28s}
 @keyframes morph-spectrum-drift{
   from{filter:hue-rotate(0deg) drop-shadow(0 0 5px rgba(124,58,237,.35))}
   to{filter:hue-rotate(360deg) drop-shadow(0 0 5px rgba(124,58,237,.35))}
 }
+@media(max-width:900px){
+  .auto-morph-products{grid-template-columns:1fr}
+  .auto-morph-product{min-height:370px}
+}
+@media(max-width:640px){
+  .automata-editorial .auto-morph-section{padding-top:76px;padding-bottom:76px}
+  .auto-morph-product{min-height:350px;padding:24px}
+  .morph-geometry{width:min(112vw,min(72vh,620px));opacity:.28}
+}
 @media(prefers-reduced-motion:reduce){
   .morph-geometry-line,.morph-geometry-halo{animation:none}
+  .auto-morph-product{transition:none}
 }
