@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import MorphGeometry from "./MorphGeometry";
 import { ArrowDownRight, ArrowRight, ArrowUpRight, Bot, Camera, Clapperboard, Heart, MessageCircle, MonitorSmartphone, Workflow } from "lucide-react";
 
 type DemoKey = "digital" | "experiences" | "studio";
@@ -72,6 +73,7 @@ export default function ImmersiveHome() {
 
   return <div className="automata-editorial">
     <section className="auto-hero" id="inicio">
+      <MorphGeometry />
       <div className="auto-hero-top">
         <span className="auto-kicker"><i /> DIGITAL EXPERIENCES &amp; INTELLIGENT SOLUTIONS</span>
         <span className="auto-index">TARIJA, BOLIVIA · 2026</span>
