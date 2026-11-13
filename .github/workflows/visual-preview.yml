@@ -106,9 +106,25 @@ jobs:
             await advisor.waitFor({ state: "visible" });
             await advisor.getByRole("button", { name: "Cerrar chat" }).click();
             await smokePage.getByRole("tab", { name: /Shared memories|Recuerdos compartidos/ }).click();
-            await smokePage.getByText(/Quiero que los invitados de mi boda compartan sus fotografías/).waitFor({ state: "visible" });
+            const weddingCopy = smokePage.locator(".auto-demo-preview .message-human p .bilingual-motion");
+            await weddingCopy.scrollIntoViewIfNeeded();
+            await smokePage.waitForFunction(() =>
+              document.querySelector(".auto-demo-preview .message-human p .bilingual-motion")?.getAttribute("aria-label")
+                === "I want wedding guests to share their photos."
+            );
+            await smokePage.waitForFunction(() =>
+              document.querySelector(".auto-demo-preview .message-human p .bilingual-motion")?.getAttribute("aria-label")
+                === "Quiero que los invitados de mi boda compartan sus fotografías.",
+              null,
+              { timeout: 15000 }
+            );
             await smokePage.getByRole("tab", { name: /An idea to tell|Una idea que contar/ }).click();
-            await smokePage.getByText(/Necesito presentar un producto/).waitFor({ state: "visible" });
+            const studioCopy = smokePage.locator(".auto-demo-preview .message-human p .bilingual-motion");
+            await studioCopy.scrollIntoViewIfNeeded();
+            await smokePage.waitForFunction(() =>
+              document.querySelector(".auto-demo-preview .message-human p .bilingual-motion")?.getAttribute("aria-label")
+                === "I need to present a product in a different way."
+            );
 
             await smokePage.goto("http://127.0.0.1:4173/digital/", { waitUntil: "domcontentloaded", timeout: 15000 });
             await smokePage.getByRole("button", { name: /Un consultorio/ }).click();
