@@ -88,7 +88,7 @@ export default function ImmersiveHome() {
           <p className="auto-hero-manifesto">100% HUMANO. <span>100% IA.</span> <strong>200% AUTOMATA.</strong></p>
           <div className="auto-actions">
             <a className="auto-button auto-button-dark" href="#divisiones">Explorar el estudio <ArrowDownRight size={17} /></a>
-            <button className="auto-button auto-button-line" onClick={openAdvisor}>Conversemos <ArrowUpRight size={17} /></button>
+            <button className="auto-button auto-button-line" onClick={() => openAdvisor()}>Conversemos <ArrowUpRight size={17} /></button>
           </div>
         </Reveal>
       </div>
@@ -164,7 +164,7 @@ export default function ImmersiveHome() {
             <div className="auto-message message-automata"><span><Bot size={14} /> AUTOMATA</span><p>{current.answer}</p></div>
           </div>
           <div className="auto-demo-result"><span>POSIBLE RESULTADO</span><p>{current.result}</p></div>
-          <div className="auto-demo-actions"><a className="auto-button auto-button-dark" href={current.href}>Conocer esta capacidad <ArrowUpRight size={16} /></a><button className="auto-button auto-button-line" onClick={openAdvisor}>Conversar con el asesor <MessageCircle size={16} /></button></div>
+          <div className="auto-demo-actions"><a className="auto-button auto-button-dark" href={current.href}>Conocer esta capacidad <ArrowUpRight size={16} /></a><button className="auto-button auto-button-line" onClick={() => openAdvisor()}>Conversar con el asesor <MessageCircle size={16} /></button></div>
         </div>
       </div>
       <div className="auto-project-links"><a href="/proyectos/">Ver todos los proyectos y prototipos <ArrowUpRight size={16} /></a><a href="/demos/">Abrir laboratorio de demos <ArrowUpRight size={16} /></a></div>
@@ -174,7 +174,7 @@ export default function ImmersiveHome() {
       <div className="auto-contact-orbit" aria-hidden="true" />
       <div className="auto-contact-inner">
         <Reveal><p className="auto-overline">04 — EL SIGUIENTE PASO</p><h2 className="auto-display">¿Y si hacemos<br /><span>algo extraordinario?</span></h2><p>Cuéntanos qué quieres conseguir. Primero entendemos la idea; después construimos el camino.</p></Reveal>
-        <Reveal delay={130}><button className="auto-button auto-button-dark" onClick={openAdvisor}>Hablemos de tu proyecto <ArrowUpRight size={18} /></button></Reveal>
+        <Reveal delay={130}><button className="auto-button auto-button-dark" onClick={() => openAdvisor()}>Hablemos de tu proyecto <ArrowUpRight size={18} /></button></Reveal>
       </div>
       <div className="auto-contact-bottom"><span>AUTOMATA · DIGITAL EXPERIENCES &amp; INTELLIGENT SOLUTIONS</span><span>TARIJA / BOLIVIA</span></div>
     </section>
