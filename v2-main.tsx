@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ArrowRight, ArrowUpRight, Bot, Camera, CheckCircle2, Clapperboard, Code2, Heart, Menu, MessageCircle, MonitorSmartphone, QrCode, Sparkles, Workflow, X } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Bot, Camera, CheckCircle2, Clapperboard, Code2, Heart, Menu, MessageCircle, MonitorSmartphone, QrCode, Sparkles, Workflow } from "lucide-react";
 import LegacyDigital from "./App";
 import ChatWidget from "./ChatWidget";
 import CookieConsent from "./CookieConsent";
@@ -55,17 +55,12 @@ function BrandLogo() {
 }
 function Header({ page }: { page: PageKey }) {
   const [open, setOpen] = useState(false);
-  const openAssistant = () => { setOpen(false); openChatWithSource(page); };
   return <header className="sticky top-0 z-50 border-b border-black/10 bg-white/95 text-black backdrop-blur">
-    <div className="mx-auto flex h-[68px] max-w-[1500px] items-center justify-between px-4 sm:px-7 lg:px-10">
+    <div className="relative mx-auto flex h-[68px] max-w-[1500px] items-center justify-between px-4 sm:px-7 lg:px-10">
       <BrandLogo/>
-      <div className="flex items-center gap-3 sm:gap-7">
-        <button onClick={openAssistant} className="font-mono text-[11px] font-bold uppercase tracking-[.14em] transition hover:text-[#7C3AED] sm:text-xs"><BilingualText en="Let’s talk" es="Hablemos" /> <span className="ml-1 inline-block">↗</span></button>
-        <button onClick={() => setOpen(v => !v)} aria-expanded={open} aria-label={open ? "Cerrar menú" : "Abrir menú"} className="flex items-center gap-2 border-l border-black/10 pl-3 sm:pl-6">
-          <span className="font-mono text-[11px] font-bold tracking-[.18em] sm:text-xs"><BilingualText en="MENU" es="MENÚ" /></span>
-          <span className="grid h-9 w-9 place-items-center">{open ? <X size={20}/> : <Menu size={20}/>}</span>
-        </button>
-      </div>
+      <button onClick={() => setOpen(v => !v)} aria-expanded={open} aria-label={open ? "Cerrar menú" : "Abrir menú"} className="grid h-10 w-10 place-items-center">
+        <Menu size={22}/>
+      </button>
     </div>
     {open && <nav className="border-t border-black/10 bg-white px-4 py-5 sm:px-7" aria-label="Navegación principal">
       <div className="mx-auto grid max-w-[1500px] gap-1">

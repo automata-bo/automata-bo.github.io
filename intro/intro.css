@@ -1,8 +1,11 @@
-html[data-intro-pending="true"] body{background:#fff!important}
+html[data-intro-pending="true"] #root{
+  filter:blur(9px);
+  transition:filter 1.2s ease;
+}
 #ai{position:fixed;inset:0;z-index:2147483000;display:grid;place-items:center}
 #ai.out{pointer-events:none}
 /* ===== Cristal ===== */
-#ai .glass{position:fixed;inset:0;background:rgba(255,255,255,.78);-webkit-backdrop-filter:blur(18px) saturate(125%);backdrop-filter:blur(18px) saturate(125%);opacity:0;pointer-events:none;transition:opacity .9s}
+#ai .glass{position:fixed;inset:0;background:rgba(5,8,14,.76);-webkit-backdrop-filter:blur(18px) saturate(125%);backdrop-filter:blur(18px) saturate(125%);opacity:0;pointer-events:none;transition:opacity .9s}
 #ai.on .glass{opacity:1}
 #ai.out .glass{opacity:0;transition:opacity 1.4s ease}
 #ai.out .stage{opacity:0;transform:translate3d(0,-12px,0);pointer-events:none}
