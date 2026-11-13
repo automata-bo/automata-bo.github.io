@@ -113,17 +113,36 @@ export default function ImmersiveHome() {
   useEffect(() => {
     const track = transitionRef.current;
     if (!track) return;
+    const root = document.documentElement;
+    const previousSnapType = root.style.scrollSnapType;
+    const previousScrollPadding = root.style.scrollPaddingTop;
     let frame = 0;
+    let lastScrollY = window.scrollY;
+
     const updateProgress = () => {
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(() => {
         const headerOffset = 68;
-        const travel = Math.max(1, track.offsetHeight - (window.innerHeight - headerOffset));
         const rect = track.getBoundingClientRect();
+        const travel = Math.max(1, track.offsetHeight - (window.innerHeight - headerOffset));
         const progress = Math.max(0, Math.min(1, (headerOffset - rect.top) / travel));
+        const movingDown = window.scrollY >= lastScrollY;
+        const transitionInView = rect.top < window.innerHeight && rect.bottom > 0;
+
         track.style.setProperty("--transition-progress", (progress * 100).toFixed(2) + "%");
+
+        // Snap only while entering this transition, so the rest of the site keeps natural scrolling.
+        if (transitionInView && movingDown) {
+          root.style.scrollSnapType = "y mandatory";
+          root.style.scrollPaddingTop = headerOffset + "px";
+        } else {
+          root.style.scrollSnapType = previousSnapType;
+          root.style.scrollPaddingTop = previousScrollPadding;
+        }
+        lastScrollY = window.scrollY;
       });
     };
+
     updateProgress();
     window.addEventListener("scroll", updateProgress, { passive: true });
     window.addEventListener("resize", updateProgress);
@@ -131,6 +150,8 @@ export default function ImmersiveHome() {
       cancelAnimationFrame(frame);
       window.removeEventListener("scroll", updateProgress);
       window.removeEventListener("resize", updateProgress);
+      root.style.scrollSnapType = previousSnapType;
+      root.style.scrollPaddingTop = previousScrollPadding;
     };
   }, []);
 
