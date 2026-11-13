@@ -108,6 +108,30 @@ export default function ImmersiveHome() {
   const current = demos[active];
   const [selectedDivision, setSelectedDivision] = useState<DemoKey | null>(null);
   const divisionsRef = useRef<HTMLElement>(null);
+  const transitionRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const track = transitionRef.current;
+    if (!track) return;
+    let frame = 0;
+    const updateProgress = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const rect = track.getBoundingClientRect();
+        const height = window.innerHeight || 1;
+        const progress = Math.max(0, Math.min(1, (height - rect.top) / height));
+        track.style.setProperty("--transition-progress", progress.toFixed(4));
+      });
+    };
+    updateProgress();
+    window.addEventListener("scroll", updateProgress, { passive: true });
+    window.addEventListener("resize", updateProgress);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", updateProgress);
+      window.removeEventListener("resize", updateProgress);
+    };
+  }, []);
 
   useEffect(() => {
     if (!selectedDivision) return;
@@ -147,6 +171,10 @@ export default function ImmersiveHome() {
       </div>
       <div className="auto-hero-bottom"><span><BilingualText en="DIGITAL STUDIO" es="ESTUDIO DIGITAL" /></span><span><BilingualText en="DESIGN · TECHNOLOGY · AI" es="DISEÑO · TECNOLOGÍA · IA" /></span><span><BilingualText en="SCROLL DOWN ↓" es="DESPLÁZATE ↓" /></span></div>
     </section>
+
+    <div className="auto-transition-track" ref={transitionRef} aria-hidden="true">
+      <div className="auto-transition-surface" />
+    </div>
 
     <section className="auto-divisions auto-divisions-redesigned" id="divisiones" ref={divisionsRef}>
       <div className="auto-section-intro">
