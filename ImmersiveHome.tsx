@@ -98,6 +98,7 @@ export default function ImmersiveHome() {
           <p className="auto-hero-manifesto">100% HUMANO. <span>100% IA.</span> <strong>200% AUTOMATA.</strong></p>
           <div className="auto-actions">
             <a className="auto-button auto-button-dark" href="#divisiones">Explorar el estudio <ArrowDownRight size={17} /></a>
+            <a className="auto-button auto-button-line" href="#morph">Meet Morph <ArrowUpRight size={17} /></a>
             <button className="auto-button auto-button-line" onClick={() => openAdvisor()}>Conversemos <ArrowUpRight size={17} /></button>
           </div>
         </Reveal>
