@@ -108,6 +108,31 @@ export default function ImmersiveHome() {
   const current = demos[active];
   const [selectedDivision, setSelectedDivision] = useState<DemoKey | null>(null);
   const divisionsRef = useRef<HTMLElement>(null);
+  const transitionRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const track = transitionRef.current;
+    if (!track) return;
+    let frame = 0;
+    const updateProgress = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const headerOffset = 68;
+        const travel = Math.max(1, track.offsetHeight - window.innerHeight);
+        const rect = track.getBoundingClientRect();
+        const progress = Math.max(0, Math.min(1, (headerOffset - rect.top) / travel));
+        track.style.setProperty("--transition-progress", (progress * 100).toFixed(2) + "%");
+      });
+    };
+    updateProgress();
+    window.addEventListener("scroll", updateProgress, { passive: true });
+    window.addEventListener("resize", updateProgress);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", updateProgress);
+      window.removeEventListener("resize", updateProgress);
+    };
+  }, []);
 
   useEffect(() => {
     if (!selectedDivision) return;
@@ -148,21 +173,25 @@ export default function ImmersiveHome() {
       <div className="auto-hero-bottom"><span><BilingualText en="DIGITAL STUDIO" es="ESTUDIO DIGITAL" /></span><span><BilingualText en="DESIGN · TECHNOLOGY · AI" es="DISEÑO · TECNOLOGÍA · IA" /></span><span><BilingualText en="SCROLL DOWN ↓" es="DESPLÁZATE ↓" /></span></div>
     </section>
 
+    <div className="auto-transition-track" ref={transitionRef} aria-hidden="true">
+      <div className="auto-transition-surface" />
+    </div>
+
     <section className="auto-divisions auto-divisions-redesigned" id="divisiones" ref={divisionsRef}>
       <div className="auto-section-intro">
         <Reveal><p className="auto-overline">01 — THE AUTOMATA ECOSYSTEM</p><h2 className="auto-display">Three divisions.<br /><span className="auto-gradient-text">One vision.</span></h2></Reveal>
         <Reveal delay={180}><p className="auto-section-copy"><BilingualText en="Three disciplines. One connected way to turn ideas into useful solutions, meaningful experiences, and stories worth telling." es="Tres disciplinas. Una forma integrada de convertir ideas en soluciones útiles, experiencias memorables e historias que merecen ser contadas." /></p></Reveal>
       </div>
       <div className="auto-division-list auto-division-list-redesigned">
-        <button type="button" className="auto-division division-blue" onClick={() => setSelectedDivision("digital")} aria-haspopup="dialog">
+        <Reveal delay={520} className="auto-division-reveal"><button type="button" className="auto-division division-blue" onClick={() => setSelectedDivision("digital")} aria-haspopup="dialog">
           <span className="auto-division-number">01</span><div className="auto-division-main"><h3 className="auto-display">Digital<span>.</span></h3><p><BilingualText en="Digital products and systems that make things work better." es="Productos y sistemas digitales que hacen que las cosas funcionen mejor." /></p><small>WEB · SISTEMAS · IA · AUTOMATIZACIÓN</small></div><span className="auto-division-arrow"><ArrowUpRight /></span>
-        </button>
-        <button type="button" className="auto-division division-pink" onClick={() => setSelectedDivision("experiences")} aria-haspopup="dialog">
+        </button></Reveal>
+        <Reveal delay={900} className="auto-division-reveal"><button type="button" className="auto-division division-pink" onClick={() => setSelectedDivision("experiences")} aria-haspopup="dialog">
           <span className="auto-division-number">02</span><div className="auto-division-main"><h3 className="auto-display">Experiences<span>.</span></h3><p><BilingualText en="Participatory moments that become shared memories." es="Momentos participativos que se convierten en recuerdos compartidos." /></p><small>EVENTOS · INTERACCIÓN · MEMORIAS DIGITALES</small></div><span className="auto-division-arrow"><ArrowUpRight /></span>
-        </button>
-        <button type="button" className="auto-division division-orange" onClick={() => setSelectedDivision("studio")} aria-haspopup="dialog">
+        </button></Reveal>
+        <Reveal delay={1280} className="auto-division-reveal"><button type="button" className="auto-division division-orange" onClick={() => setSelectedDivision("studio")} aria-haspopup="dialog">
           <span className="auto-division-number">03</span><div className="auto-division-main"><h3 className="auto-display">Studio<span>.</span></h3><p><BilingualText en="Ideas shaped into images, narratives, and audiovisual pieces." es="Ideas convertidas en imágenes, narrativas y piezas audiovisuales." /></p><small>PRODUCCIÓN · FOTOGRAFÍA · DIRECCIÓN CREATIVA</small></div><span className="auto-division-arrow"><ArrowUpRight /></span>
-        </button>
+        </button></Reveal>
       </div>
       <div className="auto-divisions-atmosphere" aria-hidden="true"><span>IDEAS</span><span>DESIGN</span><span>INTELLIGENCE</span><i /></div>
       <div className="auto-section-foot"><span>UNDERSTAND / IMAGINE / BUILD</span><span>SELECT A DIVISION ↗</span></div>
