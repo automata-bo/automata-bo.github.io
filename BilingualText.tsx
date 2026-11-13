@@ -1,34 +1,81 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 
 type Props = {
   en: string;
   es: string;
+  /** Minimum time the English version stays readable before changing. */
   delay?: number;
   className?: string;
 };
 
+const SPANISH_HOLD_MS = 120_000;
+
 /**
- * Starts in English, then assembles the editorial Spanish version from left to right.
- * Each phrase keeps its own deterministic start time and each character enters in sequence.
+ * Each phrase owns its own viewport lifecycle:
+ * English on entry -> Spanish after a readable pause -> English after two minutes.
+ * Leaving the viewport cancels its timers and resets the phrase to English.
  */
-export default function BilingualText({ en, es, delay = 1400, className = "" }: Props) {
+export default function BilingualText({ en, es, delay = 8_000, className = "" }: Props) {
   const [spanish, setSpanish] = useState(false);
-  const switchDelay = useMemo(() => {
+  const elementRef = useRef<HTMLSpanElement>(null);
+
+  const readingDelay = useMemo(() => {
     const hash = [...en].reduce((sum, char) => (sum * 31 + char.charCodeAt(0)) >>> 0, 7);
-    return delay + (hash % 6200);
+    // Small deterministic offsets keep phrases from changing in one synchronized burst.
+    return delay + (hash % 1_200);
   }, [delay, en]);
 
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setSpanish(true);
-      return;
+    const element = elementRef.current;
+    if (!element) return;
+
+    let isVisible = false;
+    let timer: number | undefined;
+
+    const clearCycle = () => {
+      if (timer !== undefined) {
+        window.clearTimeout(timer);
+        timer = undefined;
+      }
+    };
+
+    const runCycle = () => {
+      setSpanish(false);
+      timer = window.setTimeout(() => {
+        setSpanish(true);
+        timer = window.setTimeout(runCycle, SPANISH_HOLD_MS);
+      }, readingDelay);
+    };
+
+    const observer = typeof IntersectionObserver !== "undefined"
+      ? new IntersectionObserver(([entry]) => {
+          if (entry.isIntersecting && !isVisible) {
+            isVisible = true;
+            runCycle();
+          } else if (!entry.isIntersecting && isVisible) {
+            isVisible = false;
+            clearCycle();
+            setSpanish(false);
+          }
+        }, { threshold: 0.2, rootMargin: "0px 0px -6% 0px" })
+      : null;
+
+    if (observer) {
+      observer.observe(element);
+    } else {
+      isVisible = true;
+      runCycle();
     }
-    const timer = window.setTimeout(() => setSpanish(true), switchDelay);
-    return () => window.clearTimeout(timer);
-  }, [switchDelay]);
+
+    return () => {
+      clearCycle();
+      observer?.disconnect();
+    };
+  }, [readingDelay]);
 
   return (
     <span
+      ref={elementRef}
       className={`bilingual-motion ${className}`}
       lang={spanish ? "es" : "en"}
       aria-label={spanish ? es : en}
@@ -40,7 +87,7 @@ export default function BilingualText({ en, es, delay = 1400, className = "" }: 
             className="bilingual-motion__char"
             key={`${index}-${character}`}
             style={{ "--char-index": index } as React.CSSProperties}
-          >{character === " " ? "\u00a0" : character}</span>
+          >{character === " " ? "\\u00a0" : character}</span>
         ))}
       </span>
     </span>
