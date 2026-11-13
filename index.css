@@ -488,3 +488,85 @@ label{font-size:13px;font-weight:700;letter-spacing:.02em}
   .automata-editorial .auto-hero-manifesto strong,
   .automata-editorial .auto-contact-inner h2 span{animation:none}
 }
+
+
+/* MORPH GEOMETRIC BACKGROUND · isolated hero layer */
+.automata-editorial .auto-hero{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  background:#050505;
+  color:#fff;
+}
+.automata-editorial .auto-hero-center,
+.automata-editorial .auto-hero-bottom{
+  position:relative;
+  z-index:2;
+}
+.automata-editorial .auto-hero-center .auto-overline{color:rgba(255,255,255,.68)}
+.automata-editorial .auto-hero-title> .auto-reveal:first-child{color:#fff}
+.automata-editorial .auto-hero-title> .auto-reveal:nth-child(2){color:#fff}
+.automata-editorial .auto-hero-manifesto{color:rgba(255,255,255,.82)}
+.automata-editorial .auto-hero-bottom{
+  color:rgba(255,255,255,.62);
+  border-color:rgba(255,255,255,.18);
+}
+.automata-editorial .auto-hero .auto-button-dark{
+  background:#fff;
+  color:#080808;
+}
+.automata-editorial .auto-hero .auto-button-dark:hover{background:#d9d9d9}
+.automata-editorial .auto-hero .auto-button-line{
+  border-color:rgba(255,255,255,.7);
+  color:#fff;
+}
+.automata-editorial .auto-hero .auto-button-line:hover{
+  background:rgba(255,255,255,.1);
+}
+.morph-geometry{
+  position:absolute;
+  z-index:0;
+  inset:50% auto auto 50%;
+  width:min(82vw, min(76vh, 820px));
+  aspect-ratio:1;
+  transform:translate(-50%,-50%);
+  pointer-events:none;
+  opacity:.76;
+}
+.morph-geometry svg{display:block;width:100%;height:100%;overflow:visible}
+.morph-geometry-halo{
+  fill:none;
+  stroke:url(#morph-stroke-gradient);
+  stroke-width:2.8;
+  opacity:.28;
+  filter:url(#morph-soft-glow);
+}
+.morph-geometry-line{
+  fill:none;
+  stroke:url(#morph-stroke-gradient);
+  stroke-width:1.25;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  filter:url(#morph-soft-glow);
+}
+@media(max-width:640px){
+  .morph-geometry{width:min(112vw, min(72vh, 620px));opacity:.52}
+}
+@media(prefers-reduced-motion:reduce){
+  .morph-geometry{opacity:.28}
+}
+
+
+/* The spectrum moves independently from the randomized geometry. */
+.morph-geometry-line,
+.morph-geometry-halo{
+  animation:morph-spectrum-drift 22s linear infinite;
+}
+.morph-geometry-halo{animation-duration:28s}
+@keyframes morph-spectrum-drift{
+  from{filter:hue-rotate(0deg) drop-shadow(0 0 5px rgba(124,58,237,.35))}
+  to{filter:hue-rotate(360deg) drop-shadow(0 0 5px rgba(124,58,237,.35))}
+}
+@media(prefers-reduced-motion:reduce){
+  .morph-geometry-line,.morph-geometry-halo{animation:none}
+}

@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - feature/automata-web-v2-architecture
+      - feat/morph-bilingual-motion
   pull_request:
     branches:
       - main
@@ -71,7 +72,16 @@ jobs:
                 if (!response || !response.ok()) {
                   throw new Error(`HTTP ${response?.status() ?? "no response"}`);
                 }
+                // Make scroll-reveal content visible in full-page captures; the preview must not
+                // depend on a human scrolling through every section before the screenshot.
+                await page.addStyleTag({ content: ".auto-reveal { opacity: 1 !important; filter: none !important; transform: none !important; }" });
+                await page.evaluate(() => document.fonts.ready);
                 await page.screenshot({ path: `preview-shots/${name}-${viewport.label}.png`, fullPage: true, animations: "disabled" });
+                if (route === "/") {
+                  // Morph's first randomized transition takes up to 8.2 seconds to complete.
+                  await page.waitForTimeout(9000);
+                  await page.screenshot({ path: `preview-shots/home-morph-active-${viewport.label}.png`, fullPage: true, animations: "disabled" });
+                }
                 if (runtimeErrors.length) {
                   throw new Error(`Browser runtime errors: ${runtimeErrors.join("; ")}`);
                 }
@@ -91,13 +101,13 @@ jobs:
               window.open = ((url) => { window.__automataOpenedUrl = String(url ?? ""); return null; });
             });
             await smokePage.goto("http://127.0.0.1:4173/", { waitUntil: "domcontentloaded", timeout: 15000 });
-            await smokePage.getByRole("button", { name: /Conoce a nuestro asesor/ }).click();
+            await smokePage.getByRole("button", { name: /Conversemos/ }).click();
             const advisor = smokePage.getByRole("dialog", { name: "Asistente virtual de Automata" });
             await advisor.waitFor({ state: "visible" });
             await advisor.getByRole("button", { name: "Cerrar chat" }).click();
-            await smokePage.getByRole("button", { name: /Experiencia para eventos/ }).click();
-            await smokePage.getByText(/Quiero que los invitados de mi boda compartan sus fotos/).waitFor({ state: "visible" });
-            await smokePage.getByRole("button", { name: /Idea creativa/ }).click();
+            await smokePage.getByRole("tab", { name: /Recuerdos compartidos/ }).click();
+            await smokePage.getByText(/Quiero que los invitados de mi boda compartan sus fotografías/).waitFor({ state: "visible" });
+            await smokePage.getByRole("tab", { name: /Una idea que contar/ }).click();
             await smokePage.getByText(/Necesito presentar un producto/).waitFor({ state: "visible" });
 
             await smokePage.goto("http://127.0.0.1:4173/digital/", { waitUntil: "domcontentloaded", timeout: 15000 });
