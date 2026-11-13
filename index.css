@@ -643,9 +643,111 @@ label{font-size:13px;font-weight:700;letter-spacing:.02em}
 }
 
 
-/* BILINGUAL MOTION LANGUAGE */
-.bilingual-motion{display:inline-grid;grid-template-columns:minmax(0,1fr);vertical-align:baseline;max-width:100%;min-width:0;white-space:normal}
-.bilingual-motion__layer{grid-area:1/1;min-width:0;transition:opacity .72s cubic-bezier(.2,.7,.2,1),transform .72s cubic-bezier(.2,.7,.2,1),filter .72s ease}
-.bilingual-motion__layer.is-visible{opacity:1;transform:translateY(0);filter:blur(0);pointer-events:auto}
-.bilingual-motion__layer.is-hidden{opacity:0;transform:translateY(.22em);filter:blur(5px);pointer-events:none}
-@media(prefers-reduced-motion:reduce){.bilingual-motion__layer{transition:none!important;transform:none!important;filter:none!important}}
+/* BILINGUAL MOTION LANGUAGE · character-by-character horizontal assembly */
+.bilingual-motion{
+  display:inline-grid;
+  grid-template-columns:minmax(0,1fr);
+  vertical-align:baseline;
+  max-width:100%;
+  min-width:0;
+  white-space:normal;
+}
+.bilingual-motion__layer{
+  grid-area:1/1;
+  min-width:0;
+  transition:opacity .42s cubic-bezier(.2,.75,.25,1),transform .58s cubic-bezier(.16,1,.3,1),filter .42s ease;
+}
+.bilingual-motion__english.is-visible{
+  opacity:1;
+  transform:translate3d(0,0,0);
+  filter:blur(0);
+}
+.bilingual-motion__english.is-hidden{
+  opacity:0;
+  transform:translate3d(-.65em,0,0);
+  filter:blur(7px);
+  pointer-events:none;
+}
+.bilingual-motion__spanish{
+  display:block;
+}
+.bilingual-motion__spanish.is-hidden{
+  opacity:0;
+  transform:translate3d(.8em,0,0);
+  filter:blur(8px);
+  pointer-events:none;
+}
+.bilingual-motion__spanish.is-visible{
+  opacity:1;
+  transform:translate3d(0,0,0);
+  filter:blur(0);
+}
+.bilingual-motion__char{
+  display:inline-block;
+  opacity:0;
+  transform:translate3d(.62em,0,0) rotateX(-48deg);
+  filter:blur(5px);
+  transform-origin:50% 70%;
+}
+.bilingual-motion__spanish.is-visible .bilingual-motion__char{
+  animation:bilingual-char-arrive .52s cubic-bezier(.16,1,.3,1) both;
+  animation-delay:calc(var(--char-index,0) * 19ms);
+}
+@keyframes bilingual-char-arrive{
+  0%{opacity:0;transform:translate3d(.62em,0,0) rotateX(-48deg);filter:blur(5px)}
+  65%{opacity:1;filter:blur(0)}
+  100%{opacity:1;transform:translate3d(0,0,0) rotateX(0);filter:blur(0)}
+}
+@media(prefers-reduced-motion:reduce){
+  .bilingual-motion__layer{transition:none!important;transform:none!important;filter:none!important}
+  .bilingual-motion__char{opacity:1!important;transform:none!important;filter:none!important;animation:none!important}
+}
+
+/* Neon signal pass: a cyan-to-violet light sweep follows the character reveal. */
+.bilingual-motion__spanish{
+  position:relative;
+  isolation:isolate;
+}
+.bilingual-motion__spanish.is-visible::after{
+  content:"";
+  position:absolute;
+  z-index:2;
+  inset:-.08em -.16em;
+  pointer-events:none;
+  background:linear-gradient(105deg,
+    transparent 0%,
+    rgba(34,211,238,0) 34%,
+    rgba(34,211,238,.22) 46%,
+    rgba(192,132,252,.34) 51%,
+    rgba(34,211,238,.12) 56%,
+    transparent 70%);
+  background-size:240% 100%;
+  background-position:130% 0;
+  mix-blend-mode:screen;
+  animation:bilingual-neon-scan 1.05s cubic-bezier(.18,.72,.24,1) both;
+}
+.bilingual-motion__spanish.is-visible .bilingual-motion__char{
+  text-shadow:0 0 .32em currentColor,0 0 .8em rgba(34,211,238,.18);
+  animation-name:bilingual-char-arrive,bilingual-char-glow;
+  animation-duration:.56s,1.05s;
+  animation-timing-function:cubic-bezier(.16,1,.3,1),ease-out;
+  animation-fill-mode:both,both;
+  animation-delay:calc(var(--char-index,0) * 16ms),calc(var(--char-index,0) * 16ms);
+}
+@keyframes bilingual-neon-scan{
+  0%{opacity:0;background-position:130% 0}
+  18%{opacity:1}
+  100%{opacity:0;background-position:-30% 0}
+}
+@keyframes bilingual-char-glow{
+  0%{text-shadow:0 0 0 transparent}
+  45%{text-shadow:0 0 .42em currentColor,0 0 1.1em rgba(34,211,238,.32)}
+  100%{text-shadow:0 0 .16em currentColor,0 0 .45em rgba(168,85,247,.12)}
+}
+@media(prefers-reduced-motion:reduce){
+  .bilingual-motion__spanish.is-visible::after{animation:none!important;opacity:0!important}
+  .bilingual-motion__spanish.is-visible .bilingual-motion__char{
+    animation:none!important;
+    text-shadow:none!important;
+  }
+}
