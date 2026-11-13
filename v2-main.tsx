@@ -9,6 +9,7 @@ import logoFull from "./assets/automata.svg";
 import logoMonoWhite from "./assets/automataB.svg";
 
 import ImmersiveHome from "./ImmersiveHome";
+import BilingualText from "./BilingualText";
 import { DigitalExperience, ExperiencesExperience, StudioExperience, ProjectsExperience, ContactExperience } from "./ImmersiveSections";
 
 type PageKey = "home" | "digital" | "experiences" | "studio" | "projects" | "contact";
@@ -59,17 +60,17 @@ function Header({ page }: { page: PageKey }) {
     <div className="mx-auto flex h-[68px] max-w-[1500px] items-center justify-between px-4 sm:px-7 lg:px-10">
       <BrandLogo/>
       <div className="flex items-center gap-3 sm:gap-7">
-        <button onClick={openAssistant} className="font-mono text-[11px] font-bold uppercase tracking-[.14em] transition hover:text-[#7C3AED] sm:text-xs">Hablemos <span className="ml-1 inline-block">↗</span></button>
+        <button onClick={openAssistant} className="font-mono text-[11px] font-bold uppercase tracking-[.14em] transition hover:text-[#7C3AED] sm:text-xs"><BilingualText en="Let’s talk" es="Hablemos" /> <span className="ml-1 inline-block">↗</span></button>
         <button onClick={() => setOpen(v => !v)} aria-expanded={open} aria-label={open ? "Cerrar menú" : "Abrir menú"} className="flex items-center gap-2 border-l border-black/10 pl-3 sm:pl-6">
-          <span className="font-mono text-[11px] font-bold tracking-[.18em] sm:text-xs">MENU</span>
+          <span className="font-mono text-[11px] font-bold tracking-[.18em] sm:text-xs"><BilingualText en="MENU" es="MENÚ" /></span>
           <span className="grid h-9 w-9 place-items-center">{open ? <X size={20}/> : <Menu size={20}/>}</span>
         </button>
       </div>
     </div>
     {open && <nav className="border-t border-black/10 bg-white px-4 py-5 sm:px-7" aria-label="Navegación principal">
       <div className="mx-auto grid max-w-[1500px] gap-1">
-        {[["/","Inicio"],["/#morph","Meet Morph"],["/digital/","01 — Digital"],["/experiences/","02 — Experiences"],["/studio/","03 — Studio"],["/proyectos/","04 — Proyectos"],["/contacto/","05 — Contacto"]].map(([href,label]) =>
-          <a key={href} href={href} onClick={() => setOpen(false)} className="flex items-center justify-between py-3 text-left text-2xl font-black uppercase tracking-tight transition hover:text-[#EC4899] sm:text-3xl">{label}<ArrowUpRight size={24}/></a>
+        {[["/","Home|Inicio"],["/#morph","Meet Morph|Conoce Morph"],["/digital/","01 — Digital|01 — Digital"],["/experiences/","02 — Experiences|02 — Experiences"],["/studio/","03 — Studio|03 — Studio"],["/proyectos/","04 — Projects|04 — Proyectos"],["/contacto/","05 — Contact|05 — Contacto"]].map(([href,label]) =>
+          <a key={href} href={href} onClick={() => setOpen(false)} className="flex items-center justify-between py-3 text-left text-2xl font-black uppercase tracking-tight transition hover:text-[#EC4899] sm:text-3xl">{label.split("|").length===2?<BilingualText en={label.split("|")[0]} es={label.split("|")[1]} />:label}<ArrowUpRight size={24}/></a>
         )}
       </div>
     </nav>}
@@ -84,11 +85,11 @@ function Footer() {
       <p className="max-w-md text-sm leading-relaxed text-white/65">Digital Experiences & Intelligent Solutions. Tecnología, creatividad e inteligencia aplicadas a experiencias y soluciones digitales.</p>
       <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm font-semibold text-white/65">
         {nav.map(item => <a key={item.href} href={item.href} className="hover:text-[#FF5A00]">{item.label}</a>)}
-        <button type="button" onClick={() => window.dispatchEvent(new Event("automata:open-cookie-settings"))} className="text-left hover:text-[#FF5A00]">Preferencias de cookies</button>
+        <button type="button" onClick={() => window.dispatchEvent(new Event("automata:open-cookie-settings"))} className="text-left hover:text-[#FF5A00]"><BilingualText en="Cookie preferences" es="Preferencias de cookies" /></button>
       </div>
       <NewsletterSignup/>
     </div>
-    <div className="border-t border-white/10 py-4 text-center text-xs text-white/40">© {new Date().getFullYear()} AUTOMATA. Tecnología con intención.</div>
+    <div className="border-t border-white/10 py-4 text-center text-xs text-white/40">© {new Date().getFullYear()} AUTOMATA. <BilingualText en="Technology with intention." es="Tecnología con intención." /></div>
   </footer>;
 }
 function Hero({ page }: { page: PageKey }) {
