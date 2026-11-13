@@ -1,22 +1,22 @@
-html[data-intro-pending="true"] body{background:#060610!important}
+html[data-intro-pending="true"] body{background:#fff!important}
 #ai{position:fixed;inset:0;z-index:2147483000;display:grid;place-items:center}
 #ai.out{pointer-events:none}
 /* ===== Cristal ===== */
-#ai .glass{position:fixed;inset:0;background:rgba(6,6,16,.92);opacity:0;pointer-events:none;transition:opacity .9s}
+#ai .glass{position:fixed;inset:0;background:rgba(255,255,255,.78);-webkit-backdrop-filter:blur(18px) saturate(125%);backdrop-filter:blur(18px) saturate(125%);opacity:0;pointer-events:none;transition:opacity .9s}
 #ai.on .glass{opacity:1}
 #ai.out .glass{opacity:0;transition:opacity 1.4s ease}
 #ai.out .stage{opacity:0;transform:translate3d(0,-12px,0);pointer-events:none}
 #ai.gone .glass,#ai.gone .stage,#ai.gone .aura{visibility:hidden}
-#ai .aura{position:fixed;inset:0;pointer-events:none;opacity:0;transition:opacity .9s ease;background:radial-gradient(ellipse 46% 42% at 50% 50%,rgba(101,3,242,.55),rgba(249,38,245,.2) 35%,rgba(0,255,218,.12) 60%,transparent 100%)}
+#ai .aura{position:fixed;inset:0;pointer-events:none;opacity:0;transition:opacity .9s ease;background:radial-gradient(ellipse 38% 32% at 50% 50%,rgba(101,3,242,.12),rgba(249,38,245,.055) 38%,rgba(0,255,218,.035) 62%,transparent 100%)}
 #ai.formed .aura{opacity:1}
 #ai.out .aura{opacity:0;transition:opacity 1.4s ease}
 #ai .stage.flash{animation:logoGlow 1.9s ease-in-out}
-@keyframes logoGlow{0%,100%{filter:drop-shadow(0 10px 30px rgba(0,0,0,.35)) drop-shadow(0 0 0 rgba(249,38,245,0))}45%{filter:drop-shadow(0 10px 30px rgba(0,0,0,.2)) drop-shadow(0 0 26px rgba(249,38,245,.85))}}
+@keyframes logoGlow{0%,100%{filter:drop-shadow(0 10px 30px rgba(0,0,0,.18)) drop-shadow(0 0 0 rgba(249,38,245,0))}45%{filter:drop-shadow(0 10px 30px rgba(0,0,0,.12)) drop-shadow(0 0 26px rgba(249,38,245,.55))}}
 /* ===== Logo ===== */
-#ai .stage{position:relative;width:min(78vw,440px);aspect-ratio:885/434;cursor:pointer;filter:drop-shadow(0 10px 30px rgba(0,0,0,.35));transition:opacity .9s ease .1s,transform 1.3s ease;contain:layout paint}
-#ai .stage:focus-visible{outline:1px solid #fff;outline-offset:14px}
-#ai .reel{position:absolute;overflow:hidden;background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(255,255,255,.2);transition:background .5s,box-shadow .5s}
-#ai .reel::before{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(rgba(4,4,14,.8),transparent 30%,transparent 70%,rgba(4,4,14,.8));transition:opacity .5s}
+#ai .stage{position:relative;width:min(78vw,440px);aspect-ratio:885/434;cursor:pointer;filter:drop-shadow(0 10px 30px rgba(0,0,0,.18));transition:opacity .9s ease .1s,transform 1.3s ease;contain:layout paint}
+#ai .stage:focus-visible{outline:1px solid #777;outline-offset:14px}
+#ai .reel{position:absolute;overflow:hidden;background:rgba(255,255,255,.12);box-shadow:inset 0 0 0 1px rgba(30,35,45,.12);transition:background .5s,box-shadow .5s}
+#ai .reel::before{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(rgba(4,4,14,.28),transparent 30%,transparent 70%,rgba(4,4,14,.28));transition:opacity .5s}
 #ai .reel.land{background:none;box-shadow:none}
 #ai .reel.land::before{opacity:0}
 #ai .strip{position:absolute;left:0;top:0;width:100%;will-change:transform;transform:translate3d(0,0,0)}
@@ -26,5 +26,5 @@ html[data-intro-pending="true"] body{background:#060610!important}
 #ai .color{position:absolute;inset:0;pointer-events:none;background:var(--logoc) center/100% 100% no-repeat;-webkit-mask-image:linear-gradient(90deg,#000 33%,transparent 66%);mask-image:linear-gradient(90deg,#000 33%,transparent 66%);-webkit-mask-size:300% 100%;mask-size:300% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:100% 0;mask-position:100% 0;transition:-webkit-mask-position 1.4s ease,mask-position 1.4s ease}
 #ai.formed .color{-webkit-mask-position:0 0;mask-position:0 0}
 #ai .win .reel{animation:pulse 1s ease-out}
-@keyframes pulse{0%,100%{filter:drop-shadow(0 0 0 rgba(0,255,218,0))}35%{filter:drop-shadow(0 0 12px rgba(0,255,218,.95))}}
-@keyframes glow{0%,100%{filter:drop-shadow(0 0 0 rgba(249,38,245,0))}40%{filter:drop-shadow(0 0 14px rgba(249,38,245,.9))}}
+@keyframes pulse{0%,100%{filter:drop-shadow(0 0 0 rgba(0,255,218,0))}35%{filter:drop-shadow(0 0 12px rgba(0,255,218,.65))}}
+@keyframes glow{0%,100%{filter:drop-shadow(0 0 0 rgba(249,38,245,0))}40%{filter:drop-shadow(0 0 14px rgba(249,38,245,.6))}}
