@@ -1,7 +1,8 @@
 /* Intro de carga AUTOMATA. Ponla en el <head>, sin defer. */
 (function(){
 const ONCE=true; /* true = solo una vez por sesión; false = en cada visita */
-try{if(ONCE&&sessionStorage.getItem('ai-seen'))return;sessionStorage.setItem('ai-seen','1')}catch(e){}
+const FORCE=new URLSearchParams(location.search).get('intro')==='1'; /* ?intro=1 permite volver a probarla */
+try{if(ONCE&&!FORCE&&sessionStorage.getItem('ai-seen'))return;if(ONCE&&!FORCE)sessionStorage.setItem('ai-seen','1')}catch(e){}
 const base=document.currentScript?new URL('.',document.currentScript.src).href:'';
 const de=document.documentElement,prevOv=de.style.overflow;de.style.overflow='hidden';
 const ai=document.createElement('div');ai.id='ai';
@@ -11,7 +12,7 @@ ai.innerHTML='<div class="glass"></div><div class="aura"></div><svg width="0" he
 de.appendChild(ai);
 const loaded=new Promise(r=>document.readyState==='complete'?r():addEventListener('load',r));
 let ended=false;
-function end(){if(ended)return;ended=true;de.style.overflow=prevOv;document.dispatchEvent(new CustomEvent('intro:done'));setTimeout(()=>ai.remove(),60)}
+function end(){if(ended)return;ended=true;de.style.overflow=prevOv;de.dataset.introDone='true';document.dispatchEvent(new CustomEvent('intro:done'));setTimeout(()=>ai.remove(),60)}
 setTimeout(end,20000); /* seguro: nunca bloquea la web más de 20 s */
 
 const E=[0,182,355,525,700],R=[0,172,343],W=700,H=343;
