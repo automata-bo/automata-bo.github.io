@@ -821,7 +821,8 @@ label{font-size:13px;font-weight:700;letter-spacing:.02em}
   .automata-editorial .auto-division-list{
     display:flex;
     flex-direction:row;
-    width:100%;
+    width:100vw;
+    margin-left:-16px;
     height:100%;
     min-height:0;
     overflow-x:auto;
@@ -832,9 +833,9 @@ label{font-size:13px;font-weight:700;letter-spacing:.02em}
   }
   .automata-editorial .auto-division-list::-webkit-scrollbar{display:none}
   .automata-editorial .auto-division{
-    flex:0 0 100%;
-    width:100%;
-    min-width:100%;
+    flex:0 0 100vw;
+    width:100vw;
+    min-width:100vw;
     min-height:100%;
     height:100%;
     grid-template-columns:24px minmax(0,1fr) 30px;
