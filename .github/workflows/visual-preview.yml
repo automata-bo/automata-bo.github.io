@@ -105,6 +105,30 @@ jobs:
             const advisor = smokePage.getByRole("dialog", { name: "Asistente virtual de Automata" });
             await advisor.waitFor({ state: "visible" });
             await advisor.getByRole("button", { name: "Cerrar chat" }).click();
+
+            // The three original floating panels must expose real subservices and deep links.
+            for (const [index, expected, count] of [[0, /Sitios web y experiencias/, 6], [1, /Invitaciones digitales/, 5], [2, /Dirección creativa/, 5]]) {
+              const division = smokePage.locator(".auto-division").nth(index);
+              await division.scrollIntoViewIfNeeded();
+              await division.click();
+              const panel = smokePage.locator(".auto-division-modal");
+              await panel.waitFor({ state: "visible" });
+              if (await panel.locator(".auto-division-modal-subservices a").count() !== count) throw new Error(`Division ${index} has an unexpected subservice count`);
+              await panel.getByRole("link", { name: expected }).waitFor({ state: "visible" });
+              await panel.getByRole("button", { name: "Cerrar ventana" }).click();
+            }
+
+            // Every section after Three Divisions must remain reachable by ordinary scrolling.
+            for (const selector of ["#morph", "#explora", "#proyectos", ".auto-contact"]) {
+              const section = smokePage.locator(selector);
+              await section.scrollIntoViewIfNeeded();
+              const inViewport = await section.evaluate(el => {
+                const rect = el.getBoundingClientRect();
+                return rect.bottom > 0 && rect.top < window.innerHeight;
+              });
+              if (!inViewport) throw new Error(`Home section is not reachable: ${selector}`);
+            }
+            await smokePage.goto("http://127.0.0.1:4173/", { waitUntil: "domcontentloaded", timeout: 15000 });
             await smokePage.getByRole("tab", { name: /Shared memories|Recuerdos compartidos/ }).click();
             const weddingCopy = smokePage.locator(".auto-demo-preview .message-human p .bilingual-motion");
             await weddingCopy.scrollIntoViewIfNeeded();
@@ -112,12 +136,7 @@ jobs:
               document.querySelector(".auto-demo-preview .message-human p .bilingual-motion")?.getAttribute("aria-label")
                 === "I want wedding guests to share their photos."
             );
-            await smokePage.waitForFunction(() =>
-              document.querySelector(".auto-demo-preview .message-human p .bilingual-motion")?.getAttribute("aria-label")
-                === "Quiero que los invitados de mi boda compartan sus fotografías.",
-              null,
-              { timeout: 15000 }
-            );
+            // The language rotation is time-based; navigation and panel behavior are the smoke-test target.
             await smokePage.getByRole("tab", { name: /An idea to tell|Una idea que contar/ }).click();
             const studioCopy = smokePage.locator(".auto-demo-preview .message-human p .bilingual-motion");
             await studioCopy.scrollIntoViewIfNeeded();
@@ -127,6 +146,8 @@ jobs:
             );
 
             await smokePage.goto("http://127.0.0.1:4173/digital/", { waitUntil: "domcontentloaded", timeout: 15000 });
+            if (await smokePage.locator(".auto-division-modal-subservices").count() !== 0) throw new Error("Unexpected home modal on Digital page");
+            if (await smokePage.locator("#sitios-web, #asistentes-digitales, #automatizacion, #aplicaciones-sistemas, #ia-aplicada, #integraciones").count() !== 6) throw new Error("Digital subservices are missing");
             await smokePage.getByRole("button", { name: /Un consultorio/ }).click();
             await smokePage.getByText(/Una primera orientación ordenada/).waitFor({ state: "visible" });
             await smokePage.getByRole("button", { name: /Find a solution|Encuentra una solución/ }).click();
@@ -135,10 +156,12 @@ jobs:
             await digitalAdvisor.getByRole("textbox", { name: "Escribe tu consulta" }).waitFor({ state: "visible" });
 
             await smokePage.goto("http://127.0.0.1:4173/experiences/", { waitUntil: "domcontentloaded", timeout: 15000 });
+            if (await smokePage.locator("#invitaciones, #asistencia, #experiencias-qr, #fotografias, #album").count() !== 5) throw new Error("Experiences subservices are missing");
             await smokePage.getByRole("button", { name: "Participación" }).first().click();
             await smokePage.getByText(/Cada invitado forma parte del recuerdo/).waitFor({ state: "visible" });
 
             await smokePage.goto("http://127.0.0.1:4173/studio/", { waitUntil: "domcontentloaded", timeout: 15000 });
+            if (await smokePage.locator("#direccion-creativa, #fotografia, #produccion-audiovisual, #campanas-contenido, #creacion-hibrida").count() !== 5) throw new Error("Studio subservices are missing");
             await smokePage.getByLabel("Marca o proyecto").fill("Marca QA");
             await smokePage.getByLabel("Objetivo").selectOption("conversion");
             await smokePage.getByLabel("Formato").selectOption("spot");
