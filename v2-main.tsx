@@ -49,23 +49,18 @@ function currentPage(): PageKey {
   return "home";
 }
 function BrandLogo() {
-  return <a href="/" aria-label="AUTOMATA, inicio" className="inline-flex shrink-0 items-center">
+  return <a href="/" aria-label="AUTOMATA, inicio" className="showroom-brand-logo inline-flex shrink-0 items-center">
     <img src={logoFull} alt="AUTOMATA" className="h-[23px] w-auto max-w-[190px] object-contain sm:h-[27px]" />
   </a>;
 }
-function Header({ page }: { page: PageKey }) {
+function Header() {
   const [open, setOpen] = useState(false);
-  const openAssistant = () => { setOpen(false); openChatWithSource(page); };
-  return <header className="sticky top-0 z-50 border-b border-black/10 bg-white/95 text-black backdrop-blur">
-    <div className="mx-auto flex h-[68px] max-w-[1500px] items-center justify-between px-4 sm:px-7 lg:px-10">
+  return <header className="sticky top-0 z-50 border-b border-black/10 bg-white/70 text-black backdrop-blur-xl">
+    <div className="showroom-header-inner relative mx-auto flex h-[68px] max-w-[1500px] items-center justify-between px-4 sm:px-7 lg:px-10">
       <BrandLogo/>
-      <div className="flex items-center gap-3 sm:gap-7">
-        <button onClick={openAssistant} className="font-mono text-[11px] font-bold uppercase tracking-[.14em] transition hover:text-[#7C3AED] sm:text-xs"><BilingualText en="Let’s talk" es="Hablemos" /> <span className="ml-1 inline-block">↗</span></button>
-        <button onClick={() => setOpen(v => !v)} aria-expanded={open} aria-label={open ? "Cerrar menú" : "Abrir menú"} className="flex items-center gap-2 border-l border-black/10 pl-3 sm:pl-6">
-          <span className="font-mono text-[11px] font-bold tracking-[.18em] sm:text-xs"><BilingualText en="MENU" es="MENÚ" /></span>
-          <span className="grid h-9 w-9 place-items-center">{open ? <X size={20}/> : <Menu size={20}/>}</span>
-        </button>
-      </div>
+      <button onClick={() => setOpen(v => !v)} aria-expanded={open} aria-label={open ? "Cerrar menú" : "Abrir menú"} className="showroom-menu-button ml-auto grid h-10 w-10 place-items-center rounded-full border border-black/15 transition-colors hover:border-[#7C3AED] hover:bg-[#7C3AED] hover:text-white">
+        {open ? <X size={20}/> : <Menu size={20}/>}
+      </button>
     </div>
     {open && <nav className="border-t border-black/10 bg-white px-4 py-5 sm:px-7" aria-label="Navegación principal">
       <div className="mx-auto grid max-w-[1500px] gap-1">
@@ -120,5 +115,5 @@ export default function V2App() {
   const page = currentPage();
   useEffect(() => { if (window.location.pathname.replace(/\/+$/, "") !== "/demos") trackEvent("page_view"); }, []);
   if (window.location.pathname.replace(/\/+$/, "") === "/demos") return <LegacyDigital/>;
-  return <div className="showroom-site min-h-screen overflow-x-clip bg-[#090b0f] text-white"><Header page={page}/><CookieConsent/><main>{page === "home" ? <HomePage/> : page === "digital" ? <DigitalPage/> : page === "experiences" ? <ExperiencesPage/> : page === "studio" ? <StudioPage/> : page === "projects" ? <ProjectsPage/> : <ContactPage/>}</main><Footer/><ChatWidget/></div>;
+  return <div className="showroom-site min-h-screen overflow-x-clip bg-[#090b0f] text-white"><Header/><CookieConsent/><main>{page === "home" ? <HomePage/> : page === "digital" ? <DigitalPage/> : page === "experiences" ? <ExperiencesPage/> : page === "studio" ? <StudioPage/> : page === "projects" ? <ProjectsPage/> : <ContactPage/>}</main><Footer/><ChatWidget/></div>;
 }

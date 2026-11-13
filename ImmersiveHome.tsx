@@ -106,6 +106,51 @@ function ColorField() {
 export default function ImmersiveHome() {
   const [active, setActive] = useState<DemoKey>("digital");
   const current = demos[active];
+  const divisionsRef = useRef<HTMLElement>(null);
+  const divisionListRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const section = divisionsRef.current;
+    const list = divisionListRef.current;
+    if (!section || !list) return;
+
+    let touchX = 0;
+    let touchY = 0;
+    const isMobile = () => window.matchMedia("(max-width: 640px)").matches;
+    const position = () => isMobile() ? list.scrollLeft : list.scrollTop;
+    const maximum = () => isMobile() ? list.scrollWidth - list.clientWidth : list.scrollHeight - list.clientHeight;
+    const canMove = (delta: number) => delta > 0 ? position() < maximum() - 2 : position() > 2;
+
+    const onWheel = (event: WheelEvent) => {
+      if (Math.abs(event.deltaY) < Math.abs(event.deltaX)) return;
+      if (!canMove(event.deltaY)) return;
+      event.preventDefault();
+      if (isMobile()) list.scrollBy({ left: event.deltaY, behavior: "auto" });
+      else list.scrollBy({ top: event.deltaY, behavior: "auto" });
+    };
+    const onTouchStart = (event: TouchEvent) => {
+      touchX = event.touches[0].clientX;
+      touchY = event.touches[0].clientY;
+    };
+    const onTouchMove = (event: TouchEvent) => {
+      if (!isMobile()) return;
+      const touch = event.touches[0];
+      const deltaX = touchX - touch.clientX;
+      const deltaY = touchY - touch.clientY;
+      if (Math.abs(deltaY) <= Math.abs(deltaX) || !canMove(deltaY)) return;
+      event.preventDefault();
+      list.scrollLeft += deltaY;
+      touchY = touch.clientY;
+    };
+    section.addEventListener("wheel", onWheel, { passive: false });
+    section.addEventListener("touchstart", onTouchStart, { passive: true });
+    section.addEventListener("touchmove", onTouchMove, { passive: false });
+    return () => {
+      section.removeEventListener("wheel", onWheel);
+      section.removeEventListener("touchstart", onTouchStart);
+      section.removeEventListener("touchmove", onTouchMove);
+    };
+  }, []);
 
   return <div className="automata-editorial">
     <section className="auto-hero" id="inicio">
@@ -132,23 +177,23 @@ export default function ImmersiveHome() {
       <div className="auto-hero-bottom"><span><BilingualText en="DIGITAL STUDIO" es="ESTUDIO DIGITAL" /></span><span><BilingualText en="DESIGN · TECHNOLOGY · AI" es="DISEÑO · TECNOLOGÍA · IA" /></span><span><BilingualText en="SCROLL DOWN ↓" es="DESPLÁZATE ↓" /></span></div>
     </section>
 
-    <section className="auto-divisions" id="divisiones">
+    <section className="auto-divisions" id="divisiones" ref={divisionsRef}>
       <div className="auto-section-intro">
-        <Reveal><p className="auto-overline"><BilingualText en="01 — THE AUTOMATA ECOSYSTEM" es="01 — EL ECOSISTEMA AUTOMATA" /></p><h2 className="auto-display"><BilingualText en="Three divisions." es="Tres divisiones." /><br /><span className="auto-gradient-text"><BilingualText en="One vision." es="Una visión." /></span></h2></Reveal>
+        <Reveal><p className="auto-overline">01 — THE AUTOMATA ECOSYSTEM</p><h2 className="auto-display">Three divisions.<br /><span className="auto-gradient-text">One vision.</span></h2></Reveal>
         <Reveal delay={120}><p className="auto-section-copy"><BilingualText en="We don’t build technology for its own sake. We bring disciplines together to create useful solutions, memorable experiences, and stories worth telling." es="No hacemos tecnología por hacerla. Unimos disciplinas para crear soluciones útiles, experiencias memorables e historias que merecen ser contadas." /></p></Reveal>
       </div>
-      <div className="auto-division-list">
-        <Reveal><a className="auto-division division-blue" href="/digital/">
+      <div className="auto-division-list" ref={divisionListRef}>
+        <a className="auto-division division-blue" href="/digital/">
           <span className="auto-division-number">01</span><div className="auto-division-main"><h3 className="auto-display">Digital<span>.</span></h3><p><BilingualText en="We build tools and systems that make things work better." es="Construimos herramientas y sistemas que hacen que las cosas funcionen mejor." /></p><small>WEB · SISTEMAS · IA · AUTOMATIZACIÓN</small></div><span className="auto-division-arrow"><ArrowUpRight /></span>
-        </a></Reveal>
-        <Reveal delay={90}><a className="auto-division division-pink" href="/experiences/">
+        </a>
+        <a className="auto-division division-pink" href="/experiences/">
           <span className="auto-division-number">02</span><div className="auto-division-main"><h3 className="auto-display">Experiences<span>.</span></h3><p><BilingualText en="We design participatory moments that become shared memories." es="Diseñamos momentos participativos que se convierten en recuerdos compartidos." /></p><small>EVENTOS · INTERACCIÓN · MEMORIAS DIGITALES</small></div><span className="auto-division-arrow"><ArrowUpRight /></span>
-        </a></Reveal>
-        <Reveal delay={180}><a className="auto-division division-orange" href="/studio/">
+        </a>
+        <a className="auto-division division-orange" href="/studio/">
           <span className="auto-division-number">03</span><div className="auto-division-main"><h3 className="auto-display">Studio<span>.</span></h3><p><BilingualText en="We turn ideas into images, narratives, and audiovisual pieces." es="Convertimos ideas en imágenes, narrativas y piezas audiovisuales." /></p><small>PRODUCCIÓN · FOTOGRAFÍA · DIRECCIÓN CREATIVA</small></div><span className="auto-division-arrow"><ArrowUpRight /></span>
-        </a></Reveal>
+        </a>
       </div>
-      <div className="auto-section-foot"><span><BilingualText en="UNDERSTAND / IMAGINE / BUILD" es="COMPRENDER / IMAGINAR / CONSTRUIR" /></span><span><BilingualText en="SCROLL TO EXPLORE ↓" es="SCROLL PARA EXPLORAR ↓" /></span></div>
+      <div className="auto-section-foot"><span>UNDERSTAND / IMAGINE / BUILD</span><span>SCROLL TO EXPLORE ↓</span></div>
     </section>
 
     <section className="auto-morph-section" id="morph">

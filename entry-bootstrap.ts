@@ -1,7 +1,3 @@
-const startAutomata = () => import("./v2-entry");
-
-if (document.documentElement.dataset.introPending === "true") {
-  document.addEventListener("intro:done", startAutomata, { once: true });
-} else {
-  startAutomata();
-}
+// Render the real page immediately. The intro remains above it as a glass overlay;
+// Reveal and BilingualText wait for intro:done before starting their own motion.
+import("./v2-entry");

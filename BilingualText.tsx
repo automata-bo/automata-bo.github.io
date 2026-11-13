@@ -28,6 +28,8 @@ export default function BilingualText({ en, es, delay = 8_000, className = "" }:
   useEffect(() => {
     const element = elementRef.current;
     if (!element) return;
+    const explanatoryParagraph = element.closest("p");
+    if (!explanatoryParagraph || explanatoryParagraph.matches(".auto-overline, .auto-hero-manifesto")) return;
 
     let isVisible = false;
     let timer: number | undefined;
