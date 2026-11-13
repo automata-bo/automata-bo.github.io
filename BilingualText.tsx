@@ -15,14 +15,14 @@ const SPANISH_HOLD_MS = 120_000;
  * English on entry -> Spanish after a readable pause -> English after two minutes.
  * Leaving the viewport cancels its timers and resets the phrase to English.
  */
-export default function BilingualText({ en, es, delay = 8_000, className = "" }: Props) {
+export default function BilingualText({ en, es, delay = 3_500, className = "" }: Props) {
   const [spanish, setSpanish] = useState(false);
   const elementRef = useRef<HTMLSpanElement>(null);
 
   const readingDelay = useMemo(() => {
     const hash = [...en].reduce((sum, char) => (sum * 31 + char.charCodeAt(0)) >>> 0, 7);
     // Small deterministic offsets keep phrases from changing in one synchronized burst.
-    return delay + (hash % 1_200);
+    return delay + (hash % 500);
   }, [delay, en]);
 
   useEffect(() => {
