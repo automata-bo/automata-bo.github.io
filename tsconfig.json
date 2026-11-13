@@ -2,11 +2,7 @@
   "compilerOptions": {
     "target": "ES2020",
     "useDefineForClassFields": true,
-    "lib": [
-      "ES2020",
-      "DOM",
-      "DOM.Iterable"
-    ],
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
     "moduleResolution": "Bundler",
@@ -18,16 +14,6 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false
   },
-  "include": [
-    "App.tsx",
-    "ChatWidget.tsx",
-    "CookieConsent.tsx",
-    "NewsletterSignup.tsx",
-    "analytics.ts",
-    "api.ts",
-    "main.tsx",
-    "v2-main.tsx",
-    "v2-entry.tsx",
-    "vite-env.d.ts"
-  ]
+  "include": ["./*.ts", "./*.tsx"],
+  "exclude": ["node_modules", "dist", "worker"]
 }
