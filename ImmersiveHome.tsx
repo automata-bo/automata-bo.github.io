@@ -106,51 +106,22 @@ function ColorField() {
 export default function ImmersiveHome() {
   const [active, setActive] = useState<DemoKey>("digital");
   const current = demos[active];
+  const [selectedDivision, setSelectedDivision] = useState<DemoKey | null>(null);
   const divisionsRef = useRef<HTMLElement>(null);
-  const divisionListRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const section = divisionsRef.current;
-    const list = divisionListRef.current;
-    if (!section || !list) return;
-
-    let touchX = 0;
-    let touchY = 0;
-    const isMobile = () => window.matchMedia("(max-width: 640px)").matches;
-    const position = () => isMobile() ? list.scrollLeft : list.scrollTop;
-    const maximum = () => isMobile() ? list.scrollWidth - list.clientWidth : list.scrollHeight - list.clientHeight;
-    const canMove = (delta: number) => delta > 0 ? position() < maximum() - 2 : position() > 2;
-
-    const onWheel = (event: WheelEvent) => {
-      if (Math.abs(event.deltaY) < Math.abs(event.deltaX)) return;
-      if (!canMove(event.deltaY)) return;
-      event.preventDefault();
-      if (isMobile()) list.scrollBy({ left: event.deltaY, behavior: "auto" });
-      else list.scrollBy({ top: event.deltaY, behavior: "auto" });
+    if (!selectedDivision) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setSelectedDivision(null);
     };
-    const onTouchStart = (event: TouchEvent) => {
-      touchX = event.touches[0].clientX;
-      touchY = event.touches[0].clientY;
-    };
-    const onTouchMove = (event: TouchEvent) => {
-      if (!isMobile()) return;
-      const touch = event.touches[0];
-      const deltaX = touchX - touch.clientX;
-      const deltaY = touchY - touch.clientY;
-      if (Math.abs(deltaY) <= Math.abs(deltaX) || !canMove(deltaY)) return;
-      event.preventDefault();
-      list.scrollLeft += deltaY;
-      touchY = touch.clientY;
-    };
-    section.addEventListener("wheel", onWheel, { passive: false });
-    section.addEventListener("touchstart", onTouchStart, { passive: true });
-    section.addEventListener("touchmove", onTouchMove, { passive: false });
+    window.addEventListener("keydown", onKeyDown);
     return () => {
-      section.removeEventListener("wheel", onWheel);
-      section.removeEventListener("touchstart", onTouchStart);
-      section.removeEventListener("touchmove", onTouchMove);
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onKeyDown);
     };
-  }, []);
+  }, [selectedDivision]);
 
   return <div className="automata-editorial">
     <section className="auto-hero" id="inicio">
@@ -177,24 +148,40 @@ export default function ImmersiveHome() {
       <div className="auto-hero-bottom"><span><BilingualText en="DIGITAL STUDIO" es="ESTUDIO DIGITAL" /></span><span><BilingualText en="DESIGN · TECHNOLOGY · AI" es="DISEÑO · TECNOLOGÍA · IA" /></span><span><BilingualText en="SCROLL DOWN ↓" es="DESPLÁZATE ↓" /></span></div>
     </section>
 
-    <section className="auto-divisions" id="divisiones" ref={divisionsRef}>
+    <section className="auto-divisions auto-divisions-redesigned" id="divisiones" ref={divisionsRef}>
       <div className="auto-section-intro">
         <Reveal><p className="auto-overline">01 — THE AUTOMATA ECOSYSTEM</p><h2 className="auto-display">Three divisions.<br /><span className="auto-gradient-text">One vision.</span></h2></Reveal>
-        <Reveal delay={120}><p className="auto-section-copy"><BilingualText en="We don’t build technology for its own sake. We bring disciplines together to create useful solutions, memorable experiences, and stories worth telling." es="No hacemos tecnología por hacerla. Unimos disciplinas para crear soluciones útiles, experiencias memorables e historias que merecen ser contadas." /></p></Reveal>
+        <Reveal delay={180}><p className="auto-section-copy"><BilingualText en="Three disciplines. One connected way to turn ideas into useful solutions, meaningful experiences, and stories worth telling." es="Tres disciplinas. Una forma integrada de convertir ideas en soluciones útiles, experiencias memorables e historias que merecen ser contadas." /></p></Reveal>
       </div>
-      <div className="auto-division-list" ref={divisionListRef}>
-        <a className="auto-division division-blue" href="/digital/">
-          <span className="auto-division-number">01</span><div className="auto-division-main"><h3 className="auto-display">Digital<span>.</span></h3><p><BilingualText en="We build tools and systems that make things work better." es="Construimos herramientas y sistemas que hacen que las cosas funcionen mejor." /></p><small>WEB · SISTEMAS · IA · AUTOMATIZACIÓN</small></div><span className="auto-division-arrow"><ArrowUpRight /></span>
-        </a>
-        <a className="auto-division division-pink" href="/experiences/">
-          <span className="auto-division-number">02</span><div className="auto-division-main"><h3 className="auto-display">Experiences<span>.</span></h3><p><BilingualText en="We design participatory moments that become shared memories." es="Diseñamos momentos participativos que se convierten en recuerdos compartidos." /></p><small>EVENTOS · INTERACCIÓN · MEMORIAS DIGITALES</small></div><span className="auto-division-arrow"><ArrowUpRight /></span>
-        </a>
-        <a className="auto-division division-orange" href="/studio/">
-          <span className="auto-division-number">03</span><div className="auto-division-main"><h3 className="auto-display">Studio<span>.</span></h3><p><BilingualText en="We turn ideas into images, narratives, and audiovisual pieces." es="Convertimos ideas en imágenes, narrativas y piezas audiovisuales." /></p><small>PRODUCCIÓN · FOTOGRAFÍA · DIRECCIÓN CREATIVA</small></div><span className="auto-division-arrow"><ArrowUpRight /></span>
-        </a>
+      <div className="auto-division-list auto-division-list-redesigned">
+        <button type="button" className="auto-division division-blue" onClick={() => setSelectedDivision("digital")} aria-haspopup="dialog">
+          <span className="auto-division-number">01</span><div className="auto-division-main"><h3 className="auto-display">Digital<span>.</span></h3><p><BilingualText en="Digital products and systems that make things work better." es="Productos y sistemas digitales que hacen que las cosas funcionen mejor." /></p><small>WEB · SISTEMAS · IA · AUTOMATIZACIÓN</small></div><span className="auto-division-arrow"><ArrowUpRight /></span>
+        </button>
+        <button type="button" className="auto-division division-pink" onClick={() => setSelectedDivision("experiences")} aria-haspopup="dialog">
+          <span className="auto-division-number">02</span><div className="auto-division-main"><h3 className="auto-display">Experiences<span>.</span></h3><p><BilingualText en="Participatory moments that become shared memories." es="Momentos participativos que se convierten en recuerdos compartidos." /></p><small>EVENTOS · INTERACCIÓN · MEMORIAS DIGITALES</small></div><span className="auto-division-arrow"><ArrowUpRight /></span>
+        </button>
+        <button type="button" className="auto-division division-orange" onClick={() => setSelectedDivision("studio")} aria-haspopup="dialog">
+          <span className="auto-division-number">03</span><div className="auto-division-main"><h3 className="auto-display">Studio<span>.</span></h3><p><BilingualText en="Ideas shaped into images, narratives, and audiovisual pieces." es="Ideas convertidas en imágenes, narrativas y piezas audiovisuales." /></p><small>PRODUCCIÓN · FOTOGRAFÍA · DIRECCIÓN CREATIVA</small></div><span className="auto-division-arrow"><ArrowUpRight /></span>
+        </button>
       </div>
-      <div className="auto-section-foot"><span>UNDERSTAND / IMAGINE / BUILD</span><span>SCROLL TO EXPLORE ↓</span></div>
+      <div className="auto-divisions-atmosphere" aria-hidden="true"><span>IDEAS</span><span>DESIGN</span><span>INTELLIGENCE</span><i /></div>
+      <div className="auto-section-foot"><span>UNDERSTAND / IMAGINE / BUILD</span><span>SELECT A DIVISION ↗</span></div>
     </section>
+    {selectedDivision && <div className="auto-division-modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setSelectedDivision(null); }}>
+      <section className={"auto-division-modal division-modal-" + selectedDivision} role="dialog" aria-modal="true" aria-labelledby="division-modal-title">
+        <button type="button" className="auto-division-modal-close" onClick={() => setSelectedDivision(null)} aria-label="Cerrar ventana"><span>×</span></button>
+        <p className="auto-overline">AUTOMATA / 0{selectedDivision === "digital" ? "1" : selectedDivision === "experiences" ? "2" : "3"}</p>
+        <h2 id="division-modal-title" className="auto-display">{selectedDivision === "digital" ? "Digital." : selectedDivision === "experiences" ? "Experiences." : "Studio."}</h2>
+        <p className="auto-division-modal-lead">{selectedDivision === "digital" ? <BilingualText en="We design digital products, websites, intelligent assistants, automations, and integrations around real needs." es="Diseñamos productos digitales, sitios web, asistentes inteligentes, automatizaciones e integraciones alrededor de necesidades reales." /> : selectedDivision === "experiences" ? <BilingualText en="We create interactive experiences for people, events, and brands, connecting moments through thoughtful digital layers." es="Creamos experiencias interactivas para personas, eventos y marcas, conectando momentos mediante capas digitales pensadas con intención." /> : <BilingualText en="We bring ideas to life through audiovisual production, photography, creative direction, and hybrid creation with AI." es="Damos forma a ideas mediante producción audiovisual, fotografía, dirección creativa y creación híbrida con IA." />}</p>
+        <div className="auto-division-modal-details">
+          <span>{selectedDivision === "digital" ? "WEB · SYSTEMS · AI · AUTOMATION" : selectedDivision === "experiences" ? "EVENTS · INTERACTION · SHARED MEMORIES" : "PRODUCTION · PHOTOGRAPHY · CREATIVE DIRECTION"}</span>
+          <p>{selectedDivision === "digital" ? "Technology designed around people and real processes." : selectedDivision === "experiences" ? "Invitations, event interactions, QR galleries, and shared albums." : "Concept, visual language, storytelling, and audiovisual pieces."}</p>
+        </div>
+        <button type="button" className="auto-division-modal-cta" onClick={() => { const draft = selectedDivision === "digital" ? "Quiero conversar sobre una solución Digital." : selectedDivision === "experiences" ? "Quiero diseñar una Experience." : "Quiero desarrollar un proyecto con Studio."; setSelectedDivision(null); window.dispatchEvent(new CustomEvent("automata:open-chat", { detail: { source: "home", action: "explore", draft } })); }}>
+          <BilingualText en="Start a conversation" es="Conversemos sobre tu idea" /> <ArrowUpRight size={17} />
+        </button>
+      </section>
+    </div>}
 
     <section className="auto-morph-section" id="morph">
       <MorphGeometry />
