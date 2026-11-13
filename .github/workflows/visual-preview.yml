@@ -77,6 +77,11 @@ jobs:
                 await page.addStyleTag({ content: ".auto-reveal { opacity: 1 !important; filter: none !important; transform: none !important; }" });
                 await page.evaluate(() => document.fonts.ready);
                 await page.screenshot({ path: `preview-shots/${name}-${viewport.label}.png`, fullPage: true, animations: "disabled" });
+                if (route === "/") {
+                  // Morph's first randomized transition takes up to 8.2 seconds to complete.
+                  await page.waitForTimeout(9000);
+                  await page.screenshot({ path: `preview-shots/home-morph-active-${viewport.label}.png`, fullPage: true, animations: "disabled" });
+                }
                 if (runtimeErrors.length) {
                   throw new Error(`Browser runtime errors: ${runtimeErrors.join("; ")}`);
                 }
