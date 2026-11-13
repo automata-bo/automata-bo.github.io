@@ -19,6 +19,10 @@ export default function BilingualText({ en, es, delay = 1400, className = "" }: 
   }, [delay, en]);
 
   useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setSpanish(true);
+      return;
+    }
     const timer = window.setTimeout(() => setSpanish(true), switchDelay);
     return () => window.clearTimeout(timer);
   }, [switchDelay]);
