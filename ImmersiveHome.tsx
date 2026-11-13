@@ -4,6 +4,31 @@ import BilingualText from "./BilingualText";
 import { ArrowDownRight, ArrowRight, ArrowUpRight, Bot, Camera, Clapperboard, Heart, MessageCircle, MonitorSmartphone, Workflow } from "lucide-react";
 
 type DemoKey = "digital" | "experiences" | "studio";
+const divisionServices: Record<DemoKey, { title: string; description: string; href: string }[]> = {
+  digital: [
+    { title: "Sitios web y experiencias", description: "Páginas que presentan servicios, captan consultas y funcionan en móvil.", href: "/digital/#sitios-web" },
+    { title: "Asistentes digitales", description: "Atención inicial, respuestas frecuentes y derivación al equipo humano.", href: "/digital/#asistentes-digitales" },
+    { title: "Automatización de procesos", description: "Registros, avisos y tareas repetitivas conectadas.", href: "/digital/#automatizacion" },
+    { title: "Aplicaciones y sistemas", description: "Herramientas a medida para organizar información y operaciones.", href: "/digital/#aplicaciones-sistemas" },
+    { title: "Inteligencia artificial aplicada", description: "Clasificación, extracción y asistencia con supervisión.", href: "/digital/#ia-aplicada" },
+    { title: "Integraciones", description: "Conexiones entre plataformas, APIs y servicios.", href: "/digital/#integraciones" }
+  ],
+  experiences: [
+    { title: "Invitaciones digitales", description: "Piezas personalizadas con información y acceso al evento.", href: "/experiences/#invitaciones" },
+    { title: "Confirmación de asistencia", description: "Registro de invitados y organización de respuestas.", href: "/experiences/#asistencia" },
+    { title: "Experiencias con QR", description: "Accesos físicos que conectan a los invitados con experiencias digitales.", href: "/experiences/#experiencias-qr" },
+    { title: "Fotografías compartidas", description: "Participación de invitados desde sus propios teléfonos.", href: "/experiences/#fotografias" },
+    { title: "Álbum comunitario", description: "Recopilación personalizada de recuerdos para los anfitriones.", href: "/experiences/#album" }
+  ],
+  studio: [
+    { title: "Dirección creativa", description: "Concepto, referencias, lenguaje visual y narrativa.", href: "/studio/#direccion-creativa" },
+    { title: "Fotografía", description: "Retrato, producto, espacios y cobertura de momentos.", href: "/studio/#fotografia" },
+    { title: "Producción audiovisual", description: "Preproducción, rodaje, edición y piezas finales.", href: "/studio/#produccion-audiovisual" },
+    { title: "Campañas y contenido", description: "Piezas para presentar marcas, productos y servicios.", href: "/studio/#campanas-contenido" },
+    { title: "Creación híbrida con IA", description: "Recursos generativos integrados con criterio en el proceso creativo.", href: "/studio/#creacion-hibrida" }
+  ]
+};
+
 const demos: Record<DemoKey, { label: string; labelEn: string; question: string; questionEn: string; answer: string; answerEn: string; result: string; resultEn: string; href: string; tag: string }> = {
   digital: {
     label: "Atención inteligente",
@@ -113,11 +138,7 @@ export default function ImmersiveHome() {
   useEffect(() => {
     const track = transitionRef.current;
     if (!track) return;
-    const root = document.documentElement;
-    const previousSnapType = root.style.scrollSnapType;
-    const previousScrollPadding = root.style.scrollPaddingTop;
     let frame = 0;
-    let lastScrollY = window.scrollY;
 
     const updateProgress = () => {
       cancelAnimationFrame(frame);
@@ -126,22 +147,7 @@ export default function ImmersiveHome() {
         const rect = track.getBoundingClientRect();
         const travel = Math.max(1, track.offsetHeight - (window.innerHeight - headerOffset));
         const progress = Math.max(0, Math.min(1, (headerOffset - rect.top) / travel));
-        const movingDown = window.scrollY >= lastScrollY;
-        // Release mandatory snapping as soon as the divisions section reaches the fixed header.
-        // Keeping it active below this point traps the rest of the page on this single snap target.
-        const transitionInView = rect.top < window.innerHeight && rect.bottom > headerOffset;
-
         track.style.setProperty("--transition-progress", (progress * 100).toFixed(2) + "%");
-
-        // Snap only while entering this transition, so the rest of the site keeps natural scrolling.
-        if (transitionInView && movingDown) {
-          root.style.scrollSnapType = "y mandatory";
-          root.style.scrollPaddingTop = headerOffset + "px";
-        } else {
-          root.style.scrollSnapType = previousSnapType;
-          root.style.scrollPaddingTop = previousScrollPadding;
-        }
-        lastScrollY = window.scrollY;
       });
     };
 
@@ -152,8 +158,6 @@ export default function ImmersiveHome() {
       cancelAnimationFrame(frame);
       window.removeEventListener("scroll", updateProgress);
       window.removeEventListener("resize", updateProgress);
-      root.style.scrollSnapType = previousSnapType;
-      root.style.scrollPaddingTop = previousScrollPadding;
     };
   }, []);
 
@@ -226,8 +230,12 @@ export default function ImmersiveHome() {
         <h2 id="division-modal-title" className="auto-display">{selectedDivision === "digital" ? "Digital." : selectedDivision === "experiences" ? "Experiences." : "Studio."}</h2>
         <p className="auto-division-modal-lead">{selectedDivision === "digital" ? <BilingualText en="We design digital products, websites, intelligent assistants, automations, and integrations around real needs." es="Diseñamos productos digitales, sitios web, asistentes inteligentes, automatizaciones e integraciones alrededor de necesidades reales." /> : selectedDivision === "experiences" ? <BilingualText en="We create interactive experiences for people, events, and brands, connecting moments through thoughtful digital layers." es="Creamos experiencias interactivas para personas, eventos y marcas, conectando momentos mediante capas digitales pensadas con intención." /> : <BilingualText en="We bring ideas to life through audiovisual production, photography, creative direction, and hybrid creation with AI." es="Damos forma a ideas mediante producción audiovisual, fotografía, dirección creativa y creación híbrida con IA." />}</p>
         <div className="auto-division-modal-details">
-          <span>{selectedDivision === "digital" ? "WEB · SYSTEMS · AI · AUTOMATION" : selectedDivision === "experiences" ? "EVENTS · INTERACTION · SHARED MEMORIES" : "PRODUCTION · PHOTOGRAPHY · CREATIVE DIRECTION"}</span>
-          <p>{selectedDivision === "digital" ? "Technology designed around people and real processes." : selectedDivision === "experiences" ? "Invitations, event interactions, QR galleries, and shared albums." : "Concept, visual language, storytelling, and audiovisual pieces."}</p>
+          <span>EXPLORA LOS SUBSERVICIOS</span>
+          <div className="auto-division-modal-subservices">
+            {divisionServices[selectedDivision].map((service) => <a key={service.href} href={service.href} onClick={() => setSelectedDivision(null)}>
+              <strong>{service.title}</strong><small>{service.description}</small><ArrowUpRight size={15} />
+            </a>)}
+          </div>
         </div>
         <a className="auto-division-modal-cta" href={selectedDivision === "digital" ? "/digital/" : selectedDivision === "experiences" ? "/experiences/" : "/studio/"} onClick={() => setSelectedDivision(null)}>
           <BilingualText en="Explore the service" es="Explorar el servicio" /> <ArrowUpRight size={17} />
