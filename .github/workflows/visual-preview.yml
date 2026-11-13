@@ -96,9 +96,9 @@ jobs:
             const advisor = smokePage.getByRole("dialog", { name: "Asistente virtual de Automata" });
             await advisor.waitFor({ state: "visible" });
             await advisor.getByRole("button", { name: "Cerrar chat" }).click();
-            await smokePage.getByRole("button", { name: /Recuerdos compartidos/ }).click();
+            await smokePage.getByRole("tab", { name: /Recuerdos compartidos/ }).click();
             await smokePage.getByText(/Quiero que los invitados de mi boda compartan sus fotografías/).waitFor({ state: "visible" });
-            await smokePage.getByRole("button", { name: /Una idea que contar/ }).click();
+            await smokePage.getByRole("tab", { name: /Una idea que contar/ }).click();
             await smokePage.getByText(/Necesito presentar un producto/).waitFor({ state: "visible" });
 
             await smokePage.goto("http://127.0.0.1:4173/digital/", { waitUntil: "domcontentloaded", timeout: 15000 });
