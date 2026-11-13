@@ -9,16 +9,15 @@ import logoFull from "./assets/automata.svg";
 import logoMonoWhite from "./assets/automataB.svg";
 
 import ImmersiveHome from "./ImmersiveHome";
-import BilingualText from "./BilingualText";
 import { DigitalExperience, ExperiencesExperience, StudioExperience, ProjectsExperience, ContactExperience } from "./ImmersiveSections";
 
 type PageKey = "home" | "digital" | "experiences" | "studio" | "projects" | "contact";
 const nav = [
-  { label: <BilingualText en="Digital" es="Digital" />, href: "/digital/" },
-  { label: <BilingualText en="Experiences" es="Experiences" />, href: "/experiences/" },
-  { label: <BilingualText en="Studio" es="Studio" />, href: "/studio/" },
-  { label: <BilingualText en="Projects" es="Proyectos" />, href: "/proyectos/" },
-  { label: <BilingualText en="Contact" es="Contacto" />, href: "/contacto/" },
+  { label: "Digital", href: "/digital/" },
+  { label: "Experiences", href: "/experiences/" },
+  { label: "Studio", href: "/studio/" },
+  { label: "Proyectos", href: "/proyectos/" },
+  { label: "Contacto", href: "/contacto/" },
 ];
 const pageMeta: Record<PageKey, { eyebrow: string; title: string; description: string }> = {
   home: { eyebrow: "Digital Experiences & Intelligent Solutions", title: "Diseñamos experiencias digitales y soluciones inteligentes.", description: "Tecnología, creatividad e inteligencia aplicadas a experiencias y soluciones digitales." },
@@ -29,9 +28,9 @@ const pageMeta: Record<PageKey, { eyebrow: string; title: string; description: s
   contact: { eyebrow: "HABLEMOS", title: "Toda buena solución empieza entendiendo el problema.", description: "Cuéntanos qué quieres conseguir. Primero escuchamos; después proponemos el camino adecuado." },
 };
 const divisions = [
-  { key: "digital" as const, title: <BilingualText en="Digital" es="Digital" />, line: "Construimos soluciones digitales.", description: "Sitios web, aplicaciones, asistentes, automatización e integraciones.", href: "/digital/", icon: MonitorSmartphone, number: "01" },
-  { key: "experiences" as const, title: <BilingualText en="Experiences" es="Experiences" />, line: "Creamos experiencias memorables.", description: "Invitaciones, experiencias para eventos, álbumes colaborativos y recorridos interactivos.", href: "/experiences/", icon: Heart, number: "02" },
-  { key: "studio" as const, title: <BilingualText en="Studio" es="Studio" />, line: "Producimos comunicación y contenido.", description: "Audiovisual, fotografía, campañas y producción creativa asistida por IA.", href: "/studio/", icon: Clapperboard, number: "03" },
+  { key: "digital" as const, title: "Digital", line: "Construimos soluciones digitales.", description: "Sitios web, aplicaciones, asistentes, automatización e integraciones.", href: "/digital/", icon: MonitorSmartphone, number: "01" },
+  { key: "experiences" as const, title: "Experiences", line: "Creamos experiencias memorables.", description: "Invitaciones, experiencias para eventos, álbumes colaborativos y recorridos interactivos.", href: "/experiences/", icon: Heart, number: "02" },
+  { key: "studio" as const, title: "Studio", line: "Producimos comunicación y contenido.", description: "Audiovisual, fotografía, campañas y producción creativa asistida por IA.", href: "/studio/", icon: Clapperboard, number: "03" },
 ];
 function openChatWithSource(source: PageKey) {
   window.dispatchEvent(new CustomEvent("automata:open-chat", { detail: { source } }));
@@ -61,7 +60,7 @@ function Header({ page }: { page: PageKey }) {
       <BrandLogo/>
       <div className="flex items-center gap-3 sm:gap-7">
         <button onClick={openAssistant} className="font-mono text-[11px] font-bold uppercase tracking-[.14em] transition hover:text-[#7C3AED] sm:text-xs">Hablemos <span className="ml-1 inline-block">↗</span></button>
-        <button onClick={() => setOpen(v => !v)} aria-expanded={open} aria-label={open ? <BilingualText en="Close menu" es="Cerrar menú" /> : <BilingualText en="Open menu" es="Abrir menú" />} className="flex items-center gap-2 border-l border-black/10 pl-3 sm:pl-6">
+        <button onClick={() => setOpen(v => !v)} aria-expanded={open} aria-label={open ? "Cerrar menú" : "Abrir menú"} className="flex items-center gap-2 border-l border-black/10 pl-3 sm:pl-6">
           <span className="font-mono text-[11px] font-bold tracking-[.18em] sm:text-xs">MENU</span>
           <span className="grid h-9 w-9 place-items-center">{open ? <X size={20}/> : <Menu size={20}/>}</span>
         </button>
@@ -69,7 +68,7 @@ function Header({ page }: { page: PageKey }) {
     </div>
     {open && <nav className="border-t border-black/10 bg-white px-4 py-5 sm:px-7" aria-label="Navegación principal">
       <div className="mx-auto grid max-w-[1500px] gap-1">
-        {[["/",<BilingualText en="Home" es="Inicio" />],["/#morph",<BilingualText en="Meet Morph" es="Meet Morph" />],["/digital/","01 — Digital"],["/experiences/","02 — Experiences"],["/studio/","03 — Studio"],["/proyectos/","04 — Proyectos"],["/contacto/","05 — Contacto"]].map(([href,label]) =>
+        {[["/","Inicio"],["/#morph","Meet Morph"],["/digital/","01 — Digital"],["/experiences/","02 — Experiences"],["/studio/","03 — Studio"],["/proyectos/","04 — Proyectos"],["/contacto/","05 — Contacto"]].map(([href,label]) =>
           <a key={href} href={href} onClick={() => setOpen(false)} className="flex items-center justify-between py-3 text-left text-2xl font-black uppercase tracking-tight transition hover:text-[#EC4899] sm:text-3xl">{label}<ArrowUpRight size={24}/></a>
         )}
       </div>
