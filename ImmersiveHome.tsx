@@ -30,8 +30,8 @@ const demos: Record<DemoKey, { label: string; question: string; answer: string; 
   }
 };
 
-function openAdvisor() {
-  window.dispatchEvent(new CustomEvent("automata:open-chat", { detail: { source: "home" } }));
+function openAdvisor(interest?: "morph-assistant" | "morph-whatsapp") {
+  window.dispatchEvent(new CustomEvent("automata:open-chat", { detail: { source: "home", interest } }));
 }
 
 function Reveal({ children, className = "", delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
@@ -73,7 +73,6 @@ export default function ImmersiveHome() {
 
   return <div className="automata-editorial">
     <section className="auto-hero" id="inicio">
-      <MorphGeometry />
       <div className="auto-hero-top">
         <span className="auto-kicker"><i /> DIGITAL EXPERIENCES &amp; INTELLIGENT SOLUTIONS</span>
         <span className="auto-index">TARIJA, BOLIVIA · 2026</span>
@@ -113,6 +112,27 @@ export default function ImmersiveHome() {
         </a></Reveal>
       </div>
       <div className="auto-section-foot"><span>COMPRENDER / IMAGINAR / CONSTRUIR</span><span>SCROLL PARA EXPLORAR ↓</span></div>
+    </section>
+
+    <section className="auto-morph-section" id="morph">
+      <MorphGeometry />
+      <div className="auto-morph-inner">
+        <Reveal><p className="auto-overline">MORPH / ASISTENTES INTELIGENTES</p><h2 className="auto-display">La inteligencia<br />que trabaja <span>contigo.</span></h2></Reveal>
+        <Reveal delay={120}><p className="auto-morph-intro">Dos formas de integrar asistencia inteligente en los espacios donde ocurre tu negocio. Una experiencia coherente, diseñada y gestionada por AUTOMATA.</p></Reveal>
+        <div className="auto-morph-products">
+          <Reveal><article className="auto-morph-product">
+            <span className="auto-morph-product-index">01 / WEB &amp; APPS</span>
+            <div><p className="auto-morph-eyebrow">MORPH ASSISTANT</p><h3 className="auto-display">Tu asistente.<br />En tu espacio digital.</h3><p>Un asistente inteligente integrado en tu página web o aplicación. Atiende consultas, orienta a tus visitantes y conecta cada conversación con el siguiente paso.</p></div>
+            <button type="button" onClick={() => openAdvisor("morph-assistant")}>Conocer MORPH Assistant <ArrowUpRight size={17} /></button>
+          </article></Reveal>
+          <Reveal delay={120}><article className="auto-morph-product">
+            <span className="auto-morph-product-index">02 / WHATSAPP BUSINESS</span>
+            <div><p className="auto-morph-eyebrow">MORPH WHATSAPP</p><h3 className="auto-display">Tu negocio.<br />En cada conversación.</h3><p>Un asistente inteligente para la cuenta de WhatsApp Business de tu negocio. Responde, organiza solicitudes y acompaña la atención sin perder el control humano.</p></div>
+            <button type="button" onClick={() => openAdvisor("morph-whatsapp")}>Conocer MORPH WhatsApp <ArrowUpRight size={17} /></button>
+          </article></Reveal>
+        </div>
+        <p className="auto-morph-footnote">MORPH es un servicio gestionado de AUTOMATA. La tecnología trabaja detrás; tu negocio conserva el control de sus canales y conversaciones.</p>
+      </div>
     </section>
 
     <section className="auto-explore" id="explora">
