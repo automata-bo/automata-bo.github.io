@@ -129,7 +129,7 @@ export default function ImmersiveHome() {
     <section className="auto-morph-section" id="morph">
       <MorphGeometry />
       <div className="auto-morph-inner">
-        <Reveal><p className="auto-overline"><BilingualText en="MORPH / INTELLIGENT ASSISTANTS" es="MORPH / ASISTENTES INTELIGENTES" /></p><h2 className="auto-display"><BilingualText en="Intelligence" es="La inteligencia" /><br /><BilingualText en="that works" es="que trabaja" /> <span><BilingualText en="with you." es="contigo." /></span></h2></Reveal>
+        <Reveal><p className="auto-overline"><BilingualText en="MORPH / INTELLIGENT ASSISTANTS" es="MORPH / ASISTENTES INTELIGENTES" /></p><h2 className="auto-display"><BilingualText en="Intelligence" es="La inteligencia" /><br /><BilingualText en="that works" es="que trabaja" /> <BilingualText className="auto-gradient-text" en="with you." es="contigo." /></h2></Reveal>
         <Reveal delay={120}><p className="auto-morph-intro"><BilingualText en="Two ways to bring intelligent assistance into the spaces where your business happens. One coherent experience, designed and managed by AUTOMATA." es="Dos formas de integrar asistencia inteligente en los espacios donde ocurre tu negocio. Una experiencia coherente, diseñada y gestionada por AUTOMATA." /></p></Reveal>
         <div className="auto-morph-products">
           <Reveal><article className="auto-morph-product">
