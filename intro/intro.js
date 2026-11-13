@@ -12,7 +12,7 @@ ai.innerHTML='<div class="glass"></div><div class="aura"></div><svg width="0" he
 de.appendChild(ai);
 const loaded=new Promise(r=>document.readyState==='complete'?r():addEventListener('load',r));
 let ended=false;
-function end(){if(ended)return;ended=true;de.style.overflow=prevOv;document.dispatchEvent(new CustomEvent('intro:done'));setTimeout(()=>ai.remove(),60)}
+function end(){if(ended)return;ended=true;de.style.overflow=prevOv;de.dataset.introDone='true';document.dispatchEvent(new CustomEvent('intro:done'));setTimeout(()=>ai.remove(),60)}
 setTimeout(end,20000); /* seguro: nunca bloquea la web más de 20 s */
 
 const E=[0,182,355,525,700],R=[0,172,343],W=700,H=343;
