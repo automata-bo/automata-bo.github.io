@@ -1214,3 +1214,13 @@ label{font-size:13px;font-weight:700;letter-spacing:.02em}
  .automata-editorial .auto-division-modal-subservices{grid-template-columns:1fr;gap:8px}
  .automata-editorial .auto-division-modal-subservices a{min-height:0;padding:13px 38px 13px 13px}
 }
+
+
+/* Gradient headings on division detail pages must not depend on home-only CSS variables. */
+.showroom-subpage .auto-gradient-text .bilingual-motion__layer{
+  background:linear-gradient(100deg,#2563ff,#7c3aed,#ec4899,#ff641f,#22d3ee);
+  background-size:280% 100%;
+  background-clip:text;
+  -webkit-background-clip:text;
+  color:transparent;
+}
