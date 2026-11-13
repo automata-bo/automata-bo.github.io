@@ -47,8 +47,13 @@ export default function BilingualText({ en, es, delay = 8_000, className = "" }:
       }, readingDelay);
     };
 
-    const observer = typeof IntersectionObserver !== "undefined"
-      ? new IntersectionObserver(([entry]) => {
+    let observer: IntersectionObserver | undefined;
+
+    const observeWhenVisible = () => {
+      if (!element.isConnected || observer) return;
+
+      if (typeof IntersectionObserver !== "undefined") {
+        observer = new IntersectionObserver(([entry]) => {
           if (entry.isIntersecting && !isVisible) {
             isVisible = true;
             runCycle();
@@ -57,18 +62,27 @@ export default function BilingualText({ en, es, delay = 8_000, className = "" }:
             clearCycle();
             setSpanish(false);
           }
-        }, { threshold: 0.2, rootMargin: "0px 0px -6% 0px" })
-      : null;
+        }, { threshold: 0.2, rootMargin: "0px 0px -6% 0px" });
+        observer.observe(element);
+      } else {
+        isVisible = true;
+        runCycle();
+      }
+    };
 
-    if (observer) {
-      observer.observe(element);
+    // The first section's reading timer must not run behind the loading intro.
+    const introIsRunning = Boolean(document.getElementById("ai"))
+      && document.documentElement.dataset.introDone !== "true";
+
+    if (introIsRunning) {
+      document.addEventListener("intro:done", observeWhenVisible, { once: true });
     } else {
-      isVisible = true;
-      runCycle();
+      observeWhenVisible();
     }
 
     return () => {
       clearCycle();
+      document.removeEventListener("intro:done", observeWhenVisible);
       observer?.disconnect();
     };
   }, [readingDelay]);
