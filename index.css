@@ -1181,3 +1181,6 @@ label{font-size:13px;font-weight:700;letter-spacing:.02em}
   .automata-editorial .auto-transition-track{height:0;margin-bottom:0}
   .automata-editorial .auto-divisions-redesigned{margin-top:0}
 }
+
+/* The root scroll padding already accounts for the fixed header. */
+.automata-editorial .auto-divisions-redesigned{scroll-margin-top:0}
