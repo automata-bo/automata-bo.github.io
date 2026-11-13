@@ -127,7 +127,9 @@ export default function ImmersiveHome() {
         const travel = Math.max(1, track.offsetHeight - (window.innerHeight - headerOffset));
         const progress = Math.max(0, Math.min(1, (headerOffset - rect.top) / travel));
         const movingDown = window.scrollY >= lastScrollY;
-        const transitionInView = rect.top < window.innerHeight && rect.bottom > 0;
+        // Release mandatory snapping as soon as the divisions section reaches the fixed header.
+        // Keeping it active below this point traps the rest of the page on this single snap target.
+        const transitionInView = rect.top < window.innerHeight && rect.bottom > headerOffset;
 
         track.style.setProperty("--transition-progress", (progress * 100).toFixed(2) + "%");
 
@@ -227,9 +229,9 @@ export default function ImmersiveHome() {
           <span>{selectedDivision === "digital" ? "WEB · SYSTEMS · AI · AUTOMATION" : selectedDivision === "experiences" ? "EVENTS · INTERACTION · SHARED MEMORIES" : "PRODUCTION · PHOTOGRAPHY · CREATIVE DIRECTION"}</span>
           <p>{selectedDivision === "digital" ? "Technology designed around people and real processes." : selectedDivision === "experiences" ? "Invitations, event interactions, QR galleries, and shared albums." : "Concept, visual language, storytelling, and audiovisual pieces."}</p>
         </div>
-        <button type="button" className="auto-division-modal-cta" onClick={() => { const draft = selectedDivision === "digital" ? "Quiero conversar sobre una solución Digital." : selectedDivision === "experiences" ? "Quiero diseñar una Experience." : "Quiero desarrollar un proyecto con Studio."; setSelectedDivision(null); window.dispatchEvent(new CustomEvent("automata:open-chat", { detail: { source: "home", action: "explore", draft } })); }}>
-          <BilingualText en="Start a conversation" es="Conversemos sobre tu idea" /> <ArrowUpRight size={17} />
-        </button>
+        <a className="auto-division-modal-cta" href={selectedDivision === "digital" ? "/digital/" : selectedDivision === "experiences" ? "/experiences/" : "/studio/"} onClick={() => setSelectedDivision(null)}>
+          <BilingualText en="Explore the service" es="Explorar el servicio" /> <ArrowUpRight size={17} />
+        </a>
       </section>
     </div>}
 
