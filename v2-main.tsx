@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { ArrowRight, ArrowUpRight, Bot, Camera, CheckCircle2, Clapperboard, Code2, Heart, Menu, MessageCircle, MonitorSmartphone, QrCode, Sparkles, Workflow, X } from "lucide-react";
-import LegacyDigital from "./App";
 import ChatWidget from "./ChatWidget";
 import CookieConsent from "./CookieConsent";
 import NewsletterSignup from "./NewsletterSignup";
@@ -113,7 +112,6 @@ function ProjectsPage() { return <ProjectsExperience/>; }
 function ContactPage() { return <ContactExperience/>; }
 export default function V2App() {
   const page = currentPage();
-  useEffect(() => { if (window.location.pathname.replace(/\/+$/, "") !== "/demos") trackEvent("page_view"); }, []);
-  if (window.location.pathname.replace(/\/+$/, "") === "/demos") return <LegacyDigital/>;
+  useEffect(() => { trackEvent("page_view"); }, []);
   return <div className="showroom-site min-h-screen overflow-x-clip bg-[#090b0f] text-white"><Header/><CookieConsent/><main>{page === "home" ? <HomePage/> : page === "digital" ? <DigitalPage/> : page === "experiences" ? <ExperiencesPage/> : page === "studio" ? <StudioPage/> : page === "projects" ? <ProjectsPage/> : <ContactPage/>}</main><Footer/><ChatWidget/></div>;
 }
