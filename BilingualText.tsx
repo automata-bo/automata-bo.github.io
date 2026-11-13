@@ -71,8 +71,7 @@ export default function BilingualText({ en, es, delay = 8_000, className = "" }:
     };
 
     // The first section's reading timer must not run behind the loading intro.
-    const introIsRunning = Boolean(document.getElementById("ai"))
-      && document.documentElement.dataset.introDone !== "true";
+    const introIsRunning = document.documentElement.dataset.introPending === "true";
 
     if (introIsRunning) {
       document.addEventListener("intro:done", observeWhenVisible, { once: true });
