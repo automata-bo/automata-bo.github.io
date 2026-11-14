@@ -1,96 +1,92 @@
-import React, { useSyncExternalStore } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 type Props = {
   en: string;
   es: string;
-  /** Kept for API compatibility. All bilingual text shares one 4.5s clock. */
+  /** Maximum time in ms before switching (default 4500ms <= 5s) */
   intervalMs?: number;
   className?: string;
 };
 
 const DEFAULT_CYCLE_MS = 4500;
 
-// One shared language clock prevents adjacent BilingualText fragments from
-// entering different languages because of independent visibility observers.
-let spanish = false;
-let timer: number | undefined;
-let introListenerAttached = false;
-const listeners = new Set<() => void>();
+export default function BilingualText({ en, es, intervalMs = DEFAULT_CYCLE_MS, className = "" }: Props) {
+  const [spanish, setSpanish] = useState(false);
+  const elementRef = useRef<HTMLSpanElement>(null);
 
-function notifyLanguageChange() {
-  spanish = !spanish;
-  listeners.forEach(listener => listener());
-}
+  useEffect(() => {
+    const element = elementRef.current;
+    if (!element) return;
 
-function startLanguageClock() {
-  if (timer !== undefined || listeners.size === 0) return;
-  timer = window.setInterval(notifyLanguageChange, DEFAULT_CYCLE_MS);
-}
+    let timer: number | undefined;
+    let isVisible = false;
 
-function handleIntroDone() {
-  document.removeEventListener("intro:done", handleIntroDone);
-  introListenerAttached = false;
-  startLanguageClock();
-}
-
-function ensureLanguageClock() {
-  if (document.documentElement.dataset.introPending === "true") {
-    if (!introListenerAttached) {
-      introListenerAttached = true;
-      document.addEventListener("intro:done", handleIntroDone);
-    }
-    return;
-  }
-
-  startLanguageClock();
-}
-
-function subscribeToLanguage(listener: () => void) {
-  listeners.add(listener);
-  ensureLanguageClock();
-
-  return () => {
-    listeners.delete(listener);
-
-    if (listeners.size === 0) {
+    const clearCycle = () => {
       if (timer !== undefined) {
-        window.clearInterval(timer);
+        window.clearTimeout(timer);
         timer = undefined;
       }
-      if (introListenerAttached) {
-        document.removeEventListener("intro:done", handleIntroDone);
-        introListenerAttached = false;
+    };
+
+    const scheduleNext = () => {
+      timer = window.setTimeout(() => {
+        setSpanish(prev => !prev);
+        scheduleNext();
+      }, intervalMs);
+    };
+
+    let observer: IntersectionObserver | undefined;
+
+    const startObserving = () => {
+      if (!element.isConnected || observer) return;
+
+      if (typeof IntersectionObserver !== "undefined") {
+        observer = new IntersectionObserver(([entry]) => {
+          if (entry.isIntersecting && !isVisible) {
+            isVisible = true;
+            scheduleNext();
+          } else if (!entry.isIntersecting && isVisible) {
+            isVisible = false;
+            clearCycle();
+          }
+        }, { threshold: 0.1 });
+        observer.observe(element);
+      } else {
+        isVisible = true;
+        scheduleNext();
       }
+    };
+
+    const introIsRunning = document.documentElement.dataset.introPending === "true";
+    if (introIsRunning) {
+      document.addEventListener("intro:done", startObserving, { once: true });
+    } else {
+      startObserving();
     }
-  };
-}
 
-function getLanguageSnapshot() {
-  return spanish;
-}
-
-export default function BilingualText({ en, es, className = "" }: Props) {
-  const isSpanish = useSyncExternalStore(
-    subscribeToLanguage,
-    getLanguageSnapshot,
-    getLanguageSnapshot
-  );
+    return () => {
+      clearCycle();
+      document.removeEventListener("intro:done", startObserving);
+      observer?.disconnect();
+    };
+  }, [intervalMs]);
 
   return (
     <span
+      ref={elementRef}
       className={`bilingual-motion ${className}`}
-      lang={isSpanish ? "es" : "en"}
-      aria-label={isSpanish ? es : en}
+      lang={spanish ? "es" : "en"}
+      aria-label={spanish ? es : en}
     >
       <span
-        className={`bilingual-motion__layer bilingual-motion__english ${isSpanish ? "is-hidden" : "is-visible"}`}
+        className={`bilingual-motion__layer bilingual-motion__english ${spanish ? "is-hidden" : "is-visible"}`}
         aria-hidden="true"
         lang="en"
       >
         {en}
       </span>
       <span
-        className={`bilingual-motion__layer bilingual-motion__spanish ${isSpanish ? "is-visible" : "is-hidden"}`}
+        className={`bilingual-motion__layer bilingual-motion__spanish ${spanish ? "is-visible" : "is-hidden"}`}
         aria-hidden="true"
         lang="es"
       >
