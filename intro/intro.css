@@ -1,10 +1,9 @@
-html[data-intro-pending="true"] body{background:#090b0f}
-#ai{position:fixed;inset:0;z-index:2147483000;display:grid;place-items:center}
+html[data-intro-pending="true"] body{overflow:hidden !important}
+#ai{position:fixed;inset:0;z-index:2147483000;display:grid;place-items:center;pointer-events:none}
 #ai.out{pointer-events:none}
-/* ===== Cristal ===== */
-#ai .glass{position:fixed;inset:0;background:rgba(7,9,14,.72);-webkit-backdrop-filter:blur(18px) saturate(115%);backdrop-filter:blur(18px) saturate(115%);opacity:0;pointer-events:none;transition:opacity .9s}
-#ai.on .glass{opacity:1}
-#ai.out .glass{opacity:0;transition:opacity 1.4s ease}
+/* ===== Cristal integrado con la web ===== */
+#ai .glass{position:fixed;inset:0;background:rgba(7,9,14,.6);-webkit-backdrop-filter:blur(16px) saturate(120%);backdrop-filter:blur(16px) saturate(120%);opacity:1;pointer-events:none;transition:opacity 1.1s cubic-bezier(.16,1,.3,1)}
+#ai.out .glass{opacity:0}
 #ai.out .stage{opacity:0;transform:translate3d(0,-12px,0);pointer-events:none}
 #ai.gone .glass,#ai.gone .stage,#ai.gone .aura{visibility:hidden}
 #ai .aura{position:fixed;inset:0;pointer-events:none;opacity:0;transition:opacity .9s ease;background:radial-gradient(ellipse 38% 32% at 50% 50%,rgba(101,3,242,.12),rgba(249,38,245,.055) 38%,rgba(0,255,218,.035) 62%,transparent 100%)}

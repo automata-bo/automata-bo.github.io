@@ -1,38 +1,25 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 type Props = {
   en: string;
   es: string;
-  /** Minimum time the English version stays readable before changing. */
-  delay?: number;
+  /** Maximum time in ms before switching (default 4500ms <= 5s) */
+  intervalMs?: number;
   className?: string;
 };
 
-const SPANISH_HOLD_MS = 120_000;
+const DEFAULT_CYCLE_MS = 4500;
 
-/**
- * Each phrase owns its own viewport lifecycle:
- * English on entry -> Spanish after a readable pause -> English after two minutes.
- * Leaving the viewport cancels its timers and resets the phrase to English.
- */
-export default function BilingualText({ en, es, delay = 8_000, className = "" }: Props) {
+export default function BilingualText({ en, es, intervalMs = DEFAULT_CYCLE_MS, className = "" }: Props) {
   const [spanish, setSpanish] = useState(false);
   const elementRef = useRef<HTMLSpanElement>(null);
-
-  const readingDelay = useMemo(() => {
-    const hash = [...en].reduce((sum, char) => (sum * 31 + char.charCodeAt(0)) >>> 0, 7);
-    // Small deterministic offsets keep phrases from changing in one synchronized burst.
-    return delay + (hash % 1_200);
-  }, [delay, en]);
 
   useEffect(() => {
     const element = elementRef.current;
     if (!element) return;
-    const explanatoryParagraph = element.closest("p");
-    if (!explanatoryParagraph || explanatoryParagraph.matches(".auto-overline, .auto-hero-manifesto")) return;
 
-    let isVisible = false;
     let timer: number | undefined;
+    let isVisible = false;
 
     const clearCycle = () => {
       if (timer !== undefined) {
@@ -41,52 +28,48 @@ export default function BilingualText({ en, es, delay = 8_000, className = "" }:
       }
     };
 
-    const runCycle = () => {
-      setSpanish(false);
+    const scheduleNext = () => {
       timer = window.setTimeout(() => {
-        setSpanish(true);
-        timer = window.setTimeout(runCycle, SPANISH_HOLD_MS);
-      }, readingDelay);
+        setSpanish(prev => !prev);
+        scheduleNext();
+      }, intervalMs);
     };
 
     let observer: IntersectionObserver | undefined;
 
-    const observeWhenVisible = () => {
+    const startObserving = () => {
       if (!element.isConnected || observer) return;
 
       if (typeof IntersectionObserver !== "undefined") {
         observer = new IntersectionObserver(([entry]) => {
           if (entry.isIntersecting && !isVisible) {
             isVisible = true;
-            runCycle();
+            scheduleNext();
           } else if (!entry.isIntersecting && isVisible) {
             isVisible = false;
             clearCycle();
-            setSpanish(false);
           }
-        }, { threshold: 0.2, rootMargin: "0px 0px -6% 0px" });
+        }, { threshold: 0.1 });
         observer.observe(element);
       } else {
         isVisible = true;
-        runCycle();
+        scheduleNext();
       }
     };
 
-    // The first section's reading timer must not run behind the loading intro.
     const introIsRunning = document.documentElement.dataset.introPending === "true";
-
     if (introIsRunning) {
-      document.addEventListener("intro:done", observeWhenVisible, { once: true });
+      document.addEventListener("intro:done", startObserving, { once: true });
     } else {
-      observeWhenVisible();
+      startObserving();
     }
 
     return () => {
       clearCycle();
-      document.removeEventListener("intro:done", observeWhenVisible);
+      document.removeEventListener("intro:done", startObserving);
       observer?.disconnect();
     };
-  }, [readingDelay]);
+  }, [intervalMs]);
 
   return (
     <span
@@ -95,15 +78,19 @@ export default function BilingualText({ en, es, delay = 8_000, className = "" }:
       lang={spanish ? "es" : "en"}
       aria-label={spanish ? es : en}
     >
-      <span className={`bilingual-motion__layer bilingual-motion__english ${spanish ? "is-hidden" : "is-visible"}`} aria-hidden="true" lang="en">{en}</span>
-      <span className={`bilingual-motion__layer bilingual-motion__spanish ${spanish ? "is-visible" : "is-hidden"}`} aria-hidden="true" lang="es">
-        {Array.from(es).map((character, index) => (
-          <span
-            className="bilingual-motion__char"
-            key={`${index}-${character}`}
-            style={{ "--char-index": index } as React.CSSProperties}
-          >{character === " " ? "\u00a0" : character}</span>
-        ))}
+      <span
+        className={`bilingual-motion__layer bilingual-motion__english ${spanish ? "is-hidden" : "is-visible"}`}
+        aria-hidden="true"
+        lang="en"
+      >
+        {en}
+      </span>
+      <span
+        className={`bilingual-motion__layer bilingual-motion__spanish ${spanish ? "is-visible" : "is-hidden"}`}
+        aria-hidden="true"
+        lang="es"
+      >
+        {es}
       </span>
     </span>
   );
