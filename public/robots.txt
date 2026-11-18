@@ -1,50 +1,5 @@
-# ══════════════════════════════════════════════════
-# AUTOMATA — robots.txt
-# https://automata-bo.github.io/
-# ══════════════════════════════════════════════════
-
-# Permitir todos los crawlers legítimos
 User-agent: *
 Allow: /
-
-# Bloquear rutas de desarrollo/assets internos
-Disallow: /intro/
-Disallow: /*.ts$
-Disallow: /*.tsx$
 Disallow: /node_modules/
 
-# Googlebot — máxima cobertura
-User-agent: Googlebot
-Allow: /
-Crawl-delay: 0
-
-# Googlebot Images — permitir imagen OG
-User-agent: Googlebot-Image
-Allow: /og-image.jpg
-Allow: /DEMOb_fast.mp4
-Allow: /DEMO_fast.mp4
-
-# Bingbot
-User-agent: Bingbot
-Allow: /
-Crawl-delay: 1
-
-# DuckDuckBot
-User-agent: DuckDuckBot
-Allow: /
-
-# Bloquear scrapers conocidos que no respetan robots
-User-agent: AhrefsBot
-Disallow: /
-
-User-agent: SemrushBot
-Disallow: /
-
-User-agent: MJ12bot
-Disallow: /
-
-User-agent: DotBot
-Disallow: /
-
-# Sitemap
 Sitemap: https://automata-bo.github.io/sitemap.xml
