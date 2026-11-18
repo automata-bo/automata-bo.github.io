@@ -43,6 +43,10 @@ El navegador genera `sessionId` mediante `crypto.randomUUID()` y lo envía en `X
 
 Un cliente que invoque la API directamente puede generar un identificador distinto por solicitud y evitar el límite de 12 solicitudes/minuto por sesión. El límite de 60 solicitudes/minuto por IP permanece activo y reduce el abuso desde una sola IP, por lo que no se trata de una ausencia total de rate limiting.
 
+
+
+**Aclaración sobre CORS:** la comparación exacta de `Origin` es útil para navegadores y evita que sitios web de otros orígenes lean respuestas mediante CORS. No autentica al visitante ni impide que un cliente HTTP no-browser envíe manualmente `Origin: https://automata-bo.github.io`. Como el chat es una función pública, la defensa real contra abuso debe venir de desafíos anti-bot, límites del lado servidor y controles de presupuesto, no de CORS.
+
 **Impacto:** el control por sesión no representa una sesión confiable. Puede facilitar consumo no deseado de cuota de proveedores de IA, spam de solicitudes y degradación de disponibilidad.
 
 **Refuerzo:**
