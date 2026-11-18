@@ -1,0 +1,14 @@
+/*
+  GitHub Pages _headers file
+  Aplica security headers HTTP a todas las páginas
+  https://docs.github.com/en/pages/getting-started-with-github-pages/securing-your-github-pages-site-with-https
+  
+  NOTA: GitHub Pages no soporta _headers nativamente (es de Netlify/Cloudflare).
+  Estos headers se implementan via meta http-equiv en el HTML como fallback.
+  Para headers HTTP reales se necesita Cloudflare o un proxy.
+*/
+
+/*
+  IMPLEMENTACIÓN ALTERNATIVA: meta http-equiv en HTML
+  Los headers críticos están ya en cada index.html como meta tags.
+*/
